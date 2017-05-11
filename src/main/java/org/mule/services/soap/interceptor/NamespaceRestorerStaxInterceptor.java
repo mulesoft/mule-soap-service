@@ -18,7 +18,7 @@ import org.apache.cxf.phase.Phase;
  * <p>
  * This interceptor works with {@link NamespaceSaverStaxInterceptor}
  *
- * @since 4.0
+ * @since 1.0
  */
 public class NamespaceRestorerStaxInterceptor extends AbstractPhaseInterceptor<Message> {
 

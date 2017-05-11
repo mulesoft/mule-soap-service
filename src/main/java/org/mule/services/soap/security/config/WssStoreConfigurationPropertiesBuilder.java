@@ -15,7 +15,7 @@ import java.util.Properties;
  * Base contract for Security Stores that prepares additional properties for CXF in order to apply some
  * kind of Web Service Security.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface WssStoreConfigurationPropertiesBuilder {
 

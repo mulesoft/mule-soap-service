@@ -15,7 +15,7 @@ import javax.xml.namespace.QName;
  * <p>
  * It's main purpose is to resolve metadata form SOAP 1.1 and 1.2 in the same way.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapHeaderAdapter {
 

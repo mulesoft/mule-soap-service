@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 /**
  * {@link AttachmentRequestEnricher} implementation for clients that works with MTOM.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class MtomRequestEnricher extends AttachmentRequestEnricher {
 

@@ -54,7 +54,7 @@ import javax.xml.namespace.QName;
  * Parses a WSDL file and for a given service name and port name introspecting all the operations and components for the given
  * set.
  *
- * @since 4.0
+ * @since 1.0
  */
 @SuppressWarnings("unchecked")
 public class WsdlIntrospecter {

@@ -16,7 +16,7 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 /**
  * CXF interceptor that adds the SOAP action to the outgoing request message.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapActionInterceptor extends AbstractPhaseInterceptor<Message> {
 

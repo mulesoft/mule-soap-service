@@ -39,7 +39,7 @@ import org.apache.cxf.transport.MessageObserver;
  * CXF interceptor that uses a custom {@link MessageDispatcher}, specified in the {@link SoapClientConfiguration} to send a
  * SOAP message and inject the obtained response into the CXF <strong>in</strong> (response) interceptors lifecycle.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Message> {
 

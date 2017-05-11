@@ -17,7 +17,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  * Callback handler implementation that delegates the handle operation to a list of callback handlers.
  * This allows to compose multiple callback handler implementations to handle different types of callbacks.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class CompositeCallbackHandler implements CallbackHandler {
 

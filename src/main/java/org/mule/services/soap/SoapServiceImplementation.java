@@ -13,7 +13,7 @@ import org.mule.services.soap.client.SoapCxfClientFactory;
 /**
  * Default Mule {@link SoapService} implementation.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapServiceImplementation implements SoapService {
 

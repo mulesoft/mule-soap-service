@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamReader;
  * <p>
  * for each attachment will add a node with the required information depending on the protocol that it's being used.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class SoapRequestGenerator {
 

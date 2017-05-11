@@ -23,7 +23,7 @@ import javanet.staxutils.events.EventAllocator;
 /**
  * XMLStreamReader decorator that saves the scope and allows the access to information about all the parent XMLEvent elements
  *
- * @since 4.0
+ * @since 1.0
  */
 public class ScopeSaverXMLStreamReader extends DelegateXMLStreamReader {
 

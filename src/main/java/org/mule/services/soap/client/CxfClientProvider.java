@@ -64,7 +64,7 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
  * <p>
  * the created client aims to be the CXF client used in the {@link SoapCxfClient}.
  *
- * @since 4.0
+ * @since 1.0
  */
 class CxfClientProvider {
 

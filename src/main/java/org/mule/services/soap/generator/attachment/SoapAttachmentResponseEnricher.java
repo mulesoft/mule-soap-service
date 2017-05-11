@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
 /**
  * {@link AttachmentResponseEnricher} implementation for SOAP with attachments.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnricher {
 

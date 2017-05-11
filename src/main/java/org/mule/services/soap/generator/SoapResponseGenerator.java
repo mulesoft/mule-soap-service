@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 /**
  * Class used to generate the output of the {@link SoapClient#consume(SoapRequest)} using the CXF response.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class SoapResponseGenerator {
 

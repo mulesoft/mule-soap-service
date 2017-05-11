@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Default immutable {@link SoapMetadataResolver} implementation.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class DefaultSoapMetadataResolver implements SoapMetadataResolver {
 

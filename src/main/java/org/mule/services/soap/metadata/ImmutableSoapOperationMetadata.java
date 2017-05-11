@@ -12,7 +12,7 @@ import org.mule.services.soap.api.client.metadata.SoapOperationMetadata;
 /**
  * Immutable {@link SoapOperationMetadata} implementation.
  *
- * @since 4.0
+ * @since 1.0
  */
 class ImmutableSoapOperationMetadata implements SoapOperationMetadata {
 

@@ -20,7 +20,7 @@ import org.apache.ws.security.WSPasswordCallback;
  * Abstract implementation of {@link CallbackHandler} that only handles instances
  * of {@link WSPasswordCallback} with a specific usage.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WSPasswordCallbackHandler implements CallbackHandler {
 

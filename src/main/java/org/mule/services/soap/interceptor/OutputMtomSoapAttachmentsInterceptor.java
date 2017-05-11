@@ -34,7 +34,7 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
  * them in the response message {@link Exchange} so then can be returned by the {@link SoapCxfClient#consume(SoapRequest)} as a
  * {@link MultiPartPayload}, if no attachments are returned an empty map is set.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class OutputMtomSoapAttachmentsInterceptor extends AbstractPhaseInterceptor<Message> {
 

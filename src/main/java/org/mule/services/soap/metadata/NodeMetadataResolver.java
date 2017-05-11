@@ -21,7 +21,7 @@ import javax.wsdl.Part;
 /**
  * Base class for metadata resolvers that resolve dynamic metadata of XML node elements.
  *
- * @since 4.0
+ * @since 1.0
  */
 abstract class NodeMetadataResolver {
 

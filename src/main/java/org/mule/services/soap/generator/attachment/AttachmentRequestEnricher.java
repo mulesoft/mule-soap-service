@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * Abstract implementation for a request enricher that adds a node for each sent attachment to the incoming SOAP
  * request with all the information required to send the attachments using the SOAP protocol.
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AttachmentRequestEnricher {
 

@@ -22,7 +22,7 @@ import org.apache.cxf.endpoint.Client;
 /**
  * {@link SoapClientFactory} implementation that creates {@link SoapCxfClient} instances.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapCxfClientFactory implements SoapClientFactory {
 

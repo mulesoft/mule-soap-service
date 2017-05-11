@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 /**
  * General utility methods for working with XML.
  * 
- * @since 4.0, Copied from the removed XML module.
+ * @since 1.0, Copied from the removed XML module.
  */
 public class XMLUtils {
 

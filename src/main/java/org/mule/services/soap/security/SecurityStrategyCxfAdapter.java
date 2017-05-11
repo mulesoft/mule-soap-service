@@ -18,7 +18,7 @@ import java.util.Optional;
  * All securities have an Action Name and a Type (Whether should be applied to the SOAP request or SOAP response), and returns
  * a set of properties that needs to be set in the client to make it work.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SecurityStrategyCxfAdapter {
 

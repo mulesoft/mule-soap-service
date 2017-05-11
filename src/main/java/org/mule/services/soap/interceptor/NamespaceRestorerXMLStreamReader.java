@@ -21,7 +21,7 @@ import javax.xml.stream.events.StartElement;
  * XMLStreamReader decorator that restores XML Namespace declarations, by default, it will restore the namespaces on the
  * first declaration, but this can be overridden
  *
- * @since 4.0
+ * @since 1.0
  */
 public class NamespaceRestorerXMLStreamReader extends ScopeSaverXMLStreamReader {
 

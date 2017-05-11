@@ -16,7 +16,7 @@ import javax.wsdl.extensions.ElementExtensible;
  * <p>
  * This class is resposible for returning the information of the messages that are used to resolve INPUT metadata.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class InputTypeIntrospecterDelegate implements TypeIntrospecterDelegate {
 

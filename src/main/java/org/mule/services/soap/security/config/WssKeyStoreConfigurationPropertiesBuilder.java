@@ -20,7 +20,7 @@ import org.apache.ws.security.components.crypto.Merlin;
 /**
  * Default {@link WssStoreConfigurationPropertiesBuilder} implementation for Key Stores, used for encryption, decryption and signing.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WssKeyStoreConfigurationPropertiesBuilder implements WssStoreConfigurationPropertiesBuilder {
 

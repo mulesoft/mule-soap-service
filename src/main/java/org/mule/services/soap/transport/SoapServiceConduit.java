@@ -26,7 +26,7 @@ import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
 /**
  *
- * @since 4.0
+ * @since 1.0
  */
 final class SoapServiceConduit extends AbstractConduit {
 

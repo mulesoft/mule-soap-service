@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Bundles the outgoing SOAP message that it's being built with a timestamp that carries the creation.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WssTimestampSecurityStrategyCxfAdapter implements SecurityStrategyCxfAdapter {
 
