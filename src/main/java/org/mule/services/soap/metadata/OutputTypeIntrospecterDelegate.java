@@ -16,7 +16,7 @@ import javax.wsdl.extensions.ElementExtensible;
  * <p>
  * This class is responsible for returning the information of the messages that are used to resolve OUTPUT metadata.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class OutputTypeIntrospecterDelegate implements TypeIntrospecterDelegate {
 

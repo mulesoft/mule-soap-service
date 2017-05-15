@@ -27,7 +27,7 @@ import org.apache.cxf.transport.ConduitInitiatorManager;
  * Sets up the custom {@link SoapServiceConduitInitiator} for all the different entries used for CXF to obtain the needed {@link Conduit},
  * this occurs because we want that CXF always use the {@link SoapServiceConduit} to operate.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapServiceTransportFactory extends AbstractTransportFactory {
 

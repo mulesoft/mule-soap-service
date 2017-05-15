@@ -27,7 +27,7 @@ import javax.wsdl.extensions.soap12.SOAP12Header;
 /**
  * Handles the dynamic {@link MetadataType} resolution for the SOAP Headers of a web service operation.
  *
- * @since 4.0
+ * @since 1.0
  */
 final class HeadersMetadataResolver extends NodeMetadataResolver {
 

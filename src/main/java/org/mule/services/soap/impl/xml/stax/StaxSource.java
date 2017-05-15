@@ -28,7 +28,7 @@ import javanet.staxutils.helpers.XMLFilterImplEx;
 /**
  * A StaxSource which gives us access to the underlying XMLStreamReader if we are StaxCapable down the line.
  * 
- * @since 4.0, Copied from the removed XML module.
+ * @since 1.0, Copied from the removed XML module.
  */
 public class StaxSource extends StAXSource {
 

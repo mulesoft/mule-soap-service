@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Handles the dynamic {@link MetadataType} resolution for the SOAP Body parts of a web service operation.
  *
- * @since 4.0
+ * @since 1.0
  */
 final class ServiceOperationsResolver {
 

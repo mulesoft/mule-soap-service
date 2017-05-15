@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Immutable {@link SoapResponse} implementation.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class ImmutableSoapResponse implements SoapResponse {
 

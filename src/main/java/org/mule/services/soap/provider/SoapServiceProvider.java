@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * {@link ServiceProvider} implementation for providing a mule {@link SoapService}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapServiceProvider implements ServiceProvider {
 

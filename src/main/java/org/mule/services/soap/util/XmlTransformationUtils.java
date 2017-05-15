@@ -32,7 +32,7 @@ import org.xml.sax.InputSource;
 /**
  * {@link SoapService} Transformation utility class
  *
- * @since 4.0
+ * @since 1.0
  */
 public class XmlTransformationUtils {
 

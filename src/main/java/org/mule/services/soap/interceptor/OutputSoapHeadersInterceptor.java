@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  * CXF out interceptor that collects the received SOAP headers in the response, transforms it and stores them in the response
  * message {@link Exchange} so then can be returned in a {@link SoapResponse}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class OutputSoapHeadersInterceptor extends AbstractSoapInterceptor {
 

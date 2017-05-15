@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 /**
  * {@link AttachmentRequestEnricher} implementation to send attachments using SOAP with Attachments.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class SoapAttachmentRequestEnricher extends AttachmentRequestEnricher {
 

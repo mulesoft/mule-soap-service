@@ -19,7 +19,7 @@ import org.apache.cxf.phase.Phase;
  * CXF interceptor that wraps the XML Stream with a decorator that is able to restore namespace declarations for fragments in
  * the response message.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class NamespaceSaverStaxInterceptor extends AbstractPhaseInterceptor<Message> {
 

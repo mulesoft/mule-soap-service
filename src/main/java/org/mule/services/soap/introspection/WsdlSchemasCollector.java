@@ -27,7 +27,7 @@ import javax.wsdl.extensions.schema.SchemaImport;
  * The purpose of this class is to find all the schema URLs, both local or remote, for a given WSDL definition. This includes
  * imports and includes in the WSDL file and recursively in each schema found.
  *
- * @since 4.0
+ * @since 1.0
  */
 @SuppressWarnings("unchecked")
 final class WsdlSchemasCollector {

@@ -29,7 +29,7 @@ import org.apache.ws.security.handler.WSHandlerConstants;
  * Provides the capability to authenticate using Username and Password with a SOAP service by adding the UsernameToken
  * element in the SOAP request.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WssUsernameTokenSecurityStrategyCxfAdapter implements SecurityStrategyCxfAdapter {
 

@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Verifies the signature of a SOAP response, using certificates of the trust-store in the provided TLS context.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WssEncryptSecurityStrategyCxfAdapter implements SecurityStrategyCxfAdapter {
 

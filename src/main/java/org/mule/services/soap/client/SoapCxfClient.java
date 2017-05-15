@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 /**
  * a {@link SoapClient} implementation based on CXF.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapCxfClient implements SoapClient {
 

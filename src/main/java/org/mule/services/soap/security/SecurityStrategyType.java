@@ -10,7 +10,7 @@ package org.mule.services.soap.security;
 /**
  * Different types of {@link SecurityStrategyCxfAdapter} that specify when a strategy should be applied to a message.
  *
- * @since 4.0
+ * @since 1.0
  */
 public enum SecurityStrategyType {
 

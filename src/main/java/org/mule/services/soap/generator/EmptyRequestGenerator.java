@@ -34,7 +34,7 @@ import javax.xml.namespace.QName;
 /**
  * Enables the construction of request bodies for web service operations that don't require input parameters.
  *
- * @since 4.0
+ * @since 1.0
  */
 final class EmptyRequestGenerator {
 

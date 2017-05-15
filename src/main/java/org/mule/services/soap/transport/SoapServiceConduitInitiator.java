@@ -25,7 +25,7 @@ import org.apache.cxf.ws.addressing.EndpointReferenceType;
 /**
  * A simple factory for the custom {@link SoapServiceConduit} used by CXF.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapServiceConduitInitiator implements ConduitInitiator {
 

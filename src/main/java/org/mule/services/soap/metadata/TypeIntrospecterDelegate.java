@@ -15,7 +15,7 @@ import javax.wsdl.extensions.ElementExtensible;
  * Contract for classes that returns information about the messages that need to be introspected for the resolvers in order to
  * obtain input or output metadata.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface TypeIntrospecterDelegate {
 

@@ -13,7 +13,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * @since 4.0, Copied from the removed XML module.
+ * @since 1.0, Copied from the removed XML module.
  */
 public class DelegateXMLStreamReader implements XMLStreamReader {
 

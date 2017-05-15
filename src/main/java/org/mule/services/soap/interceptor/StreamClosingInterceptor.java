@@ -25,7 +25,7 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
  * CXF interceptor that replaces the original XMLStreamReader with another one which closes the underlying {@link InputStream}
  * that carried the request.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class StreamClosingInterceptor extends AbstractPhaseInterceptor<Message> {
 

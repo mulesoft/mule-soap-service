@@ -10,7 +10,7 @@ package org.mule.services.soap.util;
 /**
  * {@link Exception} implementation that aims to be thrown when an XML transformation problem occur.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class XmlTransformationException extends Exception {
 

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Utility class for handling XML {@link MetadataType}s on the {@link SoapService}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SoapServiceMetadataTypeUtils {
 

@@ -18,7 +18,7 @@ import org.apache.ws.security.components.crypto.Merlin;
 /**
  * Default {@link WssStoreConfigurationPropertiesBuilder} implementation for Trust Stores, used for signature verification.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class WssTrustStoreConfigurationPropertiesBuilder implements WssStoreConfigurationPropertiesBuilder {
 
