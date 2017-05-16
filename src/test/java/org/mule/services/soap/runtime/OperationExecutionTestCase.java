@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
@@ -45,18 +46,6 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
     URL wsdl = currentThread().getContextClassLoader().getResource("wsdl/simple-service.wsdl");
     TestSoapClient localWsdlClient = new TestSoapClient(wsdl.getPath(), server.getDefaultAddress(), soapVersion);
     testSimpleOperation(localWsdlClient);
-  }
-
-  private void testSimpleOperation(SoapClient client) throws Exception {
-    ImmutableSoapRequest req = builder().withContent("<con:echo xmlns:con=\"http://service.soap.services.mule.org/\">\n"
-        + "    <text>test</text>\n"
-        + "</con:echo>").ofContentType(APPLICATION_XML).withOperation("echo")
-        .build();
-    SoapResponse response = client.consume(req);
-    assertThat(response.getSoapHeaders().isEmpty(), is(true));
-    assertSimilarXml("<ns2:echoResponse xmlns:ns2=\"http://service.soap.services.mule.org/\">\n"
-        + "    <text>test response</text>\n"
-        + "</ns2:echoResponse>", response.getContent());
   }
 
   @Test
@@ -127,6 +116,17 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   }
 
   @Test
+  @Description("Consumes an operation that expects no parameters and returns a simple type")
+  public void large() throws Exception {
+    SoapRequest req = builder().withOperation("large").build();
+    SoapResponse response = client.consume(req);
+    String largeContent = IOUtils.toString(currentThread().getContextClassLoader().getResource("large.json").openStream());
+    String expected = "<ns2:largeResponse xmlns:ns2=\"http://service.soap.services.mule.org/\"><largeResponse>"
+        + largeContent + "</largeResponse></ns2:largeResponse>";
+    assertSimilarXml(expected, response.getContent());
+  }
+
+  @Test
   @Description("Consumes an operation that expects no parameters auto-generating the request and returns a simple type")
   public void noParamsOperationWithoutXmlPayload() throws Exception {
     testNoParams(SoapRequest.empty("noParams"));
@@ -138,5 +138,17 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
     assertSimilarXml("<ns2:noParamsResponse xmlns:ns2=\"http://service.soap.services.mule.org/\">"
         + "    <text>response</text>"
         + "</ns2:noParamsResponse>", response.getContent());
+  }
+
+  private void testSimpleOperation(SoapClient client) throws Exception {
+    ImmutableSoapRequest req = builder().withContent("<con:echo xmlns:con=\"http://service.soap.services.mule.org/\">\n"
+        + "    <text>test</text>\n"
+        + "</con:echo>").ofContentType(APPLICATION_XML).withOperation("echo")
+        .build();
+    SoapResponse response = client.consume(req);
+    assertThat(response.getSoapHeaders().isEmpty(), is(true));
+    assertSimilarXml("<ns2:echoResponse xmlns:ns2=\"http://service.soap.services.mule.org/\">\n"
+        + "    <text>test response</text>\n"
+        + "</ns2:echoResponse>", response.getContent());
   }
 }

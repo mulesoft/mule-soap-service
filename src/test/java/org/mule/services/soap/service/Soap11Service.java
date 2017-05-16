@@ -101,6 +101,12 @@ public class Soap11Service {
     return new DataHandler(new FileDataSource(file));
   }
 
+  @WebResult(name = "largeResponse")
+  @WebMethod(action = "large")
+  public String large() throws IOException {
+    return IOUtils.toString(getResourceAsUrl("large.json").openStream());
+  }
+
   private URL getResourceAsUrl(String fileName) {
     try {
       return Thread.currentThread().getContextClassLoader().getResource(fileName).toURI().toURL();
