@@ -11,7 +11,6 @@ import org.mule.services.soap.interceptor.MessageDispatcherInterceptor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +70,6 @@ final class SoapServiceConduit extends AbstractConduit {
     OutputStream os = msg.getContent(OutputStream.class);
     if (os != null) {
       os.close();
-    }
-    InputStream is = msg.getContent(InputStream.class);
-    if (is != null) {
-      is.close();
     }
   }
 }
