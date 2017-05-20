@@ -17,6 +17,7 @@
     <description>A SOAP service based on CXF</description>
 
     <properties>
+        <dom4jVersion>1.6.1</dom4jVersion>
         <cxfVersion>2.7.18</cxfVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
@@ -167,6 +168,11 @@
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-extensions-soap-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${dom4jVersion}</version>
         </dependency>
 
         <!-- Test -->
