@@ -1,1 +1,1 @@
-<con:headerIn  xmlns:con="http://service.soap.services.mule.org/">Header In Value</con:headerIn>
+<con:headerIn  xmlns:con="http://service.soap.service.mule.org/">Header In Value</con:headerIn>
