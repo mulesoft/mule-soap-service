@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:echoAccount xmlns:con="http://service.soap.services.mule.org/">
+<con:echoAccount xmlns:con="http://service.soap.service.mule.org/">
     <account>
         <id>12</id>
         <items>chocolate</items>

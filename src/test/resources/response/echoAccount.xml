@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns2:echoAccountResponse xmlns:ns2="http://service.soap.services.mule.org/" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+<ns2:echoAccountResponse xmlns:ns2="http://service.soap.service.mule.org/" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <account>
         <clientName>Juan</clientName>
         <id>12</id>

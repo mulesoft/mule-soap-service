@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns2:uploadAttachmentResponse xmlns:ns2="http://service.soap.services.mule.org/">
+<ns2:uploadAttachmentResponse xmlns:ns2="http://service.soap.service.mule.org/">
     <result>Ok</result>
 </ns2:uploadAttachmentResponse>
