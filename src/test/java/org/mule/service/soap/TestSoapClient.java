@@ -9,6 +9,7 @@ package org.mule.service.soap;
 import static java.util.Collections.emptyList;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
+import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
 import org.mule.runtime.soap.api.SoapVersion;
 import org.mule.runtime.soap.api.client.SoapClient;
@@ -19,7 +20,6 @@ import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.runtime.soap.api.message.dispatcher.DefaultHttpMessageDispatcher;
 import org.mule.service.http.impl.service.HttpServiceImplementation;
-import org.mule.service.soap.SoapServiceImplementation;
 import org.mule.tck.SimpleUnitTestSupportSchedulerService;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import org.junit.rules.ExternalResource;
 public class TestSoapClient extends ExternalResource implements SoapClient {
 
   private final SoapClient soapClient;
-  private final DefaultHttpMessageDispatcher dispatcher;
+  private final MessageDispatcher dispatcher;
 
   public TestSoapClient(String wsdlLocation,
                         String address,
@@ -37,11 +37,12 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
                         String port,
                         boolean mtom,
                         List<SecurityStrategy> strategies,
-                        SoapVersion version) {
+                        SoapVersion version,
+                        MessageDispatcher dispatcher) {
     HttpServiceImplementation httpService = new HttpServiceImplementation(new SimpleUnitTestSupportSchedulerService());
     SoapServiceImplementation soapService = new SoapServiceImplementation();
     try {
-      this.dispatcher = new DefaultHttpMessageDispatcher(httpService);
+      this.dispatcher = dispatcher != null ? dispatcher : new DefaultHttpMessageDispatcher(httpService);
       try {
         this.dispatcher.initialise();
       } catch (InitialisationException e) {
@@ -50,7 +51,7 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
       SoapClientConfigurationBuilder config = SoapClientConfiguration.builder()
           .withWsdlLocation(wsdlLocation)
           .withAddress(address)
-          .withDispatcher(dispatcher)
+          .withDispatcher(this.dispatcher)
           .withService(service)
           .withPort(port)
           .withVersion(version);
@@ -68,7 +69,11 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
   }
 
   public TestSoapClient(String wsdlLocation, String address, SoapVersion version) {
-    this(wsdlLocation, address, "TestService", "TestPort", false, emptyList(), version);
+    this(wsdlLocation, address, "TestService", "TestPort", false, emptyList(), version, null);
+  }
+
+  public TestSoapClient(String wsdlLocation, String address, SoapVersion version, MessageDispatcher dispatcher) {
+    this(wsdlLocation, address, "TestService", "TestPort", false, emptyList(), version, dispatcher);
   }
 
   TestSoapClient(String location,
@@ -76,7 +81,7 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
                  boolean mtom,
                  List<SecurityStrategy> securityStrategies,
                  SoapVersion version) {
-    this(location, address, "TestService", "TestPort", mtom, securityStrategies, version);
+    this(location, address, "TestService", "TestPort", mtom, securityStrategies, version, null);
   }
 
   @Override
