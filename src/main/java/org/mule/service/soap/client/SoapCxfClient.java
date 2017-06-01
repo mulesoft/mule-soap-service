@@ -13,7 +13,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.builder.ToStringBuilder.reflectionToString;
-import static org.mule.runtime.core.util.IOUtils.toDataHandler;
+import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
 
