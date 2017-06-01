@@ -38,7 +38,7 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     XmlTypeLoader xmlTypeLoader = new XmlTypeLoader(introspecter.getSchemas());
     Client client = CxfClientProvider.getClient(config);
     return new SoapCxfClient(client, introspecter, xmlTypeLoader, getAddress(config, introspecter),
-                             config.getDispatcher(), config.getVersion(), config.isMtomEnabled());
+                             config.getDispatcher(), config.getVersion(), config.getEncoding(), config.isMtomEnabled());
   }
 
   private String getAddress(SoapClientConfiguration config, WsdlIntrospecter introspecter) throws ConnectionException {
