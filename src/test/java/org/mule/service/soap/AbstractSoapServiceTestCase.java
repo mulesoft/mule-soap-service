@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP11;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 
-import org.mule.runtime.core.util.IOUtils;
+import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
 import org.mule.runtime.soap.api.SoapVersion;
 import org.mule.service.soap.service.Soap11Service;

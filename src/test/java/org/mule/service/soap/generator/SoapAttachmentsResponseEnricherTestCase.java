@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 
-import org.mule.runtime.core.util.IOUtils;
+import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher;

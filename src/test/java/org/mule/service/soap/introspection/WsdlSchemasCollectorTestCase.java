@@ -10,8 +10,7 @@ import static java.lang.Thread.currentThread;
 import static org.custommonkey.xmlunit.XMLUnit.compareXML;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import org.mule.runtime.core.util.IOUtils;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.runtime.core.api.util.IOUtils;
 
 import java.io.InputStream;
 import java.net.URL;
