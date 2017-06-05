@@ -6,37 +6,39 @@
  */
 package org.mule.service.soap.introspection;
 
+import static java.lang.Thread.currentThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import java.io.File;
+import java.net.URISyntaxException;
 
 import org.junit.Test;
 
 public class WsdlIntrospecterTestCase {
 
   @Test
-  public void getWsdlStyleFromOperations() {
+  public void getWsdlStyleFromOperations() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/document.wsdl");
     WsdlIntrospecter introspecter = new WsdlIntrospecter(resourceLocation, "Dilbert", "DilbertSoap");
     assertThat(introspecter.isDocumentStyle(), is(true));
   }
 
   @Test
-  public void getWsdlStyleDefault() {
+  public void getWsdlStyleDefault() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/no-style-defined.wsdl");
     WsdlIntrospecter introspecter = new WsdlIntrospecter(resourceLocation, "messagingService", "messagingPort");
     assertThat(introspecter.isDocumentStyle(), is(true));
   }
 
   @Test
-  public void getWsdlStyleFromBinding() {
+  public void getWsdlStyleFromBinding() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/rpc.wsdl");
     WsdlIntrospecter introspecter = new WsdlIntrospecter(resourceLocation, "SoapResponder", "SoapResponderPortType");
     assertThat(introspecter.isRpcStyle(), is(true));
   }
 
-  private String getResourceLocation(String name) {
-    return Thread.currentThread().getContextClassLoader().getResource(name).getFile();
+  private String getResourceLocation(String name) throws URISyntaxException {
+    return new File(currentThread().getContextClassLoader().getResource(name).toURI()).getPath();
   }
 }
