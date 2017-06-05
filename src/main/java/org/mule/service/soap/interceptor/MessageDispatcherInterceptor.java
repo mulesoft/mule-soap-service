@@ -13,6 +13,7 @@ import static org.apache.cxf.message.Message.CONTENT_TYPE;
 import static org.apache.cxf.message.Message.ENCODING;
 import static org.apache.cxf.phase.Phase.SEND_ENDING;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_SOAP_ACTION;
+import static org.mule.service.soap.client.SoapCxfClient.MULE_TRANSPORT_HEADERS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_WSC_ADDRESS;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_WSC_ENCODING;
 import static org.mule.service.soap.client.SoapCxfClient.WSC_DISPATCHER;
@@ -90,6 +91,7 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     if (action != null) {
       headers.put(SOAP_ACTION, action);
     }
+    headers.putAll((Map) exchange.get(MULE_TRANSPORT_HEADERS_KEY));
     InputStream content = new ByteArrayInputStream(message.getContent(OutputStream.class).toString().getBytes());
     return new DispatchingRequest(content, (String) exchange.get(MULE_WSC_ADDRESS), (String) message.get(CONTENT_TYPE), headers);
   }

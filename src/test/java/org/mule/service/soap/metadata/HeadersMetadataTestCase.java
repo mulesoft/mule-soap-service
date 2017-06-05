@@ -68,7 +68,8 @@ public class HeadersMetadataTestCase extends AbstractMetadataTestCase {
                                                         "Human_Resources",
                                                         false,
                                                         emptyList(),
-                                                        soapVersion);
+                                                        soapVersion,
+                                                        null);
 
     SoapOperationMetadata result = humanWsdlClient.getMetadataResolver().getInputMetadata("Get_Employee");
     ObjectType headers = toObjectType(result.getHeadersType());

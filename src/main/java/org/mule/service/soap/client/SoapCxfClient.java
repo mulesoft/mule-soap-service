@@ -82,6 +82,7 @@ public class SoapCxfClient implements SoapClient {
   public static final String MULE_ATTACHMENTS_KEY = "mule.wsc.attachments";
   public static final String MULE_WSC_ADDRESS = "mule.wsc.address";
   public static final String MULE_HEADERS_KEY = "mule.wsc.headers";
+  public static final String MULE_TRANSPORT_HEADERS_KEY = "mule.wsc.transport.headers";
   public static final String MULE_SOAP_ACTION = "mule.wsc.soap.action";
   public static final String MULE_WSC_ENCODING = "mule.wsc.encoding";
 
@@ -94,6 +95,7 @@ public class SoapCxfClient implements SoapClient {
   private final String address;
   private final MessageDispatcher dispatcher;
   private final SoapVersion version;
+  private final String encoding;
   private final boolean isMtom;
 
   SoapCxfClient(Client client,
@@ -102,6 +104,7 @@ public class SoapCxfClient implements SoapClient {
                 String address,
                 MessageDispatcher dispatcher,
                 SoapVersion version,
+                String encoding,
                 boolean isMtom) {
     this.client = client;
     this.introspecter = introspecter;
@@ -110,6 +113,7 @@ public class SoapCxfClient implements SoapClient {
     this.dispatcher = dispatcher;
     this.version = version;
     this.isMtom = isMtom;
+    this.encoding = encoding;
     // TODO: MULE-10889 -> instead of creating this enrichers, interceptors that works with the live stream would be ideal
     this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), introspecter, loader);
     this.responseGenerator = new SoapResponseGenerator(getResponseEnricher(isMtom));
@@ -141,7 +145,8 @@ public class SoapCxfClient implements SoapClient {
       throw new BadRequestException("an error occurred while parsing the provided request");
     }
     Exchange exchange = new ExchangeImpl();
-    Object[] response = invoke(operation, envelope, request.getSoapHeaders(), attachments, "UTF-8", exchange);
+    Object[] response =
+        invoke(operation, envelope, request.getSoapHeaders(), request.getTransportHeaders(), attachments, exchange);
     return responseGenerator.generate(operation, response, exchange);
   }
 
@@ -153,23 +158,25 @@ public class SoapCxfClient implements SoapClient {
 
   /**
    * Invokes a Web Service Operation with the specified parameters.
-   *  @param operation   the operation that is going to be invoked.
-   * @param payload     the request body to be bounded in the envelope.
-   * @param headers     the request headers to be bounded in the envelope.
-   * @param attachments the set of attachments that aims to be sent with the request.
-   * @param encoding    the encoding of the message.
-   * @param exchange    the exchange instance that will carry all the parameters when intercepting the message.
+   *
+   * @param operation        the operation that is going to be invoked.
+   * @param payload          the request body to be bounded in the envelope.
+   * @param headers          the request headers to be bounded in the envelope.
+   * @param transportHeaders the headers to be bounded with the underlying transport request.
+   * @param attachments      the set of attachments that aims to be sent with the request.
+   * @param exchange         the exchange instance that will carry all the parameters when intercepting the message.
    */
   Object[] invoke(String operation,
                   Object payload,
                   Map<String, String> headers,
+                  Map<String, String> transportHeaders,
                   Map<String, SoapAttachment> attachments,
-                  String encoding,
                   Exchange exchange) {
     try {
       BindingOperationInfo bop = getInvocationOperation();
-      Map<String, Object> ctx =
-          getInvocationContext(operation, encoding, transformToCxfHeaders(headers), transformToCxfAttachments(attachments));
+      Map<String, Attachment> soapAttachments = transformToCxfAttachments(attachments);
+      List<SoapHeader> soapHeaders = transformToCxfHeaders(headers);
+      Map<String, Object> ctx = getInvocationContext(operation, soapHeaders, transportHeaders, soapAttachments);
       return client.invoke(bop, new Object[] {payload}, ctx, exchange);
     } catch (SoapFault sf) {
       throw new SoapFaultException(sf.getFaultCode(), sf.getSubCode(), parseExceptionDetail(sf.getDetail()).orElse(null),
@@ -207,8 +214,8 @@ public class SoapCxfClient implements SoapClient {
   }
 
   private Map<String, Object> getInvocationContext(String operation,
-                                                   String encoding,
                                                    List<SoapHeader> headers,
+                                                   Map<String, String> transportHeaders,
                                                    Map<String, Attachment> attachments) {
     Map<String, Object> props = new HashMap<>();
 
@@ -226,6 +233,8 @@ public class SoapCxfClient implements SoapClient {
     if (version == SOAP12) {
       props.put(MULE_SOAP_ACTION, operation);
     }
+
+    props.put(MULE_TRANSPORT_HEADERS_KEY, transportHeaders != null ? transportHeaders : emptyMap());
 
     props.put(WSC_DISPATCHER, dispatcher);
 
