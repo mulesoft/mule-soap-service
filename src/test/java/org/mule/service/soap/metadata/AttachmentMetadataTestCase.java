@@ -6,25 +6,24 @@
  */
 package org.mule.service.soap.metadata;
 
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import org.mule.metadata.api.annotation.TypeIdAnnotation;
+import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+import org.mule.metadata.api.model.AnyType;
 import org.mule.metadata.api.model.NullType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.api.model.ObjectType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
 
-import java.util.Collection;
-
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
+
+import java.util.Collection;
 
 @Features(WSC_EXTENSION)
 @Stories("Metadata")
@@ -55,7 +54,7 @@ public class AttachmentMetadataTestCase extends AbstractMetadataTestCase {
     assertThat(objectType.getFields(), hasSize(1));
     ObjectFieldType attachment = objectType.getFields().iterator().next();
     assertThat(attachment.getKey().getName().getLocalPart(), is("attachment"));
-    assertThat(attachment.getValue().getAnnotation(TypeIdAnnotation.class).get().getValue(), containsString("SoapAttachment"));
+    assertThat(attachment.getValue(), is(instanceOf(AnyType.class)));
     assertThat(result.getBodyType(), is(instanceOf(NullType.class)));
   }
 }
