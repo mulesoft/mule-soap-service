@@ -11,7 +11,6 @@ import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_CONFIGURATION;
 import static org.mule.service.soap.util.SoapServiceMetadataTypeUtils.getAttachmentFields;
 import org.mule.metadata.api.TypeLoader;
-import org.mule.metadata.api.builder.ObjectFieldTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
@@ -45,11 +44,9 @@ final class AttachmentsMetadataResolver extends NodeMetadataResolver {
       return nullType;
     }
     ObjectTypeBuilder type = typeBuilder.objectType();
-    attachments.forEach(a -> {
-      ObjectFieldTypeBuilder fieldBuilder = type.addField();
-      fieldBuilder.key(getLocalPart(a));
-      fieldBuilder.value().anyType();
-    });
+    attachments.forEach(attachment -> type.addField()
+        .key(getLocalPart(attachment))
+        .value(attachment.getValue()));
     return type.build();
   }
 }

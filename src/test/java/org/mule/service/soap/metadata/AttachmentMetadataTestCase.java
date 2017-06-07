@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
-import org.mule.metadata.api.model.AnyType;
+import org.mule.metadata.api.model.BinaryType;
 import org.mule.metadata.api.model.NullType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.api.model.ObjectType;
@@ -54,7 +54,7 @@ public class AttachmentMetadataTestCase extends AbstractMetadataTestCase {
     assertThat(objectType.getFields(), hasSize(1));
     ObjectFieldType attachment = objectType.getFields().iterator().next();
     assertThat(attachment.getKey().getName().getLocalPart(), is("attachment"));
-    assertThat(attachment.getValue(), is(instanceOf(AnyType.class)));
+    assertThat(attachment.getValue(), is(instanceOf(BinaryType.class)));
     assertThat(result.getBodyType(), is(instanceOf(NullType.class)));
   }
 }
