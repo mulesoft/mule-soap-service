@@ -11,6 +11,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.custommonkey.xmlunit.XMLUnit;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 
@@ -64,6 +66,7 @@ public class SoapTestUtils {
   }
 
   public static void assertSimilarXml(String expected, String result) throws Exception {
+    XMLUnit.setIgnoreWhitespace(true);
     Diff diff = compareXML(result, expected);
     if (!diff.similar()) {
       System.out.println("Expected xml is:\n");

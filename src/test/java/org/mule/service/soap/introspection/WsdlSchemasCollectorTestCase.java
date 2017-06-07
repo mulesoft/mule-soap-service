@@ -7,31 +7,69 @@
 package org.mule.service.soap.introspection;
 
 import static java.lang.Thread.currentThread;
-import static org.custommonkey.xmlunit.XMLUnit.compareXML;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.hamcrest.core.Is.is;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+
+import com.google.common.collect.ImmutableList;
+import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.core.api.util.IOUtils;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
 
 public class WsdlSchemasCollectorTestCase {
 
+  private static final String RECURSIVE_WSDL_FOLDER = "wsdl/recursive/";
+
   @Test
   public void wsdlWithEmbeddedTypeSchema() throws Exception {
-    URL wsdl = currentThread().getContextClassLoader().getResource("wsdl/simple-service.wsdl");
+    ClassLoader cl = currentThread().getContextClassLoader();
+    URL wsdl = cl.getResource("wsdl/simple-service.wsdl");
     WsdlIntrospecter introspecter = new WsdlIntrospecter(wsdl.getPath(), "TestService", "TestPort");
     Map<String, InputStream> schemas = introspecter.getSchemas().collect();
     assertThat(schemas.size(), is(1));
 
-    URL expectedXsd = currentThread().getContextClassLoader().getResource("schemas/simple-service-types.xsd");
-    String expected = IOUtils.toString(expectedXsd.openStream());
+    String expected = IOUtils.toString(cl.getResource("schemas/simple-service-types.xsd").openStream());
     String result = IOUtils.toString(schemas.entrySet().iterator().next().getValue());
-    XMLUnit.setIgnoreWhitespace(true);
-    compareXML(expected, result);
+    assertSimilarXml(expected, result);
+  }
+
+  /**
+   * This test collects a set of local schemas referenced from a WSDL, this schemas also reference each other recursively.
+   */
+  @Test
+  public void wsdlWithLocalRecursiveSchemas() throws Exception {
+    String recursiveEmbeddedSchema = "schemas/recursive-embedded-schema.xsd";
+    String wsdl = getResourceLocation(RECURSIVE_WSDL_FOLDER + "main.wsdl");
+    WsdlIntrospecter introspecter = new WsdlIntrospecter(wsdl, "RecursiveService", "RecursivePort");
+    Map<String, InputStream> schemas = introspecter.getSchemas().collect();
+
+    List<String> files = ImmutableList.<String>builder().add(getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/import0.xsd"),
+                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/dir2/import1.xsd"),
+                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import2.xsd"),
+                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import3.xsd"),
+                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import4.xsd"),
+                                                             getResourceLocation(recursiveEmbeddedSchema))
+        .build();
+
+    assertThat(schemas.values(), hasSize(files.size()));
+    for (String file : files) {
+      String fileName = !file.contains(recursiveEmbeddedSchema) ? file : wsdl;
+      String key = "file:" + fileName;
+      assertThat(schemas, hasKey(key));
+      assertSimilarXml(IOUtils.toString(schemas.get(key)), IOUtils.toString(new FileInputStream(file)));
+    }
+  }
+
+  private String getResourceLocation(String name) {
+    return Thread.currentThread().getContextClassLoader().getResource(name).getFile();
   }
 }
