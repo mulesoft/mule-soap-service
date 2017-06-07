@@ -6,22 +6,25 @@
  */
 package org.mule.service.soap.introspection;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static java.lang.String.format;
+import static org.mule.service.soap.util.XmlTransformationUtils.*;
+
 import org.mule.metadata.xml.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Vector;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Types;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
+import javax.wsdl.extensions.schema.SchemaReference;
 
 /**
  * The purpose of this class is to find all the schema URLs, both local or remote, for a given WSDL definition. This includes
@@ -32,43 +35,71 @@ import javax.wsdl.extensions.schema.SchemaImport;
 @SuppressWarnings("unchecked")
 final class WsdlSchemasCollector {
 
-  SchemaCollector collect(Definition wsdlDefinition) {
+  private final Map<String, Schema> schemas = newHashMap();
+  private final Definition definition;
+
+  WsdlSchemasCollector(Definition definition) {
+    this.definition = definition;
+  }
+
+  public SchemaCollector collect() {
     SchemaCollector collector = SchemaCollector.getInstance();
-
-    collectTypes(wsdlDefinition.getTypes(), collector);
-
-    wsdlDefinition.getImports().values().forEach(wsdlImport -> {
-      Definition definition = ((Import) wsdlImport).getDefinition();
-      collectTypes(definition.getTypes(), collector);
+    collectSchemas(definition);
+    schemas.forEach((uri, schema) -> {
+      try {
+        collector.addSchema(uri, nodeToString(schema.getElement()));
+      } catch (XmlTransformationException e) {
+        String message = uri.endsWith(".wsdl") ? "Schema embedded in wsdl [%s]" : "Schema [%s]";
+        throw new InvalidWsdlException(format(message + " could not be parsed", uri), e);
+      }
     });
-
     return collector;
   }
 
-  private void collectTypes(Types types, SchemaCollector collector) {
+  private void collectSchemas(Definition definition) {
+    collectFromTypes(definition.getTypes());
+    definition.getImports().values().forEach(wsdlImport -> {
+      if (wsdlImport instanceof Import) {
+        collectSchemas(((Import) wsdlImport).getDefinition());
+      }
+    });
+  }
+
+  private void collectFromTypes(Types types) {
     if (types != null) {
       types.getExtensibilityElements().forEach(element -> {
         if (element instanceof Schema) {
           Schema schema = (Schema) element;
-          String schemaUri = schema.getDocumentBaseURI();
-          try {
-            collector.addSchema(schemaUri, XmlTransformationUtils.nodeToString(schema.getElement()));
-          } catch (XmlTransformationException e) {
-            throw new InvalidWsdlException(format("Cannot collect schema [%s], error while processing content", schemaUri), e);
-          }
-          getSchemaImportsUrls(schema).forEach(collector::addSchema);
+          addSchema(schema);
         }
       });
     }
   }
 
-  private List<String> getSchemaImportsUrls(Schema schema) {
-    List<String> schemas = new ArrayList<>();
+  private void addSchema(Schema schema) {
+    String key = schema.getDocumentBaseURI();
+    if (!schemas.containsKey(key)) {
+      schemas.put(key, schema);
+      addImportedSchemas(schema);
+      addIncludedSchemas(schema);
+    }
+  }
+
+  private void addImportedSchemas(Schema schema) {
     Collection imports = schema.getImports().values();
-    imports.forEach(i -> {
-      Vector vector = (Vector) i;
-      vector.forEach(element -> schemas.add(((SchemaImport) element).getSchemaLocationURI()));
+    imports.forEach(vector -> ((Vector) vector).forEach(element -> {
+      if (element instanceof SchemaImport) {
+        Schema importedSchema = ((SchemaImport) element).getReferencedSchema();
+        addSchema(importedSchema);
+      }
+    }));
+  }
+
+  private void addIncludedSchemas(Schema schema) {
+    schema.getIncludes().forEach(include -> {
+      if (include instanceof SchemaReference) {
+        addSchema(((SchemaReference) include).getReferencedSchema());
+      }
     });
-    return schemas;
   }
 }

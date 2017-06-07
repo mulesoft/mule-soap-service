@@ -62,8 +62,7 @@ public class WsdlIntrospecter {
   private static final String DOCUMENT_STYLE = "document";
   private static final String RPC_STYLE = "rpc";
 
-  private static final WsdlSchemasCollector schemaCollector = new WsdlSchemasCollector();
-
+  private final WsdlSchemasCollector schemaCollector;
   private final Definition definition;
   private final Service service;
   private final Port port;
@@ -72,6 +71,7 @@ public class WsdlIntrospecter {
     this.definition = parseWsdl(wsdlLocation);
     this.service = findService(serviceName);
     this.port = findPort(portName);
+    this.schemaCollector = new WsdlSchemasCollector(definition);
   }
 
   private Service findService(String serviceName) {
@@ -154,7 +154,7 @@ public class WsdlIntrospecter {
   }
 
   public SchemaCollector getSchemas() {
-    return schemaCollector.collect(definition);
+    return schemaCollector.collect();
   }
 
   public Service getService() {
