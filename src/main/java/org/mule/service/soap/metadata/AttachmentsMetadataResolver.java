@@ -9,15 +9,12 @@ package org.mule.service.soap.metadata;
 import static java.lang.String.format;
 import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_CONFIGURATION;
-import static org.mule.runtime.extension.api.declaration.type.ExtensionsTypeLoaderFactory.getDefault;
 import static org.mule.service.soap.util.SoapServiceMetadataTypeUtils.getAttachmentFields;
-
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.service.soap.introspection.WsdlIntrospecter;
 
 import java.util.List;
@@ -30,8 +27,6 @@ import javax.wsdl.Part;
  * @since 1.0
  */
 final class AttachmentsMetadataResolver extends NodeMetadataResolver {
-
-  private final MetadataType ATTACHMENT_TYPE = getDefault().createTypeLoader().load(SoapAttachment.class);
 
   AttachmentsMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
     super(introspecter, loader);
@@ -49,8 +44,9 @@ final class AttachmentsMetadataResolver extends NodeMetadataResolver {
       return nullType;
     }
     ObjectTypeBuilder type = typeBuilder.objectType();
-    attachments.forEach(a -> type.addField().key(getLocalPart(a)).value(ATTACHMENT_TYPE));
+    attachments.forEach(attachment -> type.addField()
+        .key(getLocalPart(attachment))
+        .value(attachment.getValue()));
     return type.build();
   }
-
 }
