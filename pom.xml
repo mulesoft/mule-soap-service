@@ -19,6 +19,7 @@
     <properties>
         <dom4jVersion>1.6.1</dom4jVersion>
         <cxfVersion>2.7.18</cxfVersion>
+        <openSamlVersion>2.6.4</openSamlVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
     </properties>
@@ -135,7 +136,17 @@
                     <groupId>joda-time</groupId>
                     <artifactId>joda-time</artifactId>
                 </exclusion>
+                <!-- We use opensaml 2.6.4 -->
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>${openSamlVersion}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
