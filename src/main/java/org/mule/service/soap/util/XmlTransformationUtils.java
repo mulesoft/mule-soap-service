@@ -6,7 +6,7 @@
  */
 package org.mule.service.soap.util;
 
-import org.mule.runtime.core.internal.util.xmlsecurity.XMLSecureFactories;
+import org.mule.runtime.core.api.util.xmlsecurity.XMLSecureFactories;
 import org.mule.runtime.soap.api.SoapService;
 import org.mule.service.soap.impl.xml.stax.StaxSource;
 
