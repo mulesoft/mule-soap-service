@@ -6,7 +6,7 @@
  */
 package org.mule.service.soap.generator;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.SoapServiceException;
