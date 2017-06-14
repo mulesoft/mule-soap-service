@@ -6,11 +6,18 @@
  */
 package org.mule.service.soap.client;
 
-import static java.util.Collections.emptyMap;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.cxf.message.Message.MTOM_ENABLED;
-import static org.apache.ws.security.handler.WSHandlerConstants.ACTION;
-import static org.apache.ws.security.handler.WSHandlerConstants.PW_CALLBACK_REF;
+import com.google.common.collect.ImmutableList;
+import org.apache.cxf.binding.Binding;
+import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
+import org.apache.cxf.binding.soap.interceptor.Soap11FaultInInterceptor;
+import org.apache.cxf.binding.soap.interceptor.Soap12FaultInInterceptor;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.interceptor.WrappedOutInterceptor;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.PhaseInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.mule.runtime.extension.api.soap.security.DecryptSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.EncryptSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
@@ -38,26 +45,17 @@ import org.mule.service.soap.security.WssVerifySignatureSecurityStrategyCxfAdapt
 import org.mule.service.soap.security.callback.CompositeCallbackHandler;
 import org.mule.service.soap.transport.SoapServiceTransportFactory;
 
-import com.google.common.collect.ImmutableList;
-
+import javax.security.auth.callback.CallbackHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import javax.security.auth.callback.CallbackHandler;
-
-import org.apache.cxf.binding.Binding;
-import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
-import org.apache.cxf.binding.soap.interceptor.Soap11FaultInInterceptor;
-import org.apache.cxf.binding.soap.interceptor.Soap12FaultInInterceptor;
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.interceptor.Interceptor;
-import org.apache.cxf.interceptor.WrappedOutInterceptor;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.phase.PhaseInterceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import static java.util.Collections.emptyMap;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.cxf.message.Message.MTOM_ENABLED;
+import static org.apache.ws.security.handler.WSHandlerConstants.ACTION;
+import static org.apache.ws.security.handler.WSHandlerConstants.PW_CALLBACK_REF;
 
 /**
  * Object that creates CXF specific clients based on a {@link SoapClientConfiguration} setting all the required CXF properties.
@@ -68,8 +66,9 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
  */
 class CxfClientProvider {
 
-  static Client getClient(SoapClientConfiguration configuration) {
-    SoapServiceTransportFactory factory = new SoapServiceTransportFactory();
+  private final SoapServiceTransportFactory factory = new SoapServiceTransportFactory();
+
+  Client getClient(SoapClientConfiguration configuration) {
     boolean isMtom = configuration.isMtomEnabled();
     String address = configuration.getAddress();
     SoapVersion version = configuration.getVersion();
@@ -82,7 +81,7 @@ class CxfClientProvider {
     return client;
   }
 
-  private static List<SecurityStrategyCxfAdapter> getAdaptedSecurities(List<SecurityStrategy> securities) {
+  private List<SecurityStrategyCxfAdapter> getAdaptedSecurities(List<SecurityStrategy> securities) {
     ImmutableList.Builder<SecurityStrategyCxfAdapter> builder = ImmutableList.builder();
     securities.forEach(s -> s.accept(new SecurityStrategyVisitor() {
 
@@ -123,7 +122,7 @@ class CxfClientProvider {
     return builder.build();
   }
 
-  private static void addSecurityInterceptors(Client client, List<SecurityStrategyCxfAdapter> securityStrategies) {
+  private void addSecurityInterceptors(Client client, List<SecurityStrategyCxfAdapter> securityStrategies) {
     Map<String, Object> requestProps = buildSecurityProperties(securityStrategies, SecurityStrategyType.OUTGOING);
     if (!requestProps.isEmpty()) {
       client.getOutInterceptors().add(new WSS4JOutInterceptor(requestProps));
@@ -135,8 +134,8 @@ class CxfClientProvider {
     }
   }
 
-  private static Map<String, Object> buildSecurityProperties(List<SecurityStrategyCxfAdapter> strategies,
-                                                             SecurityStrategyType type) {
+  private Map<String, Object> buildSecurityProperties(List<SecurityStrategyCxfAdapter> strategies,
+                                                      SecurityStrategyType type) {
     if (strategies.isEmpty()) {
       return emptyMap();
     }
@@ -167,12 +166,12 @@ class CxfClientProvider {
     return props;
   }
 
-  private static void addRequestInterceptors(Client client) {
+  private void addRequestInterceptors(Client client) {
     List<Interceptor<? extends Message>> outInterceptors = client.getOutInterceptors();
     outInterceptors.add(new SoapActionInterceptor());
   }
 
-  private static void addResponseInterceptors(Client client, boolean mtomEnabled) {
+  private void addResponseInterceptors(Client client, boolean mtomEnabled) {
     List<Interceptor<? extends Message>> inInterceptors = client.getInInterceptors();
     inInterceptors.add(new NamespaceRestorerStaxInterceptor());
     inInterceptors.add(new NamespaceSaverStaxInterceptor());
@@ -185,7 +184,7 @@ class CxfClientProvider {
     }
   }
 
-  private static void removeUnnecessaryCxfInterceptors(Client client) {
+  private void removeUnnecessaryCxfInterceptors(Client client) {
     Binding binding = client.getEndpoint().getBinding();
     removeInterceptor(binding.getOutInterceptors(), WrappedOutInterceptor.class.getName());
     removeInterceptor(binding.getInInterceptors(), Soap11FaultInInterceptor.class.getName());
@@ -193,7 +192,7 @@ class CxfClientProvider {
     removeInterceptor(binding.getInInterceptors(), CheckFaultInterceptor.class.getName());
   }
 
-  private static void removeInterceptor(List<Interceptor<? extends Message>> inInterceptors, String name) {
+  private void removeInterceptor(List<Interceptor<? extends Message>> inInterceptors, String name) {
     inInterceptors.removeIf(i -> i instanceof PhaseInterceptor && ((PhaseInterceptor) i).getId().equals(name));
   }
 }
