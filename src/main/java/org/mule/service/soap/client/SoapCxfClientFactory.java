@@ -6,11 +6,7 @@
  */
 package org.mule.service.soap.client;
 
-import static java.lang.String.format;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-import static org.mule.service.soap.transport.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
-
+import org.apache.cxf.endpoint.Client;
 import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.soap.api.client.SoapClient;
@@ -18,7 +14,10 @@ import org.mule.runtime.soap.api.client.SoapClientConfiguration;
 import org.mule.runtime.soap.api.client.SoapClientFactory;
 import org.mule.service.soap.introspection.WsdlIntrospecter;
 
-import org.apache.cxf.endpoint.Client;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+import static org.mule.service.soap.transport.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
 
 /**
  * {@link SoapClientFactory} implementation that creates {@link SoapCxfClient} instances.
@@ -26,6 +25,8 @@ import org.apache.cxf.endpoint.Client;
  * @since 1.0
  */
 public class SoapCxfClientFactory implements SoapClientFactory {
+
+  private CxfClientProvider cxfClientProvider = new CxfClientProvider();
 
   /**
    * Creates a new instance of a {@link SoapCxfClient} for the given address ans soap version.
@@ -36,7 +37,7 @@ public class SoapCxfClientFactory implements SoapClientFactory {
   public SoapClient create(SoapClientConfiguration config) throws ConnectionException {
     WsdlIntrospecter introspecter = getIntrospecter(config);
     XmlTypeLoader xmlTypeLoader = new XmlTypeLoader(introspecter.getSchemas());
-    Client client = CxfClientProvider.getClient(config);
+    Client client = cxfClientProvider.getClient(config);
     return new SoapCxfClient(client, introspecter, xmlTypeLoader, getAddress(config, introspecter),
                              config.getDispatcher(), config.getVersion(), config.getEncoding(), config.isMtomEnabled());
   }
