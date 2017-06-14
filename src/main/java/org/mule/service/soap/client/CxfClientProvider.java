@@ -7,7 +7,7 @@
 package org.mule.service.soap.client;
 
 import static java.util.Collections.emptyMap;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.cxf.message.Message.MTOM_ENABLED;
 import static org.apache.ws.security.handler.WSHandlerConstants.ACTION;
 import static org.apache.ws.security.handler.WSHandlerConstants.PW_CALLBACK_REF;

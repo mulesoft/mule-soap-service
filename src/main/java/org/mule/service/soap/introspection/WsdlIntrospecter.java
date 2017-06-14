@@ -11,7 +11,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.mule.metadata.xml.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.metadata.TypeIntrospecterDelegate;
