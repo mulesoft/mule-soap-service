@@ -27,6 +27,7 @@ import org.mule.tck.SimpleUnitTestSupportSchedulerService;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static org.mule.runtime.core.internal.util.FunctionalUtils.safely;
 
 public class TestSoapClient extends ExternalResource implements SoapClient {
 
@@ -113,7 +114,7 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
 
   @Override
   public void stop() {
-    httpClient.stop();
+    safely(httpClient::stop);
     dispatcher.dispose();
   }
 }
