@@ -6,11 +6,13 @@
  */
 package org.mule.service.soap;
 
-import static java.util.Collections.emptyList;
+import org.junit.rules.ExternalResource;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
+import org.mule.runtime.http.api.client.HttpClient;
+import org.mule.runtime.http.api.client.HttpClientConfiguration;
 import org.mule.runtime.soap.api.SoapVersion;
 import org.mule.runtime.soap.api.client.SoapClient;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
@@ -24,12 +26,14 @@ import org.mule.tck.SimpleUnitTestSupportSchedulerService;
 
 import java.util.List;
 
-import org.junit.rules.ExternalResource;
+import static java.util.Collections.emptyList;
+import static org.mule.runtime.core.internal.util.FunctionalUtils.safely;
 
 public class TestSoapClient extends ExternalResource implements SoapClient {
 
   private final SoapClient soapClient;
   private final MessageDispatcher dispatcher;
+  private final HttpClient httpClient;
 
   public TestSoapClient(String wsdlLocation,
                         String address,
@@ -42,7 +46,8 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
     HttpServiceImplementation httpService = new HttpServiceImplementation(new SimpleUnitTestSupportSchedulerService());
     SoapServiceImplementation soapService = new SoapServiceImplementation();
     try {
-      this.dispatcher = dispatcher != null ? dispatcher : new DefaultHttpMessageDispatcher(httpService);
+      this.httpClient = getHttpClient(httpService);
+      this.dispatcher = dispatcher != null ? dispatcher : new DefaultHttpMessageDispatcher(httpClient);
       try {
         this.dispatcher.initialise();
       } catch (InitialisationException e) {
@@ -66,6 +71,14 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
     } catch (ConnectionException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private HttpClient getHttpClient(HttpServiceImplementation httpService) {
+    HttpClient client = httpService.getClientFactory().create(new HttpClientConfiguration.Builder()
+        .setName("wsc-dispatcher")
+        .build());
+    client.start();
+    return client;
   }
 
   public TestSoapClient(String wsdlLocation, String address, SoapVersion version) {
@@ -101,6 +114,7 @@ public class TestSoapClient extends ExternalResource implements SoapClient {
 
   @Override
   public void stop() {
+    safely(httpClient::stop);
     dispatcher.dispose();
   }
 }
