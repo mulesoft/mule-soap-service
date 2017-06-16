@@ -107,8 +107,8 @@ class CxfClientProvider {
       @Override
       public void visitVerify(VerifySignatureSecurityStrategy verify) {
         WssVerifySignatureSecurityStrategyCxfAdapter adapter =
-          verify.getTrustStoreConfiguration().map(WssVerifySignatureSecurityStrategyCxfAdapter::new)
-            .orElse(new WssVerifySignatureSecurityStrategyCxfAdapter());
+            verify.getTrustStoreConfiguration().map(WssVerifySignatureSecurityStrategyCxfAdapter::new)
+                .orElse(new WssVerifySignatureSecurityStrategyCxfAdapter());
         builder.add(adapter);
       }
 
@@ -144,12 +144,12 @@ class CxfClientProvider {
 
     ImmutableList.Builder<CallbackHandler> callbackHandlersBuilder = ImmutableList.builder();
     strategies.stream()
-      .filter(s -> s.securityType().equals(type))
-      .forEach(s -> {
-        props.putAll(s.buildSecurityProperties());
-        actionsJoiner.add(s.securityAction());
-        s.buildPasswordCallbackHandler().ifPresent(callbackHandlersBuilder::add);
-      });
+        .filter(s -> s.securityType().equals(type))
+        .forEach(s -> {
+          props.putAll(s.buildSecurityProperties());
+          actionsJoiner.add(s.securityAction());
+          s.buildPasswordCallbackHandler().ifPresent(callbackHandlersBuilder::add);
+        });
 
     List<CallbackHandler> handlers = callbackHandlersBuilder.build();
     if (!handlers.isEmpty()) {
