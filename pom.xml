@@ -22,6 +22,9 @@
         <openSamlVersion>2.6.4</openSamlVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
+
+        <muleHttpServiceVersion>1.0.0-BETA-SNAPSHOT</muleHttpServiceVersion>
+        <mule.version>4.0.0-BETA-SNAPSHOT</mule.version>
     </properties>
 
     <scm>
@@ -50,7 +53,7 @@
             <plugin>
                 <groupId>org.mule.runtime.plugins</groupId>
                 <artifactId>mule-app-plugins-maven-plugin</artifactId>
-                <version>1.0.0-BETA-SNAPSHOT</version>
+                <version>${mule.app.plugins.maven.plugin.version}</version>
                 <extensions>true</extensions>
             </plugin>
             <plugin>
@@ -172,7 +175,7 @@
         <dependency>
             <groupId>org.mule.services</groupId>
             <artifactId>mule-service-http</artifactId>
-            <version>1.0.0-BETA-SNAPSHOT</version>
+            <version>${muleHttpServiceVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
