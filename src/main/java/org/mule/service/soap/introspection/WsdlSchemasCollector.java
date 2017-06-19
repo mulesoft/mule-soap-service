@@ -8,23 +8,20 @@ package org.mule.service.soap.introspection;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.lang.String.format;
-import static org.mule.service.soap.util.XmlTransformationUtils.*;
+import static org.mule.service.soap.util.XmlTransformationUtils.nodeToString;
 
 import org.mule.metadata.xml.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.util.XmlTransformationException;
-import org.mule.service.soap.util.XmlTransformationUtils;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Types;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
 import javax.wsdl.extensions.schema.SchemaReference;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * The purpose of this class is to find all the schema URLs, both local or remote, for a given WSDL definition. This includes

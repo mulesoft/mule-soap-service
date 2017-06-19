@@ -6,7 +6,10 @@
  */
 package org.mule.service.soap.security;
 
-import static org.apache.wss4j.common.ConfigurationConstants.*;
+
+import static org.apache.wss4j.common.ConfigurationConstants.ENCRYPT;
+import static org.apache.wss4j.common.ConfigurationConstants.ENCRYPTION_USER;
+import static org.apache.wss4j.common.ConfigurationConstants.ENC_PROP_REF_ID;
 
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
