@@ -7,7 +7,7 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.model.MetadataType;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +19,9 @@ import java.util.Set;
  */
 final class ServiceOperationsResolver {
 
-  private final WsdlIntrospecter introspecter;
+  private final WsdlDefinition introspecter;
 
-  ServiceOperationsResolver(WsdlIntrospecter introspecter) {
+  ServiceOperationsResolver(WsdlDefinition introspecter) {
     this.introspecter = introspecter;
   }
 

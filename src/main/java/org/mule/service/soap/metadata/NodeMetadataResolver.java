@@ -14,7 +14,7 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.BaseTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import javax.wsdl.Part;
 
@@ -27,10 +27,10 @@ abstract class NodeMetadataResolver {
 
   final BaseTypeBuilder typeBuilder = BaseTypeBuilder.create(XML);
   final MetadataType nullType = typeBuilder.nullType().build();
-  final WsdlIntrospecter introspecter;
+  final WsdlDefinition introspecter;
   final TypeLoader loader;
 
-  NodeMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
+  NodeMetadataResolver(WsdlDefinition introspecter, TypeLoader loader) {
     this.introspecter = introspecter;
     this.loader = loader;
   }

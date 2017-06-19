@@ -7,19 +7,18 @@
 package org.mule.service.soap.security;
 
 import static java.util.Optional.of;
-import static org.apache.ws.security.WSPasswordCallback.SIGNATURE;
-import static org.apache.ws.security.handler.WSHandlerConstants.SIGNATURE_USER;
-import static org.apache.ws.security.handler.WSHandlerConstants.SIG_PROP_REF_ID;
+import static org.apache.wss4j.common.ConfigurationConstants.SIGNATURE_USER;
+import static org.apache.wss4j.common.ConfigurationConstants.SIG_PROP_REF_ID;
+import static org.apache.wss4j.common.ext.WSPasswordCallback.SIGNATURE;
+
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
 import org.mule.service.soap.security.config.WssKeyStoreConfigurationPropertiesBuilder;
-
 import com.google.common.collect.ImmutableMap;
-
+import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.ws.security.handler.WSHandlerConstants;
 
 /**
  * Signs the SOAP request that is being sent, using the private key of the key-store in the provided TLS context.

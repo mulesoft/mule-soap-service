@@ -8,22 +8,22 @@
 package org.mule.service.soap.security;
 
 import static java.util.Optional.of;
-import static org.apache.ws.security.WSConstants.CREATED_LN;
-import static org.apache.ws.security.WSConstants.NONCE_LN;
-import static org.apache.ws.security.WSPasswordCallback.USERNAME_TOKEN;
-import static org.apache.ws.security.handler.WSHandlerConstants.ADD_UT_ELEMENTS;
-import static org.apache.ws.security.handler.WSHandlerConstants.PASSWORD_TYPE;
-import static org.apache.ws.security.handler.WSHandlerConstants.USER;
+import static org.apache.wss4j.common.ConfigurationConstants.ADD_USERNAMETOKEN_CREATED;
+import static org.apache.wss4j.common.ConfigurationConstants.ADD_USERNAMETOKEN_NONCE;
+import static org.apache.wss4j.common.ConfigurationConstants.USER;
+import static org.apache.wss4j.common.ext.WSPasswordCallback.USERNAME_TOKEN;
+import static org.apache.wss4j.dom.WSConstants.CREATED_LN;
+import static org.apache.wss4j.dom.WSConstants.NONCE_LN;
+import static org.apache.wss4j.dom.message.token.UsernameToken.PASSWORD_TYPE;
+
 import org.mule.runtime.extension.api.soap.security.PasswordType;
 import org.mule.runtime.extension.api.soap.security.UsernameTokenSecurityStrategy;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
-
 import com.google.common.collect.ImmutableMap;
-
+import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import org.apache.ws.security.handler.WSHandlerConstants;
 
 /**
  * Provides the capability to authenticate using Username and Password with a SOAP service by adding the UsernameToken
@@ -87,21 +87,10 @@ public class WssUsernameTokenSecurityStrategyCxfAdapter implements SecurityStrat
 
   @Override
   public Map<String, Object> buildSecurityProperties() {
-    ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
-    builder.put(USER, username);
-    builder.put(PASSWORD_TYPE, passwordType.getType());
-
-    if (addCreated || addNonce) {
-      StringJoiner additionalElements = new StringJoiner(" ");
-      if (addNonce) {
-        additionalElements.add(NONCE_LN);
-      }
-      if (addCreated) {
-        additionalElements.add(CREATED_LN);
-      }
-      builder.put(ADD_UT_ELEMENTS, additionalElements.toString());
-    }
-
-    return builder.build();
+    return ImmutableMap.<String, Object>builder()
+        .put(USER, username)
+        .put(PASSWORD_TYPE, passwordType.getType())
+        .put(ADD_USERNAMETOKEN_NONCE, String.valueOf(addNonce))
+        .put(ADD_USERNAMETOKEN_CREATED, String.valueOf(addNonce)).build();
   }
 }

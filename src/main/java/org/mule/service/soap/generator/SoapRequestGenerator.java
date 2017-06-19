@@ -11,7 +11,7 @@ import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.SoapServiceException;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
 
@@ -33,7 +33,7 @@ public final class SoapRequestGenerator {
   private final EmptyRequestGenerator emptyRequestGenerator;
   private final AttachmentRequestEnricher requestEnricher;
 
-  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, WsdlIntrospecter introspecter, XmlTypeLoader loader) {
+  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, WsdlDefinition introspecter, XmlTypeLoader loader) {
     this.requestEnricher = requestEnricher;
     this.emptyRequestGenerator = new EmptyRequestGenerator(introspecter, loader);
   }

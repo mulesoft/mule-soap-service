@@ -15,7 +15,7 @@ import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import javax.wsdl.Part;
  */
 final class AttachmentsMetadataResolver extends NodeMetadataResolver {
 
-  AttachmentsMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
+  AttachmentsMetadataResolver(WsdlDefinition introspecter, TypeLoader loader) {
     super(introspecter, loader);
   }
 

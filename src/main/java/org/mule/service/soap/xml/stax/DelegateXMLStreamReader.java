@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.service.soap.impl.xml.stax;
+package org.mule.service.soap.xml.stax;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;

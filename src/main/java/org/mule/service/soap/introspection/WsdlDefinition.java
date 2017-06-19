@@ -57,7 +57,7 @@ import javax.xml.namespace.QName;
  * @since 1.0
  */
 @SuppressWarnings("unchecked")
-public class WsdlIntrospecter {
+public class WsdlDefinition {
 
   private static final String DOCUMENT_STYLE = "document";
   private static final String RPC_STYLE = "rpc";
@@ -67,7 +67,7 @@ public class WsdlIntrospecter {
   private final Service service;
   private final Port port;
 
-  public WsdlIntrospecter(String wsdlLocation, String serviceName, String portName) {
+  public WsdlDefinition(String wsdlLocation, String serviceName, String portName) {
     this.definition = parseWsdl(wsdlLocation);
     this.service = findService(serviceName);
     this.port = findPort(portName);

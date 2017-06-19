@@ -6,15 +6,14 @@
  */
 package org.mule.service.soap.security.callback;
 
+import org.apache.wss4j.common.ext.WSPasswordCallback;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
-import org.apache.ws.security.WSPasswordCallback;
 
 /**
  * Abstract implementation of {@link CallbackHandler} that only handles instances

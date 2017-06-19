@@ -13,7 +13,7 @@ import org.mule.metadata.api.builder.ObjectFieldTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import javax.wsdl.extensions.soap12.SOAP12Header;
  */
 final class HeadersMetadataResolver extends NodeMetadataResolver {
 
-  HeadersMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
+  HeadersMetadataResolver(WsdlDefinition introspecter, TypeLoader loader) {
     super(introspecter, loader);
   }
 

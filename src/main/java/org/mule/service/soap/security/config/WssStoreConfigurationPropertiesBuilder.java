@@ -19,10 +19,17 @@ import java.util.Properties;
  */
 public interface WssStoreConfigurationPropertiesBuilder {
 
+
+
+  String WSS4J_PROP_PREFIX = "org.apache.wss4j.crypto";
+
+  String MERLIN_PROP_PREFIX = WSS4J_PROP_PREFIX + ".merlin.";
+
   /**
    * Name of the property where the crypto provider is defined.
    */
-  String WS_CRYPTO_PROVIDER_KEY = "org.apache.ws.security.crypto.provider";
+  //  "org.apache.wss4j.crypto". "org.apache.ws.security.crypto".
+  String WS_CRYPTO_PROVIDER_KEY = WSS4J_PROP_PREFIX + ".provider";
 
   /**
    * @return a set of {@link Properties} to configure a {@link SecurityStrategyCxfAdapter}.

@@ -7,9 +7,10 @@
 package org.mule.service.soap.security;
 
 import static java.util.Optional.of;
-import static org.apache.ws.security.WSPasswordCallback.DECRYPT;
-import static org.apache.ws.security.handler.WSHandlerConstants.DEC_PROP_REF_ID;
-import static org.apache.ws.security.handler.WSHandlerConstants.ENCRYPT;
+import static org.apache.wss4j.common.ConfigurationConstants.DEC_PROP_REF_ID;
+import static org.apache.wss4j.common.ConfigurationConstants.ENCRYPT;
+import static org.apache.wss4j.common.ext.WSPasswordCallback.DECRYPT;
+
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
 import org.mule.service.soap.security.config.WssKeyStoreConfigurationPropertiesBuilder;

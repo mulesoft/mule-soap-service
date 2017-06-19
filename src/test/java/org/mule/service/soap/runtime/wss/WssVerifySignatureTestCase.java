@@ -7,23 +7,22 @@
 package org.mule.service.soap.runtime.wss;
 
 
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 import static java.util.Collections.singletonList;
+import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.VerifySignatureSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.config.WssTrustStoreConfiguration;
 import org.mule.service.soap.service.VerifyPasswordCallback;
-
+import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import org.apache.wss4j.common.crypto.Merlin;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.cxf.interceptor.Interceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
-import org.apache.ws.security.components.crypto.Merlin;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
 
 @Features(WSC_EXTENSION)
 @Stories("WSS")
@@ -52,8 +51,7 @@ public class WssVerifySignatureTestCase extends AbstractWebServiceSecurityTestCa
 
   @Override
   protected List<SecurityStrategy> getSecurityStrategies() {
-    return singletonList(
-                         new VerifySignatureSecurityStrategy(new WssTrustStoreConfiguration("security/trustStore", "mulepassword",
-                                                                                            "jks")));
+    WssTrustStoreConfiguration trustStoreConfig = new WssTrustStoreConfiguration("security/trustStore", "mulepassword", "jks");
+    return singletonList(new VerifySignatureSecurityStrategy(trustStoreConfig));
   }
 }

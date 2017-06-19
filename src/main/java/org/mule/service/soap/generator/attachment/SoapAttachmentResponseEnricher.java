@@ -16,7 +16,7 @@ import org.mule.runtime.core.transformer.codec.Base64Decoder;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.EncodingException;
 import org.mule.service.soap.client.SoapCxfClient;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -36,7 +36,7 @@ public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnri
 
   private static final Base64Decoder decoder = new Base64Decoder();
 
-  public SoapAttachmentResponseEnricher(WsdlIntrospecter introspecter, TypeLoader loader) {
+  public SoapAttachmentResponseEnricher(WsdlDefinition introspecter, TypeLoader loader) {
     super(introspecter, loader);
   }
 

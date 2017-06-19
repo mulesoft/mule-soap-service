@@ -6,12 +6,12 @@
  */
 package org.mule.service.soap.generator.attachment;
 
-import static org.mule.service.soap.impl.xml.util.XMLUtils.toXml;
+import static org.mule.service.soap.xml.util.XMLUtils.toXml;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.SoapServiceException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
 
@@ -28,10 +28,10 @@ import org.w3c.dom.Element;
  */
 public abstract class AttachmentRequestEnricher {
 
-  protected WsdlIntrospecter introspecter;
+  protected WsdlDefinition introspecter;
   protected TypeLoader loader;
 
-  AttachmentRequestEnricher(WsdlIntrospecter introspecter, TypeLoader loader) {
+  AttachmentRequestEnricher(WsdlDefinition introspecter, TypeLoader loader) {
     this.introspecter = introspecter;
     this.loader = loader;
   }

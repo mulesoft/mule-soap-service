@@ -12,12 +12,12 @@ import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.soap.api.client.SoapClient;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
 import org.mule.runtime.soap.api.client.SoapClientFactory;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static org.mule.service.soap.transport.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
+import static org.mule.service.soap.conduit.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
 
 /**
  * {@link SoapClientFactory} implementation that creates {@link SoapCxfClient} instances.
@@ -35,14 +35,14 @@ public class SoapCxfClientFactory implements SoapClientFactory {
    */
   @Override
   public SoapClient create(SoapClientConfiguration config) throws ConnectionException {
-    WsdlIntrospecter introspecter = getIntrospecter(config);
+    WsdlDefinition introspecter = getIntrospecter(config);
     XmlTypeLoader xmlTypeLoader = new XmlTypeLoader(introspecter.getSchemas());
     Client client = cxfClientProvider.getClient(config);
     return new SoapCxfClient(client, introspecter, xmlTypeLoader, getAddress(config, introspecter),
                              config.getDispatcher(), config.getVersion(), config.getEncoding(), config.isMtomEnabled());
   }
 
-  private String getAddress(SoapClientConfiguration config, WsdlIntrospecter introspecter) throws ConnectionException {
+  private String getAddress(SoapClientConfiguration config, WsdlDefinition introspecter) throws ConnectionException {
     String address = config.getAddress() != null ? config.getAddress() : findAddress(introspecter);
     String protocol = address.substring(0, address.indexOf("://"));
     if (stream(SOAP_SERVICE_KNOWN_PROTOCOLS).noneMatch(p -> p.startsWith(protocol))) {
@@ -52,9 +52,9 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     return address;
   }
 
-  private WsdlIntrospecter getIntrospecter(SoapClientConfiguration config) throws ConnectionException {
+  private WsdlDefinition getIntrospecter(SoapClientConfiguration config) throws ConnectionException {
     String wsdlLocation = config.getWsdlLocation();
-    WsdlIntrospecter introspecter = new WsdlIntrospecter(wsdlLocation, config.getService(), config.getPort());
+    WsdlDefinition introspecter = new WsdlDefinition(wsdlLocation, config.getService(), config.getPort());
     if (introspecter.isRpcStyle()) {
       // TODO: MULE-11082  Support RPC Style - CXF DOES NOT SUPPORT RPC, if supported a new RPC Client should be created.
       throw new ConnectionException(format("The provided WSDL [%s] is RPC style, RPC WSDLs are not supported", wsdlLocation));
@@ -62,7 +62,7 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     return introspecter;
   }
 
-  private String findAddress(WsdlIntrospecter wsdlIntrospecter) throws ConnectionException {
+  private String findAddress(WsdlDefinition wsdlIntrospecter) throws ConnectionException {
     return wsdlIntrospecter.getSoapAddress()
         .orElseThrow(() -> new ConnectionException("No address was specified and no one was found for the given configuration"));
   }

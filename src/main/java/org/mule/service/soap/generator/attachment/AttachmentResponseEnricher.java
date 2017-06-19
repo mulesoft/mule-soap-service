@@ -11,8 +11,8 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.impl.xml.util.XMLUtils;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.xml.util.XMLUtils;
+import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.metadata.OutputTypeIntrospecterDelegate;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
 
@@ -29,10 +29,10 @@ import org.w3c.dom.Document;
  */
 public abstract class AttachmentResponseEnricher {
 
-  private final WsdlIntrospecter introspecter;
+  private final WsdlDefinition introspecter;
   private final TypeLoader loader;
 
-  protected AttachmentResponseEnricher(WsdlIntrospecter introspecter, TypeLoader loader) {
+  protected AttachmentResponseEnricher(WsdlDefinition introspecter, TypeLoader loader) {
     this.introspecter = introspecter;
     this.loader = loader;
   }
