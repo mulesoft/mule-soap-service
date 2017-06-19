@@ -44,7 +44,7 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
   @Before
   public void setup() {
     super.setup();
-    generator = new EmptyRequestGenerator(introspecter, loader);
+    generator = new EmptyRequestGenerator(definition, loader);
   }
 
   @Test
@@ -68,15 +68,15 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
     exception.expect(InvalidWsdlException.class);
     exception.expectMessage("No SOAP body defined in the WSDL for the specified operation");
 
-    // Makes that the introspecter returns an Binding Operation without input SOAP body.
-    WsdlDefinition introspecter = mock(WsdlDefinition.class);
+    // Makes that the definition returns an Binding Operation without input SOAP body.
+    WsdlDefinition definition = mock(WsdlDefinition.class);
     BindingOperation bop = mock(BindingOperation.class);
     BindingInput bi = mock(BindingInput.class);
     when(bi.getExtensibilityElements()).thenReturn(emptyList());
     when(bop.getBindingInput()).thenReturn(bi);
-    when(introspecter.getBindingOperation(anyString())).thenReturn(bop);
+    when(definition.getBindingOperation(anyString())).thenReturn(bop);
 
-    EmptyRequestGenerator emptyRequestGenerator = new EmptyRequestGenerator(introspecter, loader);
+    EmptyRequestGenerator emptyRequestGenerator = new EmptyRequestGenerator(definition, loader);
     emptyRequestGenerator.generateRequest(FAIL);
   }
 }

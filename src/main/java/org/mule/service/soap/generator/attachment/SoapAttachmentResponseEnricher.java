@@ -36,8 +36,8 @@ public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnri
 
   private static final Base64Decoder decoder = new Base64Decoder();
 
-  public SoapAttachmentResponseEnricher(WsdlDefinition introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public SoapAttachmentResponseEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   /**

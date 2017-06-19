@@ -23,7 +23,7 @@ public class SoapAttachmentsRequestEnricherTestCase extends AbstractRequestEnric
   @Override
   @Step("Returns an attachment enricher that adds the content of the attachment encoded to base64")
   protected AttachmentRequestEnricher getEnricher() {
-    return new SoapAttachmentRequestEnricher(introspecter, loader);
+    return new SoapAttachmentRequestEnricher(definition, loader);
   }
 
   @Override

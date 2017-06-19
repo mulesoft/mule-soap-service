@@ -24,8 +24,8 @@ import org.w3c.dom.Node;
  */
 public final class MtomResponseEnricher extends AttachmentResponseEnricher {
 
-  public MtomResponseEnricher(WsdlDefinition introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public MtomResponseEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   /**

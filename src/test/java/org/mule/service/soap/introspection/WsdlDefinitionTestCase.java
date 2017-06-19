@@ -15,27 +15,27 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 
-public class WsdlIntrospecterTestCase {
+public class WsdlDefinitionTestCase {
 
   @Test
   public void getWsdlStyleFromOperations() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/document.wsdl");
-    WsdlDefinition introspecter = new WsdlDefinition(resourceLocation, "Dilbert", "DilbertSoap");
-    assertThat(introspecter.isDocumentStyle(), is(true));
+    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "Dilbert", "DilbertSoap");
+    assertThat(definition.isDocumentStyle(), is(true));
   }
 
   @Test
   public void getWsdlStyleDefault() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/no-style-defined.wsdl");
-    WsdlDefinition introspecter = new WsdlDefinition(resourceLocation, "messagingService", "messagingPort");
-    assertThat(introspecter.isDocumentStyle(), is(true));
+    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "messagingService", "messagingPort");
+    assertThat(definition.isDocumentStyle(), is(true));
   }
 
   @Test
   public void getWsdlStyleFromBinding() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/rpc.wsdl");
-    WsdlDefinition introspecter = new WsdlDefinition(resourceLocation, "SoapResponder", "SoapResponderPortType");
-    assertThat(introspecter.isRpcStyle(), is(true));
+    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "SoapResponder", "SoapResponderPortType");
+    assertThat(definition.isRpcStyle(), is(true));
   }
 
   private String getResourceLocation(String name) throws URISyntaxException {

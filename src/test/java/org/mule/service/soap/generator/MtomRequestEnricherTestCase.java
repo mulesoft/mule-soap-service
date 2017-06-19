@@ -22,7 +22,7 @@ public class MtomRequestEnricherTestCase extends AbstractRequestEnricherTestCase
   @Override
   @Step("Returns an MTOM enricher that adds an XOP element to the XML referencing the attachment in the multipart message")
   protected AttachmentRequestEnricher getEnricher() {
-    return new MtomRequestEnricher(introspecter, loader);
+    return new MtomRequestEnricher(definition, loader);
   }
 
   @Override

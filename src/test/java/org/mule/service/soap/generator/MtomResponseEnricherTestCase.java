@@ -22,7 +22,7 @@ public class MtomResponseEnricherTestCase extends ResponseEnricherTestCase {
 
   @Override
   protected AttachmentResponseEnricher getEnricher() {
-    return new MtomResponseEnricher(introspecter, loader);
+    return new MtomResponseEnricher(definition, loader);
   }
 
   @Override

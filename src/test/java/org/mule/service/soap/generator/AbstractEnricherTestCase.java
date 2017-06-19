@@ -19,12 +19,12 @@ public abstract class AbstractEnricherTestCase extends AbstractSoapServiceTestCa
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
-  protected WsdlDefinition introspecter;
+  protected WsdlDefinition definition;
   protected XmlTypeLoader loader;
 
   @Before
   public void setup() {
-    introspecter = new WsdlDefinition(server.getDefaultAddress() + "?wsdl", "TestService", "TestPort");
-    loader = new XmlTypeLoader(introspecter.getSchemas());
+    definition = new WsdlDefinition(server.getDefaultAddress() + "?wsdl", "TestService", "TestPort");
+    loader = new XmlTypeLoader(definition.getSchemas());
   }
 }

@@ -27,8 +27,8 @@ public final class MtomRequestEnricher extends AttachmentRequestEnricher {
   private static final String HREF = "href";
   private static final String CONTENT_ID_MASK = "cid:%s";
 
-  public MtomRequestEnricher(WsdlDefinition introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public MtomRequestEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
 

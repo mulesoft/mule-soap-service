@@ -33,9 +33,9 @@ public final class SoapRequestGenerator {
   private final EmptyRequestGenerator emptyRequestGenerator;
   private final AttachmentRequestEnricher requestEnricher;
 
-  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, WsdlDefinition introspecter, XmlTypeLoader loader) {
+  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, WsdlDefinition definition, XmlTypeLoader loader) {
     this.requestEnricher = requestEnricher;
-    this.emptyRequestGenerator = new EmptyRequestGenerator(introspecter, loader);
+    this.emptyRequestGenerator = new EmptyRequestGenerator(definition, loader);
   }
 
   /**

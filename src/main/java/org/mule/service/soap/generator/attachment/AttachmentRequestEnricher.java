@@ -28,11 +28,11 @@ import org.w3c.dom.Element;
  */
 public abstract class AttachmentRequestEnricher {
 
-  protected WsdlDefinition introspecter;
+  protected WsdlDefinition definition;
   protected TypeLoader loader;
 
-  AttachmentRequestEnricher(WsdlDefinition introspecter, TypeLoader loader) {
-    this.introspecter = introspecter;
+  AttachmentRequestEnricher(WsdlDefinition definition, TypeLoader loader) {
+    this.definition = definition;
     this.loader = loader;
   }
 

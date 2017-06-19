@@ -32,8 +32,8 @@ public class WsdlSchemasCollectorTestCase {
   public void wsdlWithEmbeddedTypeSchema() throws Exception {
     ClassLoader cl = currentThread().getContextClassLoader();
     URL wsdl = cl.getResource("wsdl/simple-service.wsdl");
-    WsdlDefinition introspecter = new WsdlDefinition(wsdl.getPath(), "TestService", "TestPort");
-    Map<String, InputStream> schemas = introspecter.getSchemas().collect();
+    WsdlDefinition definition = new WsdlDefinition(wsdl.getPath(), "TestService", "TestPort");
+    Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.size(), is(1));
 
     String expected = IOUtils.toString(cl.getResource("schemas/simple-service-types.xsd").openStream());
@@ -48,8 +48,8 @@ public class WsdlSchemasCollectorTestCase {
   public void wsdlWithLocalRecursiveSchemas() throws Exception {
     String recursiveEmbeddedSchema = "schemas/recursive-embedded-schema.xsd";
     String wsdl = getResourceLocation(RECURSIVE_WSDL_FOLDER + "main.wsdl");
-    WsdlDefinition introspecter = new WsdlDefinition(wsdl, "RecursiveService", "RecursivePort");
-    Map<String, InputStream> schemas = introspecter.getSchemas().collect();
+    WsdlDefinition definition = new WsdlDefinition(wsdl, "RecursiveService", "RecursivePort");
+    Map<String, InputStream> schemas = definition.getSchemas().collect();
 
     List<String> files = ImmutableList.<String>builder().add(getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/import0.xsd"),
                                                              getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/dir2/import1.xsd"),

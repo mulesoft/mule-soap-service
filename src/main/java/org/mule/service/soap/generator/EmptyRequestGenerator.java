@@ -45,11 +45,11 @@ final class EmptyRequestGenerator {
    * SOAP request mask for operations without input parameters
    */
   private static final String NO_PARAMS_SOAP_BODY_CALL_MASK = "<ns:%s xmlns:ns=\"%s\"/>";
-  private final WsdlDefinition introspecter;
+  private final WsdlDefinition definition;
   private final XmlTypeLoader loader;
 
-  public EmptyRequestGenerator(WsdlDefinition introspecter, XmlTypeLoader loader) {
-    this.introspecter = introspecter;
+  public EmptyRequestGenerator(WsdlDefinition definition, XmlTypeLoader loader) {
+    this.definition = definition;
     this.loader = loader;
   }
 
@@ -59,7 +59,7 @@ final class EmptyRequestGenerator {
    */
   String generateRequest(String operation) {
 
-    BindingOperation bindingOperation = introspecter.getBindingOperation(operation);
+    BindingOperation bindingOperation = definition.getBindingOperation(operation);
     Optional<List<String>> soapBodyParts = getSoapBodyParts(bindingOperation);
 
     if (!soapBodyParts.isPresent()) {

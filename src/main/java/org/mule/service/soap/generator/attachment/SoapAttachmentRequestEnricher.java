@@ -25,8 +25,8 @@ public final class SoapAttachmentRequestEnricher extends AttachmentRequestEnrich
 
   private static final Base64Encoder encoder = new Base64Encoder();
 
-  public SoapAttachmentRequestEnricher(WsdlDefinition introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public SoapAttachmentRequestEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   /**

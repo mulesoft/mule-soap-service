@@ -28,13 +28,13 @@ import javax.wsdl.Part;
  */
 final class AttachmentsMetadataResolver extends NodeMetadataResolver {
 
-  AttachmentsMetadataResolver(WsdlDefinition introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  AttachmentsMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   @Override
   public MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException {
-    Part bodyPart = introspecter.getBodyPart(operation, delegate)
+    Part bodyPart = definition.getBodyPart(operation, delegate)
         .orElseThrow(() -> new MetadataResolvingException(format("operation [%s] does not have a body part", operation),
                                                           INVALID_CONFIGURATION));
 

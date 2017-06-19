@@ -19,13 +19,13 @@ import java.util.Set;
  */
 final class ServiceOperationsResolver {
 
-  private final WsdlDefinition introspecter;
+  private final WsdlDefinition definition;
 
-  ServiceOperationsResolver(WsdlDefinition introspecter) {
-    this.introspecter = introspecter;
+  ServiceOperationsResolver(WsdlDefinition definition) {
+    this.definition = definition;
   }
 
   Set<String> getAvailableOperations() {
-    return new HashSet<>(introspecter.getOperationNames());
+    return new HashSet<>(definition.getOperationNames());
   }
 }

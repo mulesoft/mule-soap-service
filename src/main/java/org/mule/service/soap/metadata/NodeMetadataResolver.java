@@ -27,11 +27,11 @@ abstract class NodeMetadataResolver {
 
   final BaseTypeBuilder typeBuilder = BaseTypeBuilder.create(XML);
   final MetadataType nullType = typeBuilder.nullType().build();
-  final WsdlDefinition introspecter;
+  final WsdlDefinition definition;
   final TypeLoader loader;
 
-  NodeMetadataResolver(WsdlDefinition introspecter, TypeLoader loader) {
-    this.introspecter = introspecter;
+  NodeMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
+    this.definition = definition;
     this.loader = loader;
   }
 
