@@ -10,6 +10,7 @@ package org.mule.service.soap.security;
 import static org.apache.wss4j.common.ConfigurationConstants.SIGNATURE;
 import static org.apache.wss4j.common.ConfigurationConstants.SIG_PROP_REF_ID;
 import static org.apache.wss4j.common.crypto.Merlin.LOAD_CA_CERTS;
+import static org.mule.service.soap.security.config.WssStoreConfigurationPropertiesBuilder.WS_CRYPTO_PROVIDER_KEY;
 
 import org.mule.runtime.extension.api.soap.security.config.WssTrustStoreConfiguration;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
@@ -71,7 +72,7 @@ public class WssVerifySignatureSecurityStrategyCxfAdapter implements SecurityStr
 
   private Properties getDefaultTrustStoreConfigurationProperties() {
     Properties properties = new Properties();
-    properties.setProperty(WssStoreConfigurationPropertiesBuilder.WSS4J_PROP_PREFIX, Merlin.class.getCanonicalName());
+    properties.setProperty(WS_CRYPTO_PROVIDER_KEY, Merlin.class.getCanonicalName());
     properties.setProperty(LOAD_CA_CERTS, String.valueOf(true));
     return properties;
   }
