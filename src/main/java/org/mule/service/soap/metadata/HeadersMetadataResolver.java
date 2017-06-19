@@ -13,7 +13,7 @@ import org.mule.metadata.api.builder.ObjectFieldTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.List;
 
@@ -31,17 +31,17 @@ import javax.wsdl.extensions.soap12.SOAP12Header;
  */
 final class HeadersMetadataResolver extends NodeMetadataResolver {
 
-  HeadersMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  HeadersMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   @Override
   public MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException {
-    BindingOperation bindingOperation = introspecter.getBindingOperation(operation);
+    BindingOperation bindingOperation = definition.getBindingOperation(operation);
     ElementExtensible bindingType = delegate.getBindingType(bindingOperation);
     List<SoapHeaderAdapter> headers = getHeaderParts(bindingType);
     if (!headers.isEmpty()) {
-      Message message = delegate.getMessage(introspecter.getOperation(operation));
+      Message message = delegate.getMessage(definition.getOperation(operation));
       return buildHeaderType(headers, message);
     }
     return nullType;
@@ -57,7 +57,7 @@ final class HeadersMetadataResolver extends NodeMetadataResolver {
       if (part != null) {
         field.key(headerPart).value(buildPartMetadataType(part));
       } else {
-        Message headerMessage = introspecter.getMessage(header.getMessage());
+        Message headerMessage = definition.getMessage(header.getMessage());
         field.key(headerPart).value(buildPartMetadataType(headerMessage.getPart(headerPart)));
       }
     }

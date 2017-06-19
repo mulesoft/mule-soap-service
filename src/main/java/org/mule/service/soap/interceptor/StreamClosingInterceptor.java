@@ -8,7 +8,7 @@ package org.mule.service.soap.interceptor;
 
 import static org.apache.cxf.phase.Phase.POST_STREAM;
 
-import org.mule.service.soap.impl.xml.stax.DelegateXMLStreamReader;
+import org.mule.service.soap.xml.stax.DelegateXMLStreamReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,6 @@ public class StreamClosingInterceptor extends AbstractPhaseInterceptor<Message> 
       public void close() throws XMLStreamException {
         super.close();
         try {
-          // TODO: MULE-10783 close xsr
           is.close();
         } catch (IOException e) {
           throw new XMLStreamException(e);

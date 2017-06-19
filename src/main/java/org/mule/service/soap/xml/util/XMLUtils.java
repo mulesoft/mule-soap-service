@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.service.soap.impl.xml.util;
+package org.mule.service.soap.xml.util;
 
 import org.dom4j.io.DOMReader;
 import org.w3c.dom.Document;

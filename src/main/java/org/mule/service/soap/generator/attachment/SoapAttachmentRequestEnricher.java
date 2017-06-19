@@ -11,7 +11,7 @@ import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.runtime.core.transformer.codec.Base64Encoder;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.EncodingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,8 +25,8 @@ public final class SoapAttachmentRequestEnricher extends AttachmentRequestEnrich
 
   private static final Base64Encoder encoder = new Base64Encoder();
 
-  public SoapAttachmentRequestEnricher(WsdlIntrospecter introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public SoapAttachmentRequestEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   /**

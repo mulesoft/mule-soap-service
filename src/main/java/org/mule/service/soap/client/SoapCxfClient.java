@@ -13,6 +13,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static org.apache.cxf.message.Message.ENCODING;
 import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
@@ -38,7 +39,7 @@ import org.mule.service.soap.generator.attachment.MtomRequestEnricher;
 import org.mule.service.soap.generator.attachment.MtomResponseEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.metadata.DefaultSoapMetadataResolver;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
@@ -84,13 +85,12 @@ public class SoapCxfClient implements SoapClient {
   public static final String MULE_HEADERS_KEY = "mule.wsc.headers";
   public static final String MULE_TRANSPORT_HEADERS_KEY = "mule.wsc.transport.headers";
   public static final String MULE_SOAP_ACTION = "mule.wsc.soap.action";
-  public static final String MULE_WSC_ENCODING = "mule.wsc.encoding";
 
   private final SoapRequestGenerator requestGenerator;
   private final SoapResponseGenerator responseGenerator;
 
   private final Client client;
-  private final WsdlIntrospecter introspecter;
+  private final WsdlDefinition definition;
   private final XmlTypeLoader loader;
   private final String address;
   private final MessageDispatcher dispatcher;
@@ -99,7 +99,7 @@ public class SoapCxfClient implements SoapClient {
   private final boolean isMtom;
 
   SoapCxfClient(Client client,
-                WsdlIntrospecter introspecter,
+                WsdlDefinition definition,
                 XmlTypeLoader typeLoader,
                 String address,
                 MessageDispatcher dispatcher,
@@ -107,7 +107,7 @@ public class SoapCxfClient implements SoapClient {
                 String encoding,
                 boolean isMtom) {
     this.client = client;
-    this.introspecter = introspecter;
+    this.definition = definition;
     this.loader = typeLoader;
     this.address = address;
     this.dispatcher = dispatcher;
@@ -115,7 +115,7 @@ public class SoapCxfClient implements SoapClient {
     this.isMtom = isMtom;
     this.encoding = encoding;
     // TODO: MULE-10889 -> instead of creating this enrichers, interceptors that works with the live stream would be ideal
-    this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), introspecter, loader);
+    this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), definition, loader);
     this.responseGenerator = new SoapResponseGenerator(getResponseEnricher(isMtom));
   }
 
@@ -152,7 +152,7 @@ public class SoapCxfClient implements SoapClient {
 
   @Override
   public SoapMetadataResolver getMetadataResolver() {
-    return new DefaultSoapMetadataResolver(introspecter, loader);
+    return new DefaultSoapMetadataResolver(definition, loader);
   }
 
 
@@ -227,7 +227,7 @@ public class SoapCxfClient implements SoapClient {
     }
 
     props.put(MULE_WSC_ADDRESS, address);
-    props.put(MULE_WSC_ENCODING, encoding);
+    props.put(ENCODING, encoding == null ? "UTF-8" : encoding);
     props.put(MULE_HEADERS_KEY, headers);
 
     if (version == SOAP12) {
@@ -271,11 +271,11 @@ public class SoapCxfClient implements SoapClient {
   }
 
   private AttachmentRequestEnricher getRequestEnricher(boolean isMtom) {
-    return isMtom ? new MtomRequestEnricher(introspecter, loader) : new SoapAttachmentRequestEnricher(introspecter, loader);
+    return isMtom ? new MtomRequestEnricher(definition, loader) : new SoapAttachmentRequestEnricher(definition, loader);
   }
 
   private AttachmentResponseEnricher getResponseEnricher(boolean isMtom) {
-    return isMtom ? new MtomResponseEnricher(introspecter, loader) : new SoapAttachmentResponseEnricher(introspecter, loader);
+    return isMtom ? new MtomResponseEnricher(definition, loader) : new SoapAttachmentResponseEnricher(definition, loader);
   }
 
   private Optional<String> parseExceptionDetail(Element detail) {

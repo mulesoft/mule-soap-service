@@ -7,13 +7,11 @@
 package org.mule.service.soap.security;
 
 import static java.util.Optional.empty;
-import static org.apache.ws.security.handler.WSHandlerConstants.TIMESTAMP;
-import static org.apache.ws.security.handler.WSHandlerConstants.TTL_TIMESTAMP;
+import static org.apache.wss4j.common.ConfigurationConstants.TIMESTAMP;
+import static org.apache.wss4j.common.ConfigurationConstants.TTL_TIMESTAMP;
 
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
-
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
 
 /**

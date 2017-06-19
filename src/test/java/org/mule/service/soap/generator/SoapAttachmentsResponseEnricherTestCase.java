@@ -34,7 +34,7 @@ public class SoapAttachmentsResponseEnricherTestCase extends ResponseEnricherTes
 
   @Override
   protected AttachmentResponseEnricher getEnricher() {
-    return new SoapAttachmentResponseEnricher(introspecter, loader);
+    return new SoapAttachmentResponseEnricher(definition, loader);
   }
 
   @Override

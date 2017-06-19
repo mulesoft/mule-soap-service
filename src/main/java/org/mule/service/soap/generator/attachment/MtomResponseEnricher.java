@@ -9,7 +9,7 @@ package org.mule.service.soap.generator.attachment;
 import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.ObjectFieldType;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ import org.w3c.dom.Node;
  */
 public final class MtomResponseEnricher extends AttachmentResponseEnricher {
 
-  public MtomResponseEnricher(WsdlIntrospecter introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  public MtomResponseEnricher(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   /**

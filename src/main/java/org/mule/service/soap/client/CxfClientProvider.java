@@ -6,18 +6,12 @@
  */
 package org.mule.service.soap.client;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.cxf.binding.Binding;
-import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
-import org.apache.cxf.binding.soap.interceptor.Soap11FaultInInterceptor;
-import org.apache.cxf.binding.soap.interceptor.Soap12FaultInInterceptor;
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.interceptor.Interceptor;
-import org.apache.cxf.interceptor.WrappedOutInterceptor;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.phase.PhaseInterceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import static java.util.Collections.emptyMap;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.cxf.message.Message.MTOM_ENABLED;
+import static org.apache.wss4j.common.ConfigurationConstants.ACTION;
+import static org.apache.wss4j.common.ConfigurationConstants.PW_CALLBACK_REF;
+
 import org.mule.runtime.extension.api.soap.security.DecryptSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.EncryptSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
@@ -43,19 +37,23 @@ import org.mule.service.soap.security.WssTimestampSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.WssUsernameTokenSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.WssVerifySignatureSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.callback.CompositeCallbackHandler;
-import org.mule.service.soap.transport.SoapServiceTransportFactory;
-
+import com.google.common.collect.ImmutableList;
+import org.apache.cxf.binding.Binding;
+import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
+import org.apache.cxf.binding.soap.interceptor.Soap11FaultInInterceptor;
+import org.apache.cxf.binding.soap.interceptor.Soap12FaultInInterceptor;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.PhaseInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import org.apache.cxf.wsdl.interceptors.WrappedOutInterceptor;
 import javax.security.auth.callback.CallbackHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-
-import static java.util.Collections.emptyMap;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.cxf.message.Message.MTOM_ENABLED;
-import static org.apache.ws.security.handler.WSHandlerConstants.ACTION;
-import static org.apache.ws.security.handler.WSHandlerConstants.PW_CALLBACK_REF;
 
 /**
  * Object that creates CXF specific clients based on a {@link SoapClientConfiguration} setting all the required CXF properties.
@@ -66,7 +64,7 @@ import static org.apache.ws.security.handler.WSHandlerConstants.PW_CALLBACK_REF;
  */
 class CxfClientProvider {
 
-  private final SoapServiceTransportFactory factory = new SoapServiceTransportFactory();
+  private final CxfClientFactory factory = new CxfClientFactory();
 
   Client getClient(SoapClientConfiguration configuration) {
     boolean isMtom = configuration.isMtomEnabled();
@@ -145,11 +143,11 @@ class CxfClientProvider {
 
     ImmutableList.Builder<CallbackHandler> callbackHandlersBuilder = ImmutableList.builder();
     strategies.stream()
-        .filter(s -> s.securityType().equals(type))
-        .forEach(s -> {
-          props.putAll(s.buildSecurityProperties());
-          actionsJoiner.add(s.securityAction());
-          s.buildPasswordCallbackHandler().ifPresent(callbackHandlersBuilder::add);
+        .filter(securityStrategy -> securityStrategy.securityType().equals(type))
+        .forEach(securityStrategy -> {
+          props.putAll(securityStrategy.buildSecurityProperties());
+          actionsJoiner.add(securityStrategy.securityAction());
+          securityStrategy.buildPasswordCallbackHandler().ifPresent(callbackHandlersBuilder::add);
         });
 
     List<CallbackHandler> handlers = callbackHandlersBuilder.build();
@@ -159,6 +157,7 @@ class CxfClientProvider {
 
     String actions = actionsJoiner.toString();
     if (isNotBlank(actions)) {
+      // the list of actions is passed as a String with the action names separated by a black space.
       props.put(ACTION, actions);
     }
 

@@ -6,16 +6,17 @@
  */
 package org.mule.service.soap.security.config;
 
-import static org.apache.ws.security.components.crypto.Merlin.KEYSTORE_ALIAS;
-import static org.apache.ws.security.components.crypto.Merlin.KEYSTORE_FILE;
-import static org.apache.ws.security.components.crypto.Merlin.KEYSTORE_PASSWORD;
-import static org.apache.ws.security.components.crypto.Merlin.KEYSTORE_PRIVATE_PASSWORD;
-import static org.apache.ws.security.components.crypto.Merlin.KEYSTORE_TYPE;
+
+
+import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_ALIAS;
+import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_FILE;
+import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_PASSWORD;
+import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_PRIVATE_PASSWORD;
+import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_TYPE;
+
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
-
+import org.apache.wss4j.common.crypto.Merlin;
 import java.util.Properties;
-
-import org.apache.ws.security.components.crypto.Merlin;
 
 /**
  * Default {@link WssStoreConfigurationPropertiesBuilder} implementation for Key Stores, used for encryption, decryption and signing.
@@ -45,10 +46,10 @@ public class WssKeyStoreConfigurationPropertiesBuilder implements WssStoreConfig
   public Properties getConfigurationProperties() {
     Properties properties = new Properties();
     properties.setProperty(WS_CRYPTO_PROVIDER_KEY, Merlin.class.getCanonicalName());
-    properties.setProperty(KEYSTORE_TYPE, type);
-    properties.setProperty(KEYSTORE_PASSWORD, password);
-    properties.setProperty(KEYSTORE_ALIAS, alias);
-    properties.setProperty(KEYSTORE_FILE, keyStorePath);
+    properties.setProperty(MERLIN_PROP_PREFIX + KEYSTORE_TYPE, type);
+    properties.setProperty(MERLIN_PROP_PREFIX + KEYSTORE_PASSWORD, password);
+    properties.setProperty(MERLIN_PROP_PREFIX + KEYSTORE_ALIAS, alias);
+    properties.setProperty(MERLIN_PROP_PREFIX + KEYSTORE_FILE, keyStorePath);
 
     if (keyPassword != null) {
       properties.setProperty(KEYSTORE_PRIVATE_PASSWORD, keyPassword);

@@ -16,7 +16,7 @@ import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
 
 import java.util.Collection;
@@ -45,11 +45,11 @@ final class EmptyRequestGenerator {
    * SOAP request mask for operations without input parameters
    */
   private static final String NO_PARAMS_SOAP_BODY_CALL_MASK = "<ns:%s xmlns:ns=\"%s\"/>";
-  private final WsdlIntrospecter introspecter;
+  private final WsdlDefinition definition;
   private final XmlTypeLoader loader;
 
-  public EmptyRequestGenerator(WsdlIntrospecter introspecter, XmlTypeLoader loader) {
-    this.introspecter = introspecter;
+  public EmptyRequestGenerator(WsdlDefinition definition, XmlTypeLoader loader) {
+    this.definition = definition;
     this.loader = loader;
   }
 
@@ -59,7 +59,7 @@ final class EmptyRequestGenerator {
    */
   String generateRequest(String operation) {
 
-    BindingOperation bindingOperation = introspecter.getBindingOperation(operation);
+    BindingOperation bindingOperation = definition.getBindingOperation(operation);
     Optional<List<String>> soapBodyParts = getSoapBodyParts(bindingOperation);
 
     if (!soapBodyParts.isPresent()) {

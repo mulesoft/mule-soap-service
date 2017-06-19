@@ -14,15 +14,27 @@ import java.util.Properties;
 /**
  * Base contract for Security Stores that prepares additional properties for CXF in order to apply some
  * kind of Web Service Security.
+ * <p>
+ * See https://ws.apache.org/wss4j/config.html.
  *
  * @since 1.0
  */
 public interface WssStoreConfigurationPropertiesBuilder {
 
   /**
-   * Name of the property where the crypto provider is defined.
+   * Prefix for all WSS4J crypto properties
    */
-  String WS_CRYPTO_PROVIDER_KEY = "org.apache.ws.security.crypto.provider";
+  String WSS4J_PROP_PREFIX = "org.apache.wss4j.crypto";
+
+  /**
+   * Prefix for all merlin crypto specific properties
+   */
+  String MERLIN_PROP_PREFIX = WSS4J_PROP_PREFIX + ".merlin.";
+
+  /**
+   * WSS4J property name to specify a provider used to create Crypto instances.
+   */
+  String WS_CRYPTO_PROVIDER_KEY = WSS4J_PROP_PREFIX + ".provider";
 
   /**
    * @return a set of {@link Properties} to configure a {@link SecurityStrategyCxfAdapter}.

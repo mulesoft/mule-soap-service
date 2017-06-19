@@ -6,15 +6,15 @@
  */
 package org.mule.service.soap.security;
 
-import static org.apache.ws.security.handler.WSHandlerConstants.ENCRYPT;
-import static org.apache.ws.security.handler.WSHandlerConstants.ENCRYPTION_USER;
-import static org.apache.ws.security.handler.WSHandlerConstants.ENC_PROP_REF_ID;
+
+import static org.apache.wss4j.common.ConfigurationConstants.ENCRYPT;
+import static org.apache.wss4j.common.ConfigurationConstants.ENCRYPTION_USER;
+import static org.apache.wss4j.common.ConfigurationConstants.ENC_PROP_REF_ID;
+
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
 import org.mule.service.soap.security.callback.WSPasswordCallbackHandler;
 import org.mule.service.soap.security.config.WssKeyStoreConfigurationPropertiesBuilder;
-
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
 
 /**

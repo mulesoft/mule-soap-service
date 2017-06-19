@@ -7,23 +7,22 @@
 package org.mule.service.soap.runtime.wss;
 
 
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 import static java.util.Collections.singletonList;
+import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+
 import org.mule.runtime.extension.api.soap.security.EncryptSecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.SecurityStrategy;
 import org.mule.runtime.extension.api.soap.security.config.WssKeyStoreConfiguration;
 import org.mule.service.soap.service.EncryptPasswordCallback;
-
+import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
+import org.apache.wss4j.common.crypto.Merlin;
+import ru.yandex.qatools.allure.annotations.Features;
+import ru.yandex.qatools.allure.annotations.Stories;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.cxf.interceptor.Interceptor;
-import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
-import org.apache.ws.security.components.crypto.Merlin;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
 
 @Features(WSC_EXTENSION)
 @Stories("WSS")

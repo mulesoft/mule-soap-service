@@ -4,12 +4,10 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.service.soap.transport;
+package org.mule.service.soap.client;
 
-import java.util.Iterator;
-
-import javax.xml.transform.Source;
-
+import org.mule.service.soap.conduit.SoapServiceConduitInitiator;
+import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.SoapVersion;
 import org.apache.cxf.binding.soap.SoapVersionFactory;
 import org.apache.cxf.bus.spring.SpringBusFactory;
@@ -17,27 +15,30 @@ import org.apache.cxf.databinding.stax.StaxDataBinding;
 import org.apache.cxf.databinding.stax.StaxDataBindingFeature;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientFactoryBean;
-import org.apache.cxf.transport.AbstractTransportFactory;
 import org.apache.cxf.transport.Conduit;
 import org.apache.cxf.transport.ConduitInitiatorManager;
+import javax.xml.transform.Source;
+import java.util.Iterator;
 
 /**
  * A factory for CXF {@link Client}s.
- *
- * Sets up the custom {@link SoapServiceConduitInitiator} for all the different entries used for CXF to obtain the needed {@link Conduit},
- * this occurs because we want that CXF always use the {@link SoapServiceConduit} to operate.
+ * <p>
+ * Sets up the custom {@link SoapServiceConduitInitiator} for all the different entries used for CXF to obtain the
+ * needed {@link Conduit}, this occurs because we want that CXF always use our custom conduit to operate.
  *
  * @since 1.0
  */
-public class SoapServiceTransportFactory extends AbstractTransportFactory {
+class CxfClientFactory {
 
-  public SoapServiceTransportFactory() {
-    if (bus == null) {
-      bus = new SpringBusFactory().createBus((String) null, true);
-    }
-    SoapServiceConduitInitiator initiator = new SoapServiceConduitInitiator();
+  private final Bus bus;
+
+  CxfClientFactory() {
+    this.bus = new SpringBusFactory().createBus((String) null, true);
+    registerConduitInitiator(new SoapServiceConduitInitiator());
+  }
+
+  private void registerConduitInitiator(SoapServiceConduitInitiator initiator) {
     ConduitInitiatorManager extension = bus.getExtension(ConduitInitiatorManager.class);
-
     extension.registerConduitInitiator("http://cxf.apache.org/transports/http", initiator);
     extension.registerConduitInitiator("http://schemas.xmlsoap.org/wsdl/soap/", initiator);
     extension.registerConduitInitiator("http://schemas.xmlsoap.org/soap/http/", initiator);
@@ -58,11 +59,10 @@ public class SoapServiceTransportFactory extends AbstractTransportFactory {
     factory.setAddress(address);
     factory.setBus(bus);
     factory.setBindingId(getBindingIdForSoapVersion(soapVersion));
-
     return factory.create();
   }
 
-  private static String getBindingIdForSoapVersion(String version) {
+  private String getBindingIdForSoapVersion(String version) {
     Iterator<SoapVersion> soapVersions = SoapVersionFactory.getInstance().getVersions();
     while (soapVersions.hasNext()) {
       SoapVersion soapVersion = soapVersions.next();

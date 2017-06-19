@@ -15,7 +15,7 @@ import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import java.util.List;
 
@@ -28,13 +28,13 @@ import javax.wsdl.Part;
  */
 final class AttachmentsMetadataResolver extends NodeMetadataResolver {
 
-  AttachmentsMetadataResolver(WsdlIntrospecter introspecter, TypeLoader loader) {
-    super(introspecter, loader);
+  AttachmentsMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
+    super(definition, loader);
   }
 
   @Override
   public MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException {
-    Part bodyPart = introspecter.getBodyPart(operation, delegate)
+    Part bodyPart = definition.getBodyPart(operation, delegate)
         .orElseThrow(() -> new MetadataResolvingException(format("operation [%s] does not have a body part", operation),
                                                           INVALID_CONFIGURATION));
 

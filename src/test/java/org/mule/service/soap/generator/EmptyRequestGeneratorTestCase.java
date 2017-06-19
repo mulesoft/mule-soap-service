@@ -14,8 +14,7 @@ import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.generator.EmptyRequestGenerator;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.anyString;
@@ -45,7 +44,7 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
   @Before
   public void setup() {
     super.setup();
-    generator = new EmptyRequestGenerator(introspecter, loader);
+    generator = new EmptyRequestGenerator(definition, loader);
   }
 
   @Test
@@ -69,15 +68,15 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
     exception.expect(InvalidWsdlException.class);
     exception.expectMessage("No SOAP body defined in the WSDL for the specified operation");
 
-    // Makes that the introspecter returns an Binding Operation without input SOAP body.
-    WsdlIntrospecter introspecter = mock(WsdlIntrospecter.class);
+    // Makes that the definition returns an Binding Operation without input SOAP body.
+    WsdlDefinition definition = mock(WsdlDefinition.class);
     BindingOperation bop = mock(BindingOperation.class);
     BindingInput bi = mock(BindingInput.class);
     when(bi.getExtensibilityElements()).thenReturn(emptyList());
     when(bop.getBindingInput()).thenReturn(bi);
-    when(introspecter.getBindingOperation(anyString())).thenReturn(bop);
+    when(definition.getBindingOperation(anyString())).thenReturn(bop);
 
-    EmptyRequestGenerator emptyRequestGenerator = new EmptyRequestGenerator(introspecter, loader);
+    EmptyRequestGenerator emptyRequestGenerator = new EmptyRequestGenerator(definition, loader);
     emptyRequestGenerator.generateRequest(FAIL);
   }
 }

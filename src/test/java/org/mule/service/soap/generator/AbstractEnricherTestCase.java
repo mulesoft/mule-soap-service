@@ -8,7 +8,7 @@ package org.mule.service.soap.generator;
 
 import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-import org.mule.service.soap.introspection.WsdlIntrospecter;
+import org.mule.service.soap.introspection.WsdlDefinition;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,12 +19,12 @@ public abstract class AbstractEnricherTestCase extends AbstractSoapServiceTestCa
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
-  protected WsdlIntrospecter introspecter;
+  protected WsdlDefinition definition;
   protected XmlTypeLoader loader;
 
   @Before
   public void setup() {
-    introspecter = new WsdlIntrospecter(server.getDefaultAddress() + "?wsdl", "TestService", "TestPort");
-    loader = new XmlTypeLoader(introspecter.getSchemas());
+    definition = new WsdlDefinition(server.getDefaultAddress() + "?wsdl", "TestService", "TestPort");
+    loader = new XmlTypeLoader(definition.getSchemas());
   }
 }

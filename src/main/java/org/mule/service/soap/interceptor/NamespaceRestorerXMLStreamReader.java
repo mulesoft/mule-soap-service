@@ -28,16 +28,16 @@ public class NamespaceRestorerXMLStreamReader extends ScopeSaverXMLStreamReader 
   private List<Namespace> namespaces;
   private List<String> nsBlacklist = new ArrayList<>();
 
-  public NamespaceRestorerXMLStreamReader(XMLStreamReader reader) {
+  NamespaceRestorerXMLStreamReader(XMLStreamReader reader) {
     super(reader);
   }
 
-  public final NamespaceRestorerXMLStreamReader blackList(String namespace) {
+  final NamespaceRestorerXMLStreamReader blackList(String namespace) {
     nsBlacklist.add(namespace);
     return this;
   }
 
-  public void restoreNamespaces() {
+  void restoreNamespaces() {
     if (getEventType() == START_ELEMENT) {
       namespaces = new ArrayList<>();
 

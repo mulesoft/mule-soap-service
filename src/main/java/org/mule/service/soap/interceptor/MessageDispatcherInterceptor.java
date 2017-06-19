@@ -15,7 +15,6 @@ import static org.apache.cxf.phase.Phase.SEND_ENDING;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_SOAP_ACTION;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_TRANSPORT_HEADERS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_WSC_ADDRESS;
-import static org.mule.service.soap.client.SoapCxfClient.MULE_WSC_ENCODING;
 import static org.mule.service.soap.client.SoapCxfClient.WSC_DISPATCHER;
 import static org.mule.service.soap.interceptor.SoapActionInterceptor.SOAP_ACTION;
 
@@ -61,6 +60,8 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
   @Override
   public void handleMessage(Message message) throws Fault {
     Exchange exchange = message.getExchange();
+    Object encoding = exchange.get(ENCODING);
+    message.put(ENCODING, encoding);
 
     // Performs all the remaining interceptions before sending.
     message.getInterceptorChain().doIntercept(message);
@@ -76,8 +77,7 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     exchange.put(STAX_IN_NOCLOSE, TRUE);
 
     Message inMessage = new MessageImpl();
-    // TODO make encoding policy
-    inMessage.put(ENCODING, exchange.get(MULE_WSC_ENCODING));
+    inMessage.put(ENCODING, encoding);
     inMessage.put(CONTENT_TYPE, response.getContentType());
     inMessage.setContent(InputStream.class, response.getContent());
     inMessage.setExchange(exchange);
