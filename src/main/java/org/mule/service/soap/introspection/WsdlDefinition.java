@@ -229,7 +229,7 @@ public class WsdlDefinition {
    * Given a Wsdl location (either local or remote) it will fetch the definition. If the definition cannot be created, then
    * an exception will be raised
    *
-   * @param locator a {@link WSDLLocator} that
+   * @param locator a {@link WSDLLocator} used to locate the WSDL and it referenced resources.
    */
   private Definition parseWsdl(WSDLLocator locator) {
     try {
