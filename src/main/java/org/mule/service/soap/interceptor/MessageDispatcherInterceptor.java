@@ -22,19 +22,17 @@ import org.mule.runtime.extension.api.soap.message.DispatchingRequest;
 import org.mule.runtime.extension.api.soap.message.DispatchingResponse;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.transport.MessageObserver;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CXF interceptor that uses a custom {@link MessageDispatcher}, specified in the {@link SoapClientConfiguration} to send a
@@ -88,11 +86,11 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     Exchange exchange = message.getExchange();
     String action = (String) exchange.get(MULE_SOAP_ACTION);
     Map<String, String> headers = new HashMap<>();
-    if (action != null) {
-      headers.put(SOAP_ACTION, action);
-    }
+    headers.put(SOAP_ACTION, action);
+    // It's important that content type is bundled with the headers
+    headers.put(CONTENT_TYPE, (String) message.get(CONTENT_TYPE));
     headers.putAll((Map) exchange.get(MULE_TRANSPORT_HEADERS_KEY));
     InputStream content = new ByteArrayInputStream(message.getContent(OutputStream.class).toString().getBytes());
-    return new DispatchingRequest(content, (String) exchange.get(MULE_WSC_ADDRESS), (String) message.get(CONTENT_TYPE), headers);
+    return new DispatchingRequest(content, (String) exchange.get(MULE_WSC_ADDRESS), headers);
   }
 }

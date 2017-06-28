@@ -6,19 +6,18 @@
  */
 package org.mule.service.soap.runtime;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP11;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
+import static org.mule.service.soap.SoapTestXmlValues.FAIL;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.SoapFaultException;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.StringContains.containsString;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,13 +35,8 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that throws a SOAP Fault and expects a Soap Fault Exception")
   public void failOperation() throws Exception {
-    String req =
-        "<con:fail xmlns:con=\"http://service.soap.service.mule.org/\">"
-            + "    <text>Fail Message</text>"
-            + "</con:fail>";
-
     try {
-      client.consume(builder().withContent(req).withOperation("fail").build());
+      client.consume(builder().withContent(testValues.getFailRequest()).withOperation(FAIL).build());
     } catch (SoapFaultException e) {
       // Server is for 1.1, Receiver for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Server", "Receiver"));
@@ -55,17 +49,16 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that does not exist and throws a SOAP Fault because of it and asserts the thrown exception")
   public void noExistentOperation() throws Exception {
-    String badRequest = "<con:noOperation xmlns:con=\"http://service.soap.service.mule.org/\"/>";
     try {
-      client.consume(builder().withContent(badRequest).withOperation("fail").build());
+      client.consume(builder().withContent(testValues.buildXml("INVALID", "")).withOperation("fail").build());
     } catch (SoapFaultException e) {
       // Client is for 1.1, Sender for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Client", "Sender"));
       if (soapVersion.equals(SOAP11)) {
-        assertThat(e.getReason(), containsString("{http://service.soap.service.mule.org/}noOperation was not recognized"));
+        assertThat(e.getReason(), containsString("{http://service.soap.service.mule.org/}INVALID was not recognized"));
       } else {
         assertThat(e.getReason(),
-                   containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}noOperation found."));
+                   containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}INVALID found."));
       }
     }
   }

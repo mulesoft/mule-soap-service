@@ -10,12 +10,23 @@ import static java.lang.Thread.currentThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+import org.mule.runtime.soap.api.exception.InvalidWsdlException;
+import org.mule.service.soap.server.BasicAuthHttpServer;
+import org.mule.service.soap.service.Soap11Service;
+import org.mule.tck.junit4.rule.DynamicPort;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import org.junit.Test;
-
 public class WsdlDefinitionTestCase {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+
+  @Rule
+  public DynamicPort port = new DynamicPort("testPort");
 
   @Test
   public void getWsdlStyleFromOperations() throws URISyntaxException {
@@ -36,6 +47,28 @@ public class WsdlDefinitionTestCase {
     String resourceLocation = getResourceLocation("wsdl/rpc.wsdl");
     WsdlDefinition definition = new WsdlDefinition(resourceLocation, "SoapResponder", "SoapResponderPortType");
     assertThat(definition.isRpcStyle(), is(true));
+  }
+
+  @Test
+  public void cannotAccess() throws Exception {
+    expectedException.expect(InvalidWsdlException.class);
+    expectedException.expectMessage("faultCode=OTHER_ERROR: Unable to locate document at");
+    BasicAuthHttpServer server = new BasicAuthHttpServer(port.getNumber(), null, null, new Soap11Service());
+    String resourceLocation = server.getDefaultAddress() + "?wsdl";
+    new WsdlDefinition(resourceLocation, "TestService", "TestPort");
+    server.stop();
+  }
+
+  @Test
+  public void protectedWsdl() throws Exception {
+    BasicAuthHttpServer server = new BasicAuthHttpServer(port.getNumber(), null, null, new Soap11Service());
+    HttpBasicAuthResourceLocator resourceLocator = new HttpBasicAuthResourceLocator();
+    resourceLocator.start();
+    String resourceLocation = server.getDefaultAddress() + "?wsdl";
+    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "TestService", "TestPort", resourceLocator);
+    resourceLocator.stop();
+    server.stop();
+    assertThat(definition.isDocumentStyle(), is(true));
   }
 
   private String getResourceLocation(String name) throws URISyntaxException {

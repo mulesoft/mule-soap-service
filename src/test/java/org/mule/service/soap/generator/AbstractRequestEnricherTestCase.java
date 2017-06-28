@@ -7,23 +7,35 @@
 package org.mule.service.soap.generator;
 
 import static java.util.Collections.singletonMap;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.service.soap.SoapTestUtils;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
-
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Step;
 
 public abstract class AbstractRequestEnricherTestCase extends AbstractEnricherTestCase {
 
   @Test
   @Description("Enrich a request that contains attachments")
   public void enrich() throws Exception {
-    SoapAttachment attachment = SoapTestUtils.getTestAttachment();
-    String providedBody = SoapTestUtils.getRequestResource(SoapTestUtils.UPLOAD_ATTACHMENT);
+    SoapAttachment attachment = getTestAttachment();
     AttachmentRequestEnricher enricher = getEnricher();
-    String request = enricher.enrichRequest(providedBody, singletonMap("attachment-id", attachment));
+    String request = enricher.enrichRequest(testValues.getUploadAttachmentRequest(), singletonMap("attachment-id", attachment));
     SoapTestUtils.assertSimilarXml(getExpectedResult(), request);
+  }
+
+  @Step("Prepares a test attachment")
+  private SoapAttachment getTestAttachment() {
+    SoapAttachment attachment = mock(SoapAttachment.class);
+    when(attachment.getContent()).thenReturn(IOUtils.toInputStream("Some Content"));
+    when(attachment.getContentType()).thenReturn(MediaType.TEXT);
+    return attachment;
   }
 
   protected abstract AttachmentRequestEnricher getEnricher();

@@ -9,21 +9,20 @@ package org.mule.service.soap.runtime;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
-import org.mule.runtime.api.lifecycle.InitialisationException;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+import static org.mule.service.soap.client.TestSoapClient.getDefaultConfiguration;
+
 import org.mule.runtime.extension.api.soap.message.DispatchingRequest;
 import org.mule.runtime.extension.api.soap.message.DispatchingResponse;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-import org.mule.service.soap.TestSoapClient;
-
+import org.mule.service.soap.client.TestSoapClient;
 import com.google.common.collect.ImmutableMap;
-
+import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
-
-import org.junit.Test;
 
 public class CustomDispatcherTestCase extends AbstractSoapServiceTestCase {
 
@@ -46,8 +45,10 @@ public class CustomDispatcherTestCase extends AbstractSoapServiceTestCase {
   }
 
   private TestSoapClient getTestClient() {
-    String defaultAddress = server.getDefaultAddress();
-    return new TestSoapClient(defaultAddress + "?wsdl", defaultAddress, soapVersion, new TestDispatcher());
+    return new TestSoapClient(getDefaultConfiguration(server.getDefaultAddress())
+        .withVersion(soapVersion)
+        .withDispatcher(new TestDispatcher())
+        .build());
   }
 
   public class TestDispatcher implements MessageDispatcher {
@@ -57,17 +58,7 @@ public class CustomDispatcherTestCase extends AbstractSoapServiceTestCase {
       String envelope = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
           + "<s:Body>" + RESPONSE + "</s:Body>"
           + "</s:Envelope>";
-      return new DispatchingResponse(new ByteArrayInputStream(envelope.getBytes()), "text/xml", request.getHeaders());
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void initialise() throws InitialisationException {
-
+      return new DispatchingResponse(new ByteArrayInputStream(envelope.getBytes()), request.getHeaders());
     }
   }
 }
