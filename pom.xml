@@ -19,7 +19,9 @@
     <properties>
         <dom4jVersion>1.6.1</dom4jVersion>
         <cxfVersion>3.0.13</cxfVersion>
+        <httpServiceVersion>1.0.0-SNAPSHOT</httpServiceVersion>
         <openSamlVersion>2.6.4</openSamlVersion>
+        <xmlSecVersion>2.0.6</xmlSecVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
     </properties>
@@ -97,11 +99,6 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
-                <!-- We use joda-time 2.9.1 -->
-                <exclusion>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                </exclusion>
                 <!-- We use opensaml 2.6.4 -->
                 <exclusion>
                     <groupId>org.opensaml</groupId>
@@ -126,7 +123,7 @@
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>2.0.6</version>
+            <version>${xmlSecVersion}</version>
         </dependency>
 
         <!-- Mule Dependencies -->
@@ -151,7 +148,7 @@
         <dependency>
             <groupId>org.mule.services</groupId>
             <artifactId>mule-service-http</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${httpServiceVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -179,6 +176,29 @@
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
             <version>${openSamlVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.owasp.esapi</groupId>
+                    <artifactId>esapi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ca.juliusdavies</groupId>
+                    <artifactId>not-yet-commons-ssl</artifactId>
+                </exclusion>
+                <!-- We use joda-time 2.9.1 -->
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- XML Handling -->
