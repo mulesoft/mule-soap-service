@@ -12,17 +12,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import org.mule.metadata.xml.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
+import org.mule.runtime.soap.api.transport.NullTransportResourceLocator;
+import org.mule.runtime.soap.api.transport.TransportResourceLocator;
 import org.mule.service.soap.metadata.TypeIntrospecterDelegate;
-
 import com.ibm.wsdl.extensions.schema.SchemaSerializer;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import javax.wsdl.BindingInput;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
@@ -47,8 +43,13 @@ import javax.wsdl.extensions.soap12.SOAP12Binding;
 import javax.wsdl.extensions.soap12.SOAP12Body;
 import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Parses a WSDL file and for a given service name and port name introspecting all the operations and components for the given
@@ -68,7 +69,13 @@ public class WsdlDefinition {
   private final Port port;
 
   public WsdlDefinition(String wsdlLocation, String serviceName, String portName) {
-    this.definition = parseWsdl(wsdlLocation);
+    this(wsdlLocation, serviceName, portName, new NullTransportResourceLocator());
+  }
+
+  public WsdlDefinition(String wsdlLocation, String serviceName, String portName, TransportResourceLocator locator) {
+    validateBlankString(wsdlLocation, "WSDL Location");
+    validateNotNull(locator, "ResourceLocator cannot be null");
+    this.definition = parseWsdl(new WsdlLocator(wsdlLocation, locator));
     this.service = findService(serviceName);
     this.port = findPort(portName);
     this.schemaCollector = new WsdlSchemasCollector(definition);
@@ -117,12 +124,7 @@ public class WsdlDefinition {
     if (parts.size() == 1) {
       return ofNullable((Part) parts.get(parts.keySet().toArray()[0]));
     }
-
-    Optional<String> bodyPartName = getBodyPartName(bindingOperation, delegate);
-    if (bodyPartName.isPresent()) {
-      return ofNullable((Part) parts.get(bodyPartName.get()));
-    }
-    return empty();
+    return getBodyPartName(bindingOperation, delegate).flatMap(partName -> ofNullable((Part) parts.get(partName)));
   }
 
   @SuppressWarnings("unchecked")
@@ -227,45 +229,32 @@ public class WsdlDefinition {
    * Given a Wsdl location (either local or remote) it will fetch the definition. If the definition cannot be created, then
    * an exception will be raised
    *
-   * @param wsdlLocation path to the desired WSDL file
+   * @param locator a {@link WSDLLocator} used to locate the WSDL and it referenced resources.
    */
-  private Definition parseWsdl(final String wsdlLocation) {
+  private Definition parseWsdl(WSDLLocator locator) {
     try {
-      validateBlankString(wsdlLocation, "wsdl Location");
       WSDLFactory factory = WSDLFactory.newInstance();
       ExtensionRegistry registry = initExtensionRegistry(factory);
       WSDLReader wsdlReader = factory.newWSDLReader();
       wsdlReader.setFeature("javax.wsdl.verbose", false);
       wsdlReader.setFeature("javax.wsdl.importDocuments", true);
       wsdlReader.setExtensionRegistry(registry);
-
-      // TODO: MULE-10783 don't delegate this call, get the wsdl using the transport configuration specified in the connection.
-      Definition definition = wsdlReader.readWSDL(wsdlLocation);
-      validateNotNull(definition, format("Cannot obtain WSDL definition for file [%s]", wsdlLocation));
-
-      return definition;
+      return wsdlReader.readWSDL(locator);
     } catch (WSDLException e) {
-      //TODO MULE-10784 we should analyze the type of exception (missing or corrupted file) and thrown better exceptions
-      throw new InvalidWsdlException(format("Something went wrong when parsing the wsdl file [%s]", wsdlLocation), e);
+      throw new InvalidWsdlException(format("Error processing WSDL file [%s]: %s", locator.getBaseURI(), e.getMessage()), e);
     }
   }
 
   private ExtensionRegistry initExtensionRegistry(WSDLFactory factory) throws WSDLException {
     ExtensionRegistry registry = factory.newPopulatedExtensionRegistry();
-    registry.registerSerializer(Types.class,
-                                new QName("http://www.w3.org/2001/XMLSchema", "schema"),
-                                new SchemaSerializer());
+    registry.registerSerializer(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"), new SchemaSerializer());
 
     // these will replace whatever may have already been registered
     // in these places, but there's no good way to check what was
     // there before.
     QName header = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "header");
-    registry.registerDeserializer(MIMEPart.class,
-                                  header,
-                                  registry.queryDeserializer(BindingInput.class, header));
-    registry.registerSerializer(MIMEPart.class,
-                                header,
-                                registry.querySerializer(BindingInput.class, header));
+    registry.registerDeserializer(MIMEPart.class, header, registry.queryDeserializer(BindingInput.class, header));
+    registry.registerSerializer(MIMEPart.class, header, registry.querySerializer(BindingInput.class, header));
 
     // get the original classname of the SOAPHeader
     // implementation that was stored in the registry.

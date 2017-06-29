@@ -6,8 +6,6 @@
  */
 package org.mule.service.soap.security.config;
 
-
-
 import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_ALIAS;
 import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_FILE;
 import static org.apache.wss4j.common.crypto.Merlin.KEYSTORE_PASSWORD;

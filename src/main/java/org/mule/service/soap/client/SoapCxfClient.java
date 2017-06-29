@@ -14,6 +14,8 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.cxf.message.Message.ENCODING;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.disposeIfNeeded;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
@@ -43,18 +45,7 @@ import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.metadata.DefaultSoapMetadataResolver;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
-
 import com.google.common.collect.ImmutableMap;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.attachment.AttachmentImpl;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -69,6 +60,13 @@ import org.apache.cxf.service.model.BindingOperationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * a {@link SoapClient} implementation based on CXF.
@@ -98,14 +96,8 @@ public class SoapCxfClient implements SoapClient {
   private final String encoding;
   private final boolean isMtom;
 
-  SoapCxfClient(Client client,
-                WsdlDefinition definition,
-                XmlTypeLoader typeLoader,
-                String address,
-                MessageDispatcher dispatcher,
-                SoapVersion version,
-                String encoding,
-                boolean isMtom) {
+  SoapCxfClient(Client client, WsdlDefinition definition, XmlTypeLoader typeLoader, String address,
+                MessageDispatcher dispatcher, SoapVersion version, String encoding, boolean isMtom) {
     this.client = client;
     this.definition = definition;
     this.loader = typeLoader;
@@ -121,13 +113,13 @@ public class SoapCxfClient implements SoapClient {
 
   @Override
   public void stop() throws MuleException {
-    dispatcher.dispose();
+    disposeIfNeeded(dispatcher, LOGGER);
     client.destroy();
   }
 
   @Override
   public void start() throws MuleException {
-    dispatcher.initialise();
+    initialiseIfNeeded(dispatcher);
   }
 
   /**
@@ -135,18 +127,9 @@ public class SoapCxfClient implements SoapClient {
    */
   @Override
   public SoapResponse consume(SoapRequest request) throws SoapFaultException {
-    Map<String, SoapAttachment> attachments = request.getAttachments();
     String operation = request.getOperation();
-    XMLStreamReader envelope;
-    try {
-      String xml = request.getContent() != null ? IOUtils.toString(request.getContent()) : null;
-      envelope = requestGenerator.generate(operation, xml, attachments);
-    } catch (IOException e) {
-      throw new BadRequestException("an error occurred while parsing the provided request");
-    }
     Exchange exchange = new ExchangeImpl();
-    Object[] response =
-        invoke(operation, envelope, request.getSoapHeaders(), request.getTransportHeaders(), attachments, exchange);
+    Object[] response = invoke(request, exchange);
     return responseGenerator.generate(operation, response, exchange);
   }
 
@@ -155,47 +138,33 @@ public class SoapCxfClient implements SoapClient {
     return new DefaultSoapMetadataResolver(definition, loader);
   }
 
-
-  /**
-   * Invokes a Web Service Operation with the specified parameters.
-   *
-   * @param operation        the operation that is going to be invoked.
-   * @param payload          the request body to be bounded in the envelope.
-   * @param headers          the request headers to be bounded in the envelope.
-   * @param transportHeaders the headers to be bounded with the underlying transport request.
-   * @param attachments      the set of attachments that aims to be sent with the request.
-   * @param exchange         the exchange instance that will carry all the parameters when intercepting the message.
-   */
-  Object[] invoke(String operation,
-                  Object payload,
-                  Map<String, String> headers,
-                  Map<String, String> transportHeaders,
-                  Map<String, SoapAttachment> attachments,
-                  Exchange exchange) {
+  private Object[] invoke(SoapRequest request, Exchange exchange) {
+    String operation = request.getOperation();
+    XMLStreamReader xmlBody = getXmlBody(request);
     try {
-      BindingOperationInfo bop = getInvocationOperation();
-      Map<String, Attachment> soapAttachments = transformToCxfAttachments(attachments);
-      List<SoapHeader> soapHeaders = transformToCxfHeaders(headers);
-      Map<String, Object> ctx = getInvocationContext(operation, soapHeaders, transportHeaders, soapAttachments);
-      return client.invoke(bop, new Object[] {payload}, ctx, exchange);
+      Map<String, Object> ctx = getInvocationContext(request);
+      return client.invoke(getInvocationOperation(), new Object[] {xmlBody}, ctx, exchange);
     } catch (SoapFault sf) {
       throw new SoapFaultException(sf.getFaultCode(), sf.getSubCode(), parseExceptionDetail(sf.getDetail()).orElse(null),
-                                   sf.getReason(),
-                                   sf.getNode(), sf.getRole(),
-                                   sf);
+                                   sf.getReason(), sf.getNode(), sf.getRole(), sf);
     } catch (Fault f) {
       if (f.getMessage().contains("COULD_NOT_READ_XML")) {
-        throw new BadRequestException(
-                                      format("Error consuming the operation [%s], the request body is not a valid XML",
-                                             operation));
+        throw new BadRequestException("Error consuming the operation [" + operation + "], the request body is not a valid XML");
       }
       throw new SoapFaultException(f.getFaultCode(), parseExceptionDetail(f.getDetail()).orElse(null), f);
     } catch (DispatchingException e) {
       throw e;
     } catch (Exception e) {
-      throw new SoapServiceException(format("An unexpected error occur while consuming the [%s] web service operation",
-                                            operation),
-                                     e);
+      throw new SoapServiceException("Unexpected error while consuming the web service operation [" + operation + "]", e);
+    }
+  }
+
+  private XMLStreamReader getXmlBody(SoapRequest request) {
+    try {
+      String xml = request.getContent() != null ? IOUtils.toString(request.getContent()) : null;
+      return requestGenerator.generate(request.getOperation(), xml, request.getAttachments());
+    } catch (IOException e) {
+      throw new BadRequestException("an error occurred while parsing the provided request");
     }
   }
 
@@ -213,31 +182,18 @@ public class SoapCxfClient implements SoapClient {
     return bop;
   }
 
-  private Map<String, Object> getInvocationContext(String operation,
-                                                   List<SoapHeader> headers,
-                                                   Map<String, String> transportHeaders,
-                                                   Map<String, Attachment> attachments) {
+  private Map<String, Object> getInvocationContext(SoapRequest request) {
     Map<String, Object> props = new HashMap<>();
-
-    if (isMtom) {
-      props.put(MULE_ATTACHMENTS_KEY, attachments);
-    } else {
-      // is NOT mtom the attachments must not be touched by cxf, we create a custom request embedding the attachment in the xml
-      props.put(MULE_ATTACHMENTS_KEY, emptyMap());
-    }
-
+    // is NOT mtom the attachments must not be touched by cxf, we create a custom request embedding the attachment in the xml
+    props.put(MULE_ATTACHMENTS_KEY, isMtom ? transformToCxfAttachments(request.getAttachments()) : emptyMap());
     props.put(MULE_WSC_ADDRESS, address);
     props.put(ENCODING, encoding == null ? "UTF-8" : encoding);
-    props.put(MULE_HEADERS_KEY, headers);
-
-    if (version == SOAP12) {
-      props.put(MULE_SOAP_ACTION, operation);
-    }
-
-    props.put(MULE_TRANSPORT_HEADERS_KEY, transportHeaders != null ? transportHeaders : emptyMap());
-
+    props.put(MULE_HEADERS_KEY, transformToCxfHeaders(request.getSoapHeaders()));
+    props.put(MULE_TRANSPORT_HEADERS_KEY, request.getTransportHeaders());
     props.put(WSC_DISPATCHER, dispatcher);
-
+    if (version == SOAP12) {
+      props.put(MULE_SOAP_ACTION, request.getOperation());
+    }
     Map<String, Object> ctx = new HashMap<>();
     ctx.put(Client.REQUEST_CONTEXT, props);
     return ctx;

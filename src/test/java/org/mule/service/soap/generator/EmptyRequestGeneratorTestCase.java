@@ -6,24 +6,19 @@
  */
 package org.mule.service.soap.generator;
 
-import static org.mule.service.soap.SoapTestUtils.ECHO;
-import static org.mule.service.soap.SoapTestUtils.FAIL;
-import static org.mule.service.soap.SoapTestUtils.NO_PARAMS;
-import static org.mule.service.soap.SoapTestUtils.getRequestResource;
+import static java.util.Collections.emptyList;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+import static org.mule.service.soap.SoapTestXmlValues.ECHO;
+import static org.mule.service.soap.SoapTestXmlValues.FAIL;
+import static org.mule.service.soap.SoapTestXmlValues.NO_PARAMS;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.introspection.WsdlDefinition;
-
-import static java.util.Collections.emptyList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import javax.wsdl.BindingInput;
-import javax.wsdl.BindingOperation;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,6 +26,8 @@ import org.junit.rules.ExpectedException;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
+import javax.wsdl.BindingInput;
+import javax.wsdl.BindingOperation;
 
 @Features(WSC_EXTENSION)
 @Stories("Request Generation")
@@ -51,14 +48,15 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
   @Description("Checks the generation of a body request for an operation that don't require any parameters")
   public void noParams() throws Exception {
     String request = generator.generateRequest(NO_PARAMS);
-    assertSimilarXml(request, getRequestResource(NO_PARAMS));
+    assertSimilarXml(request, testValues.getNoParamsRequest());
   }
 
   @Test
   @Description("Checks that the generation of a body request for an operation that require parameters fails")
   public void withParams() throws Exception {
     exception.expect(BadRequestException.class);
-    exception.expectMessage("Cannot build default body request for operation [echo], the operation requires input parameters");
+    exception
+        .expectMessage("Cannot buildOutputType default body request for operation [echo], the operation requires input parameters");
     generator.generateRequest(ECHO);
   }
 

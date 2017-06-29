@@ -11,6 +11,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+import static org.mule.service.soap.SoapTestXmlValues.ECHO;
+import static org.mule.service.soap.SoapTestXmlValues.ECHO_ACCOUNT;
+import static org.mule.service.soap.SoapTestXmlValues.ECHO_HEADERS;
+import static org.mule.service.soap.SoapTestXmlValues.HEADER_IN;
+import static org.mule.service.soap.SoapTestXmlValues.HEADER_INOUT;
+import static org.mule.service.soap.SoapTestXmlValues.HEADER_OUT;
+import static org.mule.service.soap.SoapTestXmlValues.NO_PARAMS;
+import static org.mule.service.soap.client.TestSoapClient.getDefaultConfiguration;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
 import org.mule.runtime.soap.api.client.SoapClient;
@@ -18,18 +27,16 @@ import org.mule.runtime.soap.api.message.ImmutableSoapRequest;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-import org.mule.service.soap.TestSoapClient;
-
+import org.mule.service.soap.client.TestSoapClient;
 import com.google.common.collect.ImmutableMap;
-
-import java.net.URL;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
 
 @Features(WSC_EXTENSION)
 @Stories("Operation Execution")
@@ -45,7 +52,10 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation using a connection that uses a local .wsdl file")
   public void echoWithLocalWsdl() throws Exception {
     URL wsdl = currentThread().getContextClassLoader().getResource("wsdl/simple-service.wsdl");
-    TestSoapClient localWsdlClient = new TestSoapClient(wsdl.getPath(), server.getDefaultAddress(), soapVersion);
+    TestSoapClient localWsdlClient = new TestSoapClient(getDefaultConfiguration(server.getDefaultAddress())
+        .withWsdlLocation(wsdl.getPath())
+        .withDispatcher(dispatcher)
+        .withVersion(soapVersion).build());
     testSimpleOperation(localWsdlClient);
   }
 
@@ -54,65 +64,36 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   public void simpleOperationWithHeaders() throws Exception {
 
     Map<String, String> headers = ImmutableMap.<String, String>builder()
-        .put("headerIn", HEADER_IN)
-        .put("headerInOut", HEADER_INOUT)
+        .put(HEADER_IN, testValues.getHeaderIn())
+        .put(HEADER_INOUT, testValues.getHeaderInOutRequest())
         .build();
 
     ImmutableSoapRequest req =
-        builder().withContent("<con:echoWithHeaders xmlns:con=\"http://service.soap.service.mule.org/\">\n"
-            + "    <text>test</text>\n"
-            + "</con:echoWithHeaders>")
-            .withOperation("echoWithHeaders")
-            .withSoapHeaders(
-                             headers)
+        builder().withContent(testValues.getEchoWithHeadersRequest())
+            .withOperation(ECHO_HEADERS)
+            .withSoapHeaders(headers)
             .ofContentType(APPLICATION_XML)
             .build();
 
     SoapResponse response = client.consume(req);
-
-    assertSimilarXml(response.getSoapHeaders().get("headerOut"), HEADER_OUT);
-    assertSimilarXml(response.getSoapHeaders().get("headerInOut"), HEADER_INOUT_RES);
-
-    assertSimilarXml("<ns2:echoWithHeadersResponse xmlns:ns2=\"http://service.soap.service.mule.org/\">\n" +
-        "<text>test response</text>" +
-        "</ns2:echoWithHeadersResponse>", response.getContent());
+    assertSimilarXml(response.getSoapHeaders().get(HEADER_OUT), testValues.getHeaderOut());
+    assertSimilarXml(response.getSoapHeaders().get(HEADER_INOUT), testValues.getHeaderInOutResponse());
+    assertSimilarXml(testValues.getEchoWithHeadersResponse(), response.getContent());
   }
 
   @Test
   @Description("Consumes an operation that expects 2 parameters (a simple one and a complex one) and returns a complex type")
   public void complexTypeOperation() throws Exception {
-    ImmutableSoapRequest req =
-        builder().withContent("<con:echoAccount xmlns:con=\"http://service.soap.service.mule.org/\">\n"
-            + "    <account>\n"
-            + "        <id>12</id>\n"
-            + "        <items>chocolate</items>\n"
-            + "        <items>banana</items>\n"
-            + "        <items>dulce de leche</items>\n"
-            + "        <startingDate>2016-09-23T00:00:00-03:00</startingDate>\n"
-            + "    </account>\n"
-            + "    <name>Juan</name>\n"
-            + "</con:echoAccount>").withOperation("echoAccount").build();
+    ImmutableSoapRequest req = builder().withContent(testValues.getEchoAccountRequest()).withOperation(ECHO_ACCOUNT).build();
     SoapResponse response = client.consume(req);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
-    assertSimilarXml("<ns2:echoAccountResponse xmlns:ns2=\"http://service.soap.service.mule.org/\">\n"
-        + "    <account>\n"
-        + "        <clientName>Juan</clientName>\n"
-        + "        <id>12</id>\n"
-        + "        <items>chocolate</items>\n"
-        + "        <items>banana</items>\n"
-        + "        <items>dulce de leche</items>\n"
-        + "        <startingDate>2016-09-23T00:00:00-03:00</startingDate>\n"
-        + "    </account>\n"
-        + "</ns2:echoAccountResponse>", response.getContent());
+    assertSimilarXml(testValues.getEchoAccountResponse(), response.getContent());
   }
 
   @Test
   @Description("Consumes an operation that expects no parameters and returns a simple type")
   public void noParamsOperation() throws Exception {
-    SoapRequest req = builder()
-        .withContent("<con:noParams xmlns:con=\"http://service.soap.service.mule.org/\"/>")
-        .withOperation("noParams")
-        .build();
+    SoapRequest req = builder().withContent(testValues.getNoParamsRequest()).withOperation(NO_PARAMS).build();
     testNoParams(req);
   }
 
@@ -120,36 +101,28 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation that expects no parameters and returns a simple type")
   public void large() throws Exception {
     SoapRequest req = builder().withOperation("large").build();
-    SoapResponse response = client.consume(req);
+    InputStream response = client.consume(req).getContent();
     String largeContent = IOUtils.toString(currentThread().getContextClassLoader().getResource("large.json").openStream());
-    String expected = "<ns2:largeResponse xmlns:ns2=\"http://service.soap.service.mule.org/\"><largeResponse>"
-        + largeContent + "</largeResponse></ns2:largeResponse>";
-    assertSimilarXml(expected, response.getContent());
+    assertSimilarXml(testValues.buildXml("largeResponse", "<largeResponse>" + largeContent + "</largeResponse>"), response);
   }
 
   @Test
   @Description("Consumes an operation that expects no parameters auto-generating the request and returns a simple type")
   public void noParamsOperationWithoutXmlPayload() throws Exception {
-    testNoParams(SoapRequest.empty("noParams"));
+    testNoParams(SoapRequest.empty(NO_PARAMS));
   }
 
   private void testNoParams(SoapRequest request) throws Exception {
     SoapResponse response = client.consume(request);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
-    assertSimilarXml("<ns2:noParamsResponse xmlns:ns2=\"http://service.soap.service.mule.org/\">"
-        + "    <text>response</text>"
-        + "</ns2:noParamsResponse>", response.getContent());
+    assertSimilarXml(testValues.getNoParamsResponse(), response.getContent());
   }
 
   private void testSimpleOperation(SoapClient client) throws Exception {
-    ImmutableSoapRequest req = builder().withContent("<con:echo xmlns:con=\"http://service.soap.service.mule.org/\">\n"
-        + "    <text>test</text>\n"
-        + "</con:echo>").ofContentType(APPLICATION_XML).withOperation("echo")
-        .build();
-    SoapResponse response = client.consume(req);
+    //    SoapRequest request = builder().withContent(testValues.getEchoResquest()).ofContentType(APPLICATION_XML).withOperation(ECHO).build();
+    SoapRequest request = builder().withContent(testValues.getEchoResquest()).withOperation(ECHO).build();
+    SoapResponse response = client.consume(request);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
-    assertSimilarXml("<ns2:echoResponse xmlns:ns2=\"http://service.soap.service.mule.org/\">\n"
-        + "    <text>test response</text>\n"
-        + "</ns2:echoResponse>", response.getContent());
+    assertSimilarXml(testValues.getEchoResponse(), response.getContent());
   }
 }

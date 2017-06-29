@@ -9,6 +9,7 @@ package org.mule.service.soap.message;
 import static java.util.Collections.unmodifiableMap;
 import static org.mule.runtime.api.message.Message.builder;
 import static org.mule.runtime.core.api.message.DefaultMultiPartPayload.BODY_ATTRIBUTES;
+
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.message.PartAttributes;
@@ -17,9 +18,7 @@ import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.message.SoapAttributes;
 import org.mule.runtime.soap.api.message.SoapMultipartPayload;
 import org.mule.runtime.soap.api.message.SoapResponse;
-
 import com.google.common.collect.ImmutableList;
-
 import java.io.InputStream;
 import java.util.Map;
 

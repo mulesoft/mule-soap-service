@@ -11,33 +11,28 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mule.runtime.api.metadata.MediaType.HTML;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+import static org.mule.service.soap.SoapTestXmlValues.DOWNLOAD_ATTACHMENT;
+import static org.mule.service.soap.SoapTestXmlValues.UPLOAD_ATTACHMENT;
 
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-
-import java.io.ByteArrayInputStream;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 public class AttachmentsTestCase extends AbstractSoapServiceTestCase {
 
   @Test
   @Description("Downloads an attachment from a mtom server")
   public void downloadAttachment() throws Exception {
-    SoapRequest request = builder()
-        .withContent("<con:downloadAttachment xmlns:con=\"http://service.soap.service.mule.org/\">\n"
-            + "    <fileName>attachment.txt</fileName>\n"
-            + "</con:downloadAttachment>")
-        .withOperation("downloadAttachment")
-        .build();
-    SoapResponse response = client.consume(request);
-    assertSimilarXml("<ns2:downloadAttachmentResponse xmlns:ns2=\"http://service.soap.service.mule.org/\"/>",
-                     response.getContent());
+    SoapRequest req = builder().withContent(testValues.getDownloadAttachmentRequest()).withOperation(DOWNLOAD_ATTACHMENT).build();
+    SoapResponse response = client.consume(req);
+    assertSimilarXml(testValues.getDownloadAttachmentResponse(), response.getContent());
     Map<String, SoapAttachment> attachments = response.getAttachments();
     assertThat(attachments.entrySet(), hasSize(1));
     SoapAttachment attachment = attachments.entrySet().iterator().next().getValue();
@@ -49,12 +44,10 @@ public class AttachmentsTestCase extends AbstractSoapServiceTestCase {
   public void uploadAttachment() throws Exception {
     SoapRequest request = builder()
         .withAttachment("attachment", new SoapAttachment(new ByteArrayInputStream("Some Content".getBytes()), HTML))
-        .withContent("<con:uploadAttachment xmlns:con=\"http://service.soap.service.mule.org/\"/>")
-        .withOperation("uploadAttachment")
+        .withContent(testValues.getUploadAttachmentRequest())
+        .withOperation(UPLOAD_ATTACHMENT)
         .build();
     SoapResponse response = client.consume(request);
-    assertSimilarXml("<ns2:uploadAttachmentResponse xmlns:ns2=\"http://service.soap.service.mule.org/\">\n"
-        + "    <result>Ok</result>\n"
-        + "</ns2:uploadAttachmentResponse>", response.getContent());
+    assertSimilarXml(testValues.getUploadAttachmentResponse(), response.getContent());
   }
 }

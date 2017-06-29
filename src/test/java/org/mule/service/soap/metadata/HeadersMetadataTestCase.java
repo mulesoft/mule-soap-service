@@ -6,14 +6,14 @@
  */
 package org.mule.service.soap.metadata;
 
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 import static java.lang.Thread.currentThread;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsIn.isIn;
 import static org.junit.Assert.assertThat;
+import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+
 import org.mule.metadata.api.annotation.TypeIdAnnotation;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.NullType;
@@ -21,16 +21,15 @@ import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.api.model.ObjectType;
 import org.mule.metadata.api.model.StringType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.runtime.soap.api.client.SoapClientConfiguration;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
-import org.mule.service.soap.TestSoapClient;
-
-import java.net.URL;
-import java.util.Collection;
-
+import org.mule.service.soap.client.TestSoapClient;
 import org.junit.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
+import java.net.URL;
+import java.util.Collection;
 
 @Features(WSC_EXTENSION)
 @Stories("Metadata")
@@ -62,15 +61,14 @@ public class HeadersMetadataTestCase extends AbstractMetadataTestCase {
   @Description("Checks the metadata for a Header that is defined in another message that is not the main operation message")
   public void operationWithCommonHeaderDefinedInDifferentMessageMetadata() throws MetadataResolvingException {
     URL humanWsdl = currentThread().getContextClassLoader().getResource("wsdl/human.wsdl");
-    TestSoapClient humanWsdlClient = new TestSoapClient(humanWsdl.getPath(),
-                                                        "http://dummy-address-for-metadata.com",
-                                                        "Human_ResourcesService",
-                                                        "Human_Resources",
-                                                        false,
-                                                        emptyList(),
-                                                        soapVersion,
-                                                        null);
-
+    SoapClientConfiguration configuration = SoapClientConfiguration.builder()
+        .withDispatcher(dispatcher)
+        .withAddress("address.com")
+        .withVersion(soapVersion)
+        .withWsdlLocation(humanWsdl.getPath())
+        .withService("Human_ResourcesService")
+        .withPort("Human_Resources").build();
+    TestSoapClient humanWsdlClient = new TestSoapClient(configuration);
     SoapOperationMetadata result = humanWsdlClient.getMetadataResolver().getInputMetadata("Get_Employee");
     ObjectType headers = toObjectType(result.getHeadersType());
     assertThat(headers.getFields(), hasSize(1));

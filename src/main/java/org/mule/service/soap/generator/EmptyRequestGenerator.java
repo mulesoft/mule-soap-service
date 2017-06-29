@@ -39,7 +39,7 @@ import javax.xml.namespace.QName;
 final class EmptyRequestGenerator {
 
   private static final String REQUIRED_PARAMS_ERROR_MASK =
-      "Cannot build default body request for operation [%s]%s, the operation requires input parameters";
+      "Cannot buildOutputType default body request for operation [%s]%s, the operation requires input parameters";
 
   /**
    * SOAP request mask for operations without input parameters
@@ -64,7 +64,8 @@ final class EmptyRequestGenerator {
 
     if (!soapBodyParts.isPresent()) {
       throw new InvalidWsdlException(format("No SOAP body defined in the WSDL for the specified operation, cannot check if the operation"
-          + " requires input parameters. Cannot build a default body request for the specified operation [%s]", operation));
+          + " requires input parameters. Cannot buildOutputType a default body request for the specified operation [%s]",
+                                            operation));
     }
 
     Message message = bindingOperation.getOperation().getInput().getMessage();

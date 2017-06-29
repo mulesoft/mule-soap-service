@@ -7,22 +7,19 @@
 package org.mule.service.soap.introspection;
 
 import static java.lang.Thread.currentThread;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.hamcrest.core.Is.is;
 import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
 
-import com.google.common.collect.ImmutableList;
 import org.mule.runtime.core.api.util.IOUtils;
-
+import org.junit.Test;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
 
 public class WsdlSchemasCollectorTestCase {
 
@@ -46,25 +43,21 @@ public class WsdlSchemasCollectorTestCase {
    */
   @Test
   public void wsdlWithLocalRecursiveSchemas() throws Exception {
-    String recursiveEmbeddedSchema = "schemas/recursive-embedded-schema.xsd";
+    String embeddedSchema = "schemas/recursive-embedded-schema.xsd";
     String wsdl = getResourceLocation(RECURSIVE_WSDL_FOLDER + "main.wsdl");
     WsdlDefinition definition = new WsdlDefinition(wsdl, "RecursiveService", "RecursivePort");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
-
-    List<String> files = ImmutableList.<String>builder().add(getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/import0.xsd"),
-                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "dir1/dir2/import1.xsd"),
-                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import2.xsd"),
-                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import3.xsd"),
-                                                             getResourceLocation(RECURSIVE_WSDL_FOLDER + "import4.xsd"),
-                                                             getResourceLocation(recursiveEmbeddedSchema))
-        .build();
-
+    List<String> files = asList(RECURSIVE_WSDL_FOLDER + "dir1/import0.xsd",
+                                RECURSIVE_WSDL_FOLDER + "dir1/dir2/import1.xsd",
+                                RECURSIVE_WSDL_FOLDER + "import2.xsd",
+                                RECURSIVE_WSDL_FOLDER + "import3.xsd",
+                                RECURSIVE_WSDL_FOLDER + "import4.xsd",
+                                embeddedSchema);
     assertThat(schemas.values(), hasSize(files.size()));
     for (String file : files) {
-      String fileName = !file.contains(recursiveEmbeddedSchema) ? file : wsdl;
-      String key = "file:" + fileName;
-      assertThat(schemas, hasKey(key));
-      assertSimilarXml(IOUtils.toString(schemas.get(key)), IOUtils.toString(new FileInputStream(file)));
+      // If the file is the embedded schema the key is path to the wsdl containing the schema, thats why we check this
+      String key = file.equals(embeddedSchema) ? wsdl : schemas.keySet().stream().filter(k -> k.contains(file)).findAny().get();
+      assertSimilarXml(IOUtils.toString(schemas.get(key)), new FileInputStream(getResourceLocation(file)));
     }
   }
 

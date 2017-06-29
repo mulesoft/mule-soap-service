@@ -6,12 +6,11 @@
  */
 package org.mule.service.soap.generator;
 
-import static org.mule.service.soap.SoapTestUtils.DOWNLOAD_ATTACHMENT;
-import static org.mule.service.soap.SoapTestUtils.getResponseResource;
+import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
+import static org.mule.service.soap.SoapTestXmlValues.DOWNLOAD_ATTACHMENT;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDocument;
 
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
-
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.junit.Test;
@@ -27,7 +26,7 @@ abstract class ResponseEnricherTestCase extends AbstractEnricherTestCase {
     Document doc = stringToDocument(getResponse());
     AttachmentResponseEnricher enricher = getEnricher();
     String result = enricher.enrich(doc, DOWNLOAD_ATTACHMENT, exchange);
-    assertSimilarXml(getResponseResource(DOWNLOAD_ATTACHMENT), result);
+    assertSimilarXml(testValues.getDownloadAttachmentResponse(), result);
     assertAttachment(exchange);
   }
 
