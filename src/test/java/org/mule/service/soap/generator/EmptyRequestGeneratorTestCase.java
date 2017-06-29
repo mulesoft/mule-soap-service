@@ -56,7 +56,7 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
   public void withParams() throws Exception {
     exception.expect(BadRequestException.class);
     exception
-        .expectMessage("Cannot buildOutputType default body request for operation [echo], the operation requires input parameters");
+        .expectMessage("Cannot build default body request for operation [echo], the operation requires input parameters");
     generator.generateRequest(ECHO);
   }
 

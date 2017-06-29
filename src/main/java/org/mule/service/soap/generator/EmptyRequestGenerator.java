@@ -10,6 +10,7 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
@@ -18,18 +19,16 @@ import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.introspection.WsdlDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
 import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap12.SOAP12Body;
 import javax.xml.namespace.QName;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Enables the construction of request bodies for web service operations that don't require input parameters.
@@ -39,7 +38,7 @@ import javax.xml.namespace.QName;
 final class EmptyRequestGenerator {
 
   private static final String REQUIRED_PARAMS_ERROR_MASK =
-      "Cannot buildOutputType default body request for operation [%s]%s, the operation requires input parameters";
+      "Cannot build default body request for operation [%s]%s, the operation requires input parameters";
 
   /**
    * SOAP request mask for operations without input parameters
@@ -64,7 +63,7 @@ final class EmptyRequestGenerator {
 
     if (!soapBodyParts.isPresent()) {
       throw new InvalidWsdlException(format("No SOAP body defined in the WSDL for the specified operation, cannot check if the operation"
-          + " requires input parameters. Cannot buildOutputType a default body request for the specified operation [%s]",
+          + " requires input parameters. Cannot build a default body request for the specified operation [%s]",
                                             operation));
     }
 
