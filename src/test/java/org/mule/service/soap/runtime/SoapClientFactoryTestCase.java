@@ -22,12 +22,12 @@ import java.net.URL;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 
-@Features(WSC_EXTENSION)
-@Stories("Connection")
+@Feature(WSC_EXTENSION)
+@Story("Connection")
 public class SoapClientFactoryTestCase extends AbstractSoapServiceTestCase {
 
   @Rule

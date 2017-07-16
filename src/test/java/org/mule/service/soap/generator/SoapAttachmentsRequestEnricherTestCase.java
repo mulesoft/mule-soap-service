@@ -9,15 +9,16 @@ package org.mule.service.soap.generator;
 
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
+import io.qameta.allure.Stories;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentRequestEnricher;
 
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Step;
-import ru.yandex.qatools.allure.annotations.Stories;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 
-@Features(WSC_EXTENSION)
-@Stories({"Attachments", "Request Generation"})
+@Feature(WSC_EXTENSION)
+@Stories({@Story("Attachments"), @Story("Request Generation")})
 public class SoapAttachmentsRequestEnricherTestCase extends AbstractRequestEnricherTestCase {
 
   @Override

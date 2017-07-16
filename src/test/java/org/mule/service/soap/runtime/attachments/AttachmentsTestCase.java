@@ -21,7 +21,7 @@ import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import ru.yandex.qatools.allure.annotations.Description;
+import io.qameta.allure.Description;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
