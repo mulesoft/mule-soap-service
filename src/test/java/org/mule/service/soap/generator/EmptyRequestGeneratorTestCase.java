@@ -23,14 +23,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Stories;
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import javax.wsdl.BindingInput;
 import javax.wsdl.BindingOperation;
 
-@Features(WSC_EXTENSION)
-@Stories("Request Generation")
+@Feature(WSC_EXTENSION)
+@Story("Request Generation")
 public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
 
   @Rule

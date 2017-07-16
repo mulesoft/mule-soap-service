@@ -16,8 +16,8 @@ import org.mule.service.soap.SoapTestUtils;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Step;
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 
 public abstract class AbstractRequestEnricherTestCase extends AbstractEnricherTestCase {
 

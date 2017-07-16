@@ -15,7 +15,7 @@ import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import ru.yandex.qatools.allure.annotations.Description;
+import io.qameta.allure.Description;
 
 abstract class ResponseEnricherTestCase extends AbstractEnricherTestCase {
 
