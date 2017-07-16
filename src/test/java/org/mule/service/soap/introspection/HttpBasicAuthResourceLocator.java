@@ -46,7 +46,7 @@ public class HttpBasicAuthResourceLocator implements TransportResourceLocator, L
     auth.setUsername(USERNAME);
     auth.setPassword(PASSWORD);
     try {
-      HttpResponse response = httpClient.send(HttpRequest.builder().setMethod(GET).setUri(url).build(), 500, false, auth);
+      HttpResponse response = httpClient.send(HttpRequest.builder().method(GET).uri(url).build(), 500, false, auth);
       if (response.getStatusCode() == 401) {
         throw new RuntimeException("Unauthorized");
       }
