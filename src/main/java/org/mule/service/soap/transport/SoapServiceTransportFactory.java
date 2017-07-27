@@ -6,6 +6,8 @@
  */
 package org.mule.service.soap.transport;
 
+import static org.mule.runtime.core.api.util.ClassUtils.withContextClassLoader;
+
 import java.util.Iterator;
 
 import javax.xml.transform.Source;
@@ -33,7 +35,7 @@ public class SoapServiceTransportFactory extends AbstractTransportFactory {
 
   public SoapServiceTransportFactory() {
     if (bus == null) {
-      bus = new SpringBusFactory().createBus((String) null, true);
+      bus = withContextClassLoader(this.getClass().getClassLoader(), () -> new SpringBusFactory().createBus((String) null, true));
     }
     SoapServiceConduitInitiator initiator = new SoapServiceConduitInitiator();
     ConduitInitiatorManager extension = bus.getExtension(ConduitInitiatorManager.class);
