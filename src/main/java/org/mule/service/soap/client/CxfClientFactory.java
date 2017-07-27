@@ -6,7 +6,13 @@
  */
 package org.mule.service.soap.client;
 
+import static org.mule.runtime.core.api.util.ClassUtils.withContextClassLoader;
 import org.mule.service.soap.conduit.SoapServiceConduitInitiator;
+
+import java.util.Iterator;
+
+import javax.xml.transform.Source;
+
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.SoapVersion;
 import org.apache.cxf.binding.soap.SoapVersionFactory;
@@ -17,8 +23,6 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientFactoryBean;
 import org.apache.cxf.transport.Conduit;
 import org.apache.cxf.transport.ConduitInitiatorManager;
-import javax.xml.transform.Source;
-import java.util.Iterator;
 
 /**
  * A factory for CXF {@link Client}s.
@@ -33,7 +37,8 @@ class CxfClientFactory {
   private final Bus bus;
 
   CxfClientFactory() {
-    this.bus = new SpringBusFactory().createBus((String) null, true);
+    this.bus = withContextClassLoader(CxfClientFactory.class.getClassLoader(),
+                                      () -> new SpringBusFactory().createBus((String) null, true));
     registerConduitInitiator(new SoapServiceConduitInitiator());
   }
 
