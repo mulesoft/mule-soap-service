@@ -22,6 +22,7 @@
         <openSamlVersion>2.6.4</openSamlVersion>
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
+        <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
         <muleHttpServiceVersion>1.0.0-SNAPSHOT</muleHttpServiceVersion>
@@ -120,6 +121,17 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${springVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${springVersion}</version>
+        </dependency>
+
         <!-- We should use this version to work with CXF 3-->
         <dependency>
             <groupId>org.apache.santuario</groupId>
@@ -128,6 +140,12 @@
         </dependency>
 
         <!-- Mule Dependencies -->
+        <dependency>
+            <groupId>org.mule.runtime</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-module-tls</artifactId>
