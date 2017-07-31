@@ -37,7 +37,7 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation that throws a SOAP Fault and expects a Soap Fault Exception")
   public void failOperation() throws Exception {
     try {
-      client.consume(builder().withContent(testValues.getFailRequest()).withOperation(FAIL).build());
+      client.consume(builder().content(testValues.getFailRequest()).operation(FAIL).build());
     } catch (SoapFaultException e) {
       // Server is for 1.1, Receiver for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Server", "Receiver"));
@@ -51,7 +51,7 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation that does not exist and throws a SOAP Fault because of it and asserts the thrown exception")
   public void noExistentOperation() throws Exception {
     try {
-      client.consume(builder().withContent(testValues.buildXml("INVALID", "")).withOperation("fail").build());
+      client.consume(builder().content(testValues.buildXml("INVALID", "")).operation("fail").build());
     } catch (SoapFaultException e) {
       // Client is for 1.1, Sender for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Client", "Sender"));
@@ -69,6 +69,6 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   public void echoBodyIsNotValidXml() throws Exception {
     expectedException.expect(BadRequestException.class);
     expectedException.expectMessage("Error consuming the operation [echo], the request body is not a valid XML");
-    client.consume(builder().withOperation("echo").withContent("Invalid Test Payload: this is not an XML").build());
+    client.consume(builder().operation("echo").content("Invalid Test Payload: this is not an XML").build());
   }
 }

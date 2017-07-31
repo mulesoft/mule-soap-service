@@ -30,7 +30,7 @@ public class AttachmentsTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Downloads an attachment from a mtom server")
   public void downloadAttachment() throws Exception {
-    SoapRequest req = builder().withContent(testValues.getDownloadAttachmentRequest()).withOperation(DOWNLOAD_ATTACHMENT).build();
+    SoapRequest req = builder().content(testValues.getDownloadAttachmentRequest()).operation(DOWNLOAD_ATTACHMENT).build();
     SoapResponse response = client.consume(req);
     assertSimilarXml(testValues.getDownloadAttachmentResponse(), response.getContent());
     Map<String, SoapAttachment> attachments = response.getAttachments();
@@ -43,9 +43,9 @@ public class AttachmentsTestCase extends AbstractSoapServiceTestCase {
   @Description("Uploads an attachment to a mtom server")
   public void uploadAttachment() throws Exception {
     SoapRequest request = builder()
-        .withAttachment("attachment", new SoapAttachment(new ByteArrayInputStream("Some Content".getBytes()), HTML))
-        .withContent(testValues.getUploadAttachmentRequest())
-        .withOperation(UPLOAD_ATTACHMENT)
+        .attachment("attachment", new SoapAttachment(new ByteArrayInputStream("Some Content".getBytes()), HTML))
+        .content(testValues.getUploadAttachmentRequest())
+        .operation(UPLOAD_ATTACHMENT)
         .build();
     SoapResponse response = client.consume(request);
     assertSimilarXml(testValues.getUploadAttachmentResponse(), response.getContent());
