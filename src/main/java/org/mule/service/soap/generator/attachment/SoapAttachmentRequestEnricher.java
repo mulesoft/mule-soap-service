@@ -8,7 +8,6 @@ package org.mule.service.soap.generator.attachment;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.runtime.core.transformer.codec.Base64Encoder;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.EncodingException;
 import org.mule.service.soap.introspection.WsdlDefinition;
