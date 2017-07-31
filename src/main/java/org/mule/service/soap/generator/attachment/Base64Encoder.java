@@ -11,11 +11,12 @@ import static org.mule.runtime.api.metadata.DataType.BYTE_ARRAY;
 import static org.mule.runtime.api.metadata.DataType.CURSOR_STREAM_PROVIDER;
 import static org.mule.runtime.api.metadata.DataType.INPUT_STREAM;
 import static org.mule.runtime.api.metadata.DataType.STRING;
+import static org.mule.runtime.core.api.config.i18n.CoreMessages.transformFailed;
+import static org.mule.runtime.core.api.util.Base64.DONT_BREAK_LINES;
+import static org.mule.runtime.core.api.util.Base64.encodeBytes;
 import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
-import org.mule.runtime.core.api.config.i18n.CoreMessages;
 import org.mule.runtime.core.api.transformer.AbstractTransformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.runtime.core.api.util.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public class Base64Encoder extends AbstractTransformer {
         buf = (byte[]) src;
       }
 
-      String result = Base64.encodeBytes(buf, Base64.DONT_BREAK_LINES);
+      String result = encodeBytes(buf, DONT_BREAK_LINES);
 
       if (byte[].class.isAssignableFrom(getReturnDataType().getType())) {
         return result.getBytes(encoding);
@@ -60,7 +61,7 @@ public class Base64Encoder extends AbstractTransformer {
         return result;
       }
     } catch (Exception ex) {
-      throw new TransformerException(CoreMessages.transformFailed(src.getClass().getName(), "base64"), this, ex);
+      throw new TransformerException(transformFailed(src.getClass().getName(), "base64"), this, ex);
     }
   }
 

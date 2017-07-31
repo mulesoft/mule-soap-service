@@ -10,8 +10,8 @@ import static org.mule.runtime.api.metadata.DataType.BYTE_ARRAY;
 import static org.mule.runtime.api.metadata.DataType.CURSOR_STREAM_PROVIDER;
 import static org.mule.runtime.api.metadata.DataType.INPUT_STREAM;
 import static org.mule.runtime.api.metadata.DataType.STRING;
+import static org.mule.runtime.core.api.config.i18n.CoreMessages.transformFailed;
 import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
-import org.mule.runtime.core.api.config.i18n.CoreMessages;
 import org.mule.runtime.core.api.transformer.AbstractTransformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.runtime.core.api.util.Base64;
@@ -58,7 +58,7 @@ public class Base64Decoder extends AbstractTransformer {
         return result;
       }
     } catch (Exception ex) {
-      throw new TransformerException(CoreMessages.transformFailed("base64", getReturnDataType()), this, ex);
+      throw new TransformerException(transformFailed("base64", getReturnDataType()), this, ex);
     }
   }
 
