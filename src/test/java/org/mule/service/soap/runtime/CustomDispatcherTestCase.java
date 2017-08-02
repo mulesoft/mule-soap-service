@@ -37,7 +37,7 @@ public class CustomDispatcherTestCase extends AbstractSoapServiceTestCase {
   @Test
   public void transportHeaders() {
     Map<String, String> headers = ImmutableMap.<String, String>builder().put("H1", "H1Value").put("H2", "H2Value").build();
-    SoapResponse response = getTestClient().consume(builder().withOperation("noParams").withTransportHeaders(headers).build());
+    SoapResponse response = getTestClient().consume(builder().operation("noParams").transportHeaders(headers).build());
     response.getTransportHeaders().forEach((k, v) -> {
       assertThat(headers.containsKey(k), is(true));
       assertThat(headers.containsValue(v), is(true));

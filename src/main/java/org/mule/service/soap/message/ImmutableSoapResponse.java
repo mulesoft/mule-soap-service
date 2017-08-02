@@ -80,11 +80,11 @@ public final class ImmutableSoapResponse implements SoapResponse {
       return Result.<InputStream, SoapAttributes>builder().output(content).attributes(attributes).mediaType(contentType).build();
     } else {
       ImmutableList.Builder<Message> parts = ImmutableList.builder();
-      parts.add(builder().payload(content).mediaType(contentType).attributes(BODY_ATTRIBUTES).build());
+      parts.add(builder().value(content).mediaType(contentType).attributesValue(BODY_ATTRIBUTES).build());
       attachments.forEach((name, attachment) -> parts.add(builder()
-          .payload(attachment.getContent())
+          .value(attachment.getContent())
           .mediaType(attachment.getContentType())
-          .attributes(new PartAttributes(name))
+          .attributesValue(new PartAttributes(name))
           .build()));
       return Result.<SoapMultipartPayload, SoapAttributes>builder()
           .output(new SoapMultipartPayload(parts.build()))

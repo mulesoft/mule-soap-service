@@ -20,8 +20,8 @@ public abstract class AbstractWebServiceSecurityTestCase extends AbstractSoapSer
   @Description("Consumes a simple operation of a secured web service and expects a valid response")
   public void expectedSecuredRequest() throws Exception {
     SoapRequest req = builder()
-        .withContent("<con:echo xmlns:con=\"http://service.soap.service.mule.org/\"><text>test</text></con:echo>")
-        .withOperation("echo")
+        .content("<con:echo xmlns:con=\"http://service.soap.service.mule.org/\"><text>test</text></con:echo>")
+        .operation("echo")
         .build();
     client.consume(req);
   }

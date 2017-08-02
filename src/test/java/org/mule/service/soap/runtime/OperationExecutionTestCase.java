@@ -69,10 +69,10 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
         .build();
 
     ImmutableSoapRequest req =
-        builder().withContent(testValues.getEchoWithHeadersRequest())
-            .withOperation(ECHO_HEADERS)
-            .withSoapHeaders(headers)
-            .ofContentType(APPLICATION_XML)
+        builder().content(testValues.getEchoWithHeadersRequest())
+            .operation(ECHO_HEADERS)
+            .soapHeaders(headers)
+            .contentType(APPLICATION_XML)
             .build();
 
     SoapResponse response = client.consume(req);
@@ -84,7 +84,7 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that expects 2 parameters (a simple one and a complex one) and returns a complex type")
   public void complexTypeOperation() throws Exception {
-    ImmutableSoapRequest req = builder().withContent(testValues.getEchoAccountRequest()).withOperation(ECHO_ACCOUNT).build();
+    ImmutableSoapRequest req = builder().content(testValues.getEchoAccountRequest()).operation(ECHO_ACCOUNT).build();
     SoapResponse response = client.consume(req);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
     assertSimilarXml(testValues.getEchoAccountResponse(), response.getContent());
@@ -93,14 +93,14 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that expects no parameters and returns a simple type")
   public void noParamsOperation() throws Exception {
-    SoapRequest req = builder().withContent(testValues.getNoParamsRequest()).withOperation(NO_PARAMS).build();
+    SoapRequest req = builder().content(testValues.getNoParamsRequest()).operation(NO_PARAMS).build();
     testNoParams(req);
   }
 
   @Test
   @Description("Consumes an operation that expects no parameters and returns a simple type")
   public void large() throws Exception {
-    SoapRequest req = builder().withOperation("large").build();
+    SoapRequest req = builder().operation("large").build();
     InputStream response = client.consume(req).getContent();
     String largeContent = IOUtils.toString(currentThread().getContextClassLoader().getResource("large.json").openStream());
     assertSimilarXml(testValues.buildXml("largeResponse", "<largeResponse>" + largeContent + "</largeResponse>"), response);
@@ -119,8 +119,8 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   }
 
   private void testSimpleOperation(SoapClient client) throws Exception {
-    //    SoapRequest request = builder().withContent(testValues.getEchoResquest()).ofContentType(APPLICATION_XML).withOperation(ECHO).build();
-    SoapRequest request = builder().withContent(testValues.getEchoResquest()).withOperation(ECHO).build();
+    //    SoapRequest request = builder().content(testValues.getEchoResquest()).contentType(APPLICATION_XML).operation(ECHO).build();
+    SoapRequest request = builder().content(testValues.getEchoResquest()).operation(ECHO).build();
     SoapResponse response = client.consume(request);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
     assertSimilarXml(testValues.getEchoResponse(), response.getContent());
