@@ -121,6 +121,7 @@
             </exclusions>
         </dependency>
 
+        <!--  These spring dependencies are needed by cxf's SpringBusFactory -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
