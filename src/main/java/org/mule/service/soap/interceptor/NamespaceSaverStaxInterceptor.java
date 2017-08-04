@@ -41,5 +41,4 @@ public class NamespaceSaverStaxInterceptor extends AbstractPhaseInterceptor<Mess
       message.setContent(NamespaceRestorerXMLStreamReader.class, replacement);
     }
   }
-
 }

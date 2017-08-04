@@ -7,9 +7,14 @@
 package org.mule.service.soap;
 
 import static org.custommonkey.xmlunit.XMLUnit.compareXML;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.api.metadata.TypedValue;
+import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
+import org.mule.runtime.extension.api.soap.SoapOutputPayload;
 import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -58,5 +63,14 @@ public class SoapTestUtils {
     DOMSource source = new DOMSource(doc);
     transformer.transform(source, result);
     return result.getWriter().toString();
+  }
+
+  public static String payloadBodyAsString(Message message) throws Exception {
+    Object payload = message.getPayload().getValue();
+    assertThat(payload, is(instanceOf(SoapOutputPayload.class)));
+    TypedValue<InputStream> body = ((SoapOutputPayload) payload).getBody();
+    InputStream val =
+        body.getValue() instanceof CursorStreamProvider ? ((CursorStreamProvider) body.getValue()).openCursor() : body.getValue();
+    return IOUtils.toString(val);
   }
 }
