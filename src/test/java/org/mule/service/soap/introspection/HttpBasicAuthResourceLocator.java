@@ -7,21 +7,20 @@
 package org.mule.service.soap.introspection;
 
 import static org.mule.runtime.http.api.HttpConstants.Method.GET;
-import static org.mule.runtime.http.api.client.HttpAuthenticationType.BASIC;
 import static org.mule.service.soap.server.BasicAuthHttpServer.PASSWORD;
 import static org.mule.service.soap.server.BasicAuthHttpServer.USERNAME;
-
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.lifecycle.Lifecycle;
 import org.mule.runtime.http.api.client.HttpClient;
 import org.mule.runtime.http.api.client.HttpClientConfiguration;
-import org.mule.runtime.http.api.client.HttpRequestAuthentication;
+import org.mule.runtime.http.api.client.auth.HttpAuthentication;
 import org.mule.runtime.http.api.domain.message.request.HttpRequest;
 import org.mule.runtime.http.api.domain.message.response.HttpResponse;
 import org.mule.runtime.soap.api.transport.TransportResourceLocator;
 import org.mule.service.http.impl.service.HttpServiceImplementation;
 import org.mule.tck.SimpleUnitTestSupportSchedulerService;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeoutException;
@@ -42,9 +41,7 @@ public class HttpBasicAuthResourceLocator implements TransportResourceLocator, L
 
   @Override
   public InputStream getResource(String url) {
-    HttpRequestAuthentication auth = new HttpRequestAuthentication(BASIC);
-    auth.setUsername(USERNAME);
-    auth.setPassword(PASSWORD);
+    HttpAuthentication auth = HttpAuthentication.basic(USERNAME, PASSWORD).build();
     try {
       HttpResponse response = httpClient.send(HttpRequest.builder().method(GET).uri(url).build(), 500, false, auth);
       if (response.getStatusCode() == 401) {
