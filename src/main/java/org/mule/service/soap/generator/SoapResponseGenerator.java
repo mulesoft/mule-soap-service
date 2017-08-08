@@ -12,7 +12,7 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.client.SoapClient;
 import org.mule.runtime.soap.api.exception.BadResponseException;
-import org.mule.runtime.soap.api.message.SoapAttributes;
+import org.mule.runtime.extension.api.soap.SoapAttributes;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.client.SoapCxfClient;
