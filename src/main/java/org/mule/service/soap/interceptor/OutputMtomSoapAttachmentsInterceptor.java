@@ -9,8 +9,6 @@ package org.mule.service.soap.interceptor;
 import static org.apache.cxf.interceptor.Fault.FAULT_CODE_SERVER;
 import static org.apache.cxf.phase.Phase.PRE_PROTOCOL;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
-
-import org.mule.runtime.api.message.MultiPartPayload;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.message.SoapRequest;
@@ -33,7 +31,7 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 /**
  * CXF out interceptor that collects the received Mtom SOAP attachments in the response, transforms it to message parts and stores
  * them in the response message {@link Exchange} so then can be returned by the {@link SoapCxfClient#consume(SoapRequest)} as a
- * {@link MultiPartPayload}, if no attachments are returned an empty map is set.
+ * {@link SoapAttachment}, if no attachments are returned an empty map is set.
  *
  * @since 1.0
  */
