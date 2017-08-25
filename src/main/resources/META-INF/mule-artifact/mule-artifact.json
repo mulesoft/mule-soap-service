@@ -3,11 +3,11 @@
   "minMuleVersion": "4.0.0",
   "serviceProviderClassName": "org.mule.service.soap.provider.SoapServiceProvider",
   "classLoaderModelLoaderDescriptor": {
-    "id": "maven",
+    "id": "mule",
     "attributes": {}
   },
   "bundleDescriptorLoader": {
-    "id": "maven",
+    "id": "mule",
     "attributes": {}
   }
 }
