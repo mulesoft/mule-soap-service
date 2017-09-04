@@ -87,7 +87,9 @@ final class WsdlSchemasCollector {
     imports.forEach(vector -> ((Vector) vector).forEach(element -> {
       if (element instanceof SchemaImport) {
         Schema importedSchema = ((SchemaImport) element).getReferencedSchema();
-        addSchema(importedSchema);
+        if (importedSchema != null) {
+          addSchema(importedSchema);
+        }
       }
     }));
   }
