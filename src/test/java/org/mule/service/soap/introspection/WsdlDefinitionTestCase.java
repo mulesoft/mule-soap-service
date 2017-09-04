@@ -14,11 +14,13 @@ import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.server.BasicAuthHttpServer;
 import org.mule.service.soap.service.Soap11Service;
 import org.mule.tck.junit4.rule.DynamicPort;
+
+import java.io.File;
+import java.net.URISyntaxException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import java.io.File;
-import java.net.URISyntaxException;
 
 public class WsdlDefinitionTestCase {
 

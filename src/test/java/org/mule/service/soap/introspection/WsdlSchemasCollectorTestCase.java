@@ -14,12 +14,14 @@ import static org.hamcrest.core.Is.is;
 import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
 
 import org.mule.runtime.core.api.util.IOUtils;
-import org.junit.Test;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
 
 public class WsdlSchemasCollectorTestCase {
 
@@ -59,6 +61,14 @@ public class WsdlSchemasCollectorTestCase {
       String key = file.equals(embeddedSchema) ? wsdl : schemas.keySet().stream().filter(k -> k.contains(file)).findAny().get();
       assertSimilarXml(IOUtils.toString(schemas.get(key)), new FileInputStream(getResourceLocation(file)));
     }
+  }
+
+  @Test
+  public void wsdlWithSchemaThatDoesNotHaveALocation() throws Exception {
+    String wsdl = getResourceLocation("wsdl/no-schema-location/test.wsdl");
+    WsdlDefinition definition = new WsdlDefinition(wsdl, "service", "BasicHttpBinding_IOrderService");
+    Map<String, InputStream> schemas = definition.getSchemas().collect();
+    assertThat(schemas.entrySet(), hasSize(4));
   }
 
   private String getResourceLocation(String name) {
