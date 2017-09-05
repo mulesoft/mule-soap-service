@@ -41,7 +41,6 @@ public class XmlTransformationUtils {
     StaxSource staxSource = new StaxSource(xmlStreamReader);
     DOMResult writer = new DOMResult();
     TransformerFactory idTransformer = SaxonTransformerFactory.newInstance();
-    XMLSecureFactories.createDefault().configureTransformerFactory(idTransformer);
     try {
       Transformer transformer = idTransformer.newTransformer();
       transformer.transform(staxSource, writer);
@@ -79,7 +78,6 @@ public class XmlTransformationUtils {
       DOMSource source = new DOMSource(node);
       StreamResult result = new StreamResult(writer);
       TransformerFactory idTransformer = SaxonTransformerFactory.newInstance();
-      XMLSecureFactories.createDefault().configureTransformerFactory(idTransformer);
       Transformer transformer = idTransformer.newTransformer();
       transformer.transform(source, result);
       return writer.toString();
