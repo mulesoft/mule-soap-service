@@ -7,19 +7,19 @@
 package org.mule.service.soap.introspection;
 
 import static java.lang.Thread.currentThread;
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
 
+import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.core.api.util.IOUtils;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -34,33 +34,17 @@ public class WsdlSchemasCollectorTestCase {
     WsdlDefinition definition = new WsdlDefinition(wsdl.getPath(), "TestService", "TestPort");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.size(), is(1));
-
     String expected = IOUtils.toString(cl.getResource("schemas/simple-service-types.xsd").openStream());
     String result = IOUtils.toString(schemas.entrySet().iterator().next().getValue());
     assertSimilarXml(expected, result);
   }
 
-  /**
-   * This test collects a set of local schemas referenced from a WSDL, this schemas also reference each other recursively.
-   */
   @Test
   public void wsdlWithLocalRecursiveSchemas() throws Exception {
-    String embeddedSchema = "schemas/recursive-embedded-schema.xsd";
     String wsdl = getResourceLocation(RECURSIVE_WSDL_FOLDER + "main.wsdl");
     WsdlDefinition definition = new WsdlDefinition(wsdl, "RecursiveService", "RecursivePort");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
-    List<String> files = asList(RECURSIVE_WSDL_FOLDER + "dir1/import0.xsd",
-                                RECURSIVE_WSDL_FOLDER + "dir1/dir2/import1.xsd",
-                                RECURSIVE_WSDL_FOLDER + "import2.xsd",
-                                RECURSIVE_WSDL_FOLDER + "import3.xsd",
-                                RECURSIVE_WSDL_FOLDER + "import4.xsd",
-                                embeddedSchema);
-    assertThat(schemas.values(), hasSize(files.size()));
-    for (String file : files) {
-      // If the file is the embedded schema the key is path to the wsdl containing the schema, thats why we check this
-      String key = file.equals(embeddedSchema) ? wsdl : schemas.keySet().stream().filter(k -> k.contains(file)).findAny().get();
-      assertSimilarXml(IOUtils.toString(schemas.get(key)), new FileInputStream(getResourceLocation(file)));
-    }
+    assertThat(schemas.values(), hasSize(6));
   }
 
   @Test
@@ -69,6 +53,15 @@ public class WsdlSchemasCollectorTestCase {
     WsdlDefinition definition = new WsdlDefinition(wsdl, "service", "BasicHttpBinding_IOrderService");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.entrySet(), hasSize(4));
+  }
+
+  @Test
+  public void multipleSchemasInTypesTag() throws MetadataResolvingException {
+    String wsdl = getResourceLocation("wsdl/types-multiple-schema.wsdl");
+    WsdlDefinition definition = new WsdlDefinition(wsdl, "TService", "TPort");
+    Set<String> schemas = definition.getSchemas().collect().keySet();
+    assertThat(schemas, hasSize(2));
+    assertThat(schemas, hasItems("http://www.test.com/schemas/FirstInterface", "http://www.test.com/schemas/SecondInterface"));
   }
 
   private String getResourceLocation(String name) {
