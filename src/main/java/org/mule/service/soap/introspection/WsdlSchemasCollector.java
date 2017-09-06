@@ -32,6 +32,7 @@ import java.util.Vector;
 @SuppressWarnings("unchecked")
 final class WsdlSchemasCollector {
 
+  private static final String TARGET_NS = "targetNamespace";
   private final Map<String, Schema> schemas = newHashMap();
   private final Definition definition;
 
@@ -67,14 +68,14 @@ final class WsdlSchemasCollector {
       types.getExtensibilityElements().forEach(element -> {
         if (element instanceof Schema) {
           Schema schema = (Schema) element;
-          addSchema(schema);
+          String targetNamespace = schema.getElement().getAttribute(TARGET_NS);
+          addSchema(targetNamespace != null ? targetNamespace : schema.getDocumentBaseURI(), schema);
         }
       });
     }
   }
 
-  private void addSchema(Schema schema) {
-    String key = schema.getDocumentBaseURI();
+  private void addSchema(String key, Schema schema) {
     if (!schemas.containsKey(key)) {
       schemas.put(key, schema);
       addImportedSchemas(schema);
@@ -88,7 +89,7 @@ final class WsdlSchemasCollector {
       if (element instanceof SchemaImport) {
         Schema importedSchema = ((SchemaImport) element).getReferencedSchema();
         if (importedSchema != null) {
-          addSchema(importedSchema);
+          addSchema(importedSchema.getDocumentBaseURI(), importedSchema);
         }
       }
     }));
@@ -97,7 +98,8 @@ final class WsdlSchemasCollector {
   private void addIncludedSchemas(Schema schema) {
     schema.getIncludes().forEach(include -> {
       if (include instanceof SchemaReference) {
-        addSchema(((SchemaReference) include).getReferencedSchema());
+        Schema referencedSchema = ((SchemaReference) include).getReferencedSchema();
+        addSchema(referencedSchema.getDocumentBaseURI(), referencedSchema);
       }
     });
   }
