@@ -6,11 +6,12 @@
  */
 package org.mule.service.soap.metadata;
 
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.api.model.ObjectType;
@@ -21,10 +22,10 @@ import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.junit.Test;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.junit.Test;
 
 @Feature(WSC_EXTENSION)
 @Story("Metadata")
