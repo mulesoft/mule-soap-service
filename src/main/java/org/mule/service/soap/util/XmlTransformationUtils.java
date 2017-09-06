@@ -24,6 +24,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.sf.saxon.jaxp.SaxonTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,7 +40,7 @@ public class XmlTransformationUtils {
   public static Document xmlStreamReaderToDocument(XMLStreamReader xmlStreamReader) throws XmlTransformationException {
     StaxSource staxSource = new StaxSource(xmlStreamReader);
     DOMResult writer = new DOMResult();
-    TransformerFactory idTransformer = XMLSecureFactories.createDefault().getSaxonTransformerFactory();
+    TransformerFactory idTransformer = SaxonTransformerFactory.newInstance();
     try {
       Transformer transformer = idTransformer.newTransformer();
       transformer.transform(staxSource, writer);
@@ -76,7 +77,7 @@ public class XmlTransformationUtils {
       StringWriter writer = new StringWriter();
       DOMSource source = new DOMSource(node);
       StreamResult result = new StreamResult(writer);
-      TransformerFactory idTransformer = XMLSecureFactories.createDefault().getSaxonTransformerFactory();
+      TransformerFactory idTransformer = SaxonTransformerFactory.newInstance();
       Transformer transformer = idTransformer.newTransformer();
       transformer.transform(source, result);
       return writer.toString();
