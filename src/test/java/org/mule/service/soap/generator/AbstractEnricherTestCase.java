@@ -6,7 +6,7 @@
  */
 package org.mule.service.soap.generator;
 
-import org.mule.metadata.xml.XmlTypeLoader;
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
 import org.mule.service.soap.introspection.WsdlDefinition;
 
