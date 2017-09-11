@@ -14,7 +14,7 @@ import static java.util.Optional.ofNullable;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
-import org.mule.metadata.xml.XmlTypeLoader;
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.service.soap.introspection.WsdlDefinition;

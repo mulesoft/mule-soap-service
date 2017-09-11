@@ -20,7 +20,7 @@ import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
 import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
 
-import org.mule.metadata.xml.XmlTypeLoader;
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;

@@ -13,7 +13,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import org.mule.metadata.xml.SchemaCollector;
+import org.mule.metadata.xml.api.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.runtime.soap.api.transport.NullTransportResourceLocator;
 import org.mule.runtime.soap.api.transport.TransportResourceLocator;
