@@ -15,16 +15,17 @@ import static org.mule.runtime.soap.api.message.SoapRequest.builder;
 import static org.mule.service.soap.SoapTestXmlValues.FAIL;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
-import io.qameta.allure.Stories;
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.SoapFaultException;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
+
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Stories;
+import io.qameta.allure.Story;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import io.qameta.allure.Description;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
 
 @Feature(WSC_EXTENSION)
 @Stories({@Story("Operation Execution"), @Story("Soap Fault")})
@@ -51,15 +52,14 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation that does not exist and throws a SOAP Fault because of it and asserts the thrown exception")
   public void noExistentOperation() throws Exception {
     try {
-      client.consume(builder().content(testValues.buildXml("INVALID", "")).operation("fail").build());
+      client.consume(builder().content(testValues.buildXml("FAIL", "")).operation("fail").build());
     } catch (SoapFaultException e) {
       // Client is for 1.1, Sender for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Client", "Sender"));
       if (soapVersion.equals(SOAP11)) {
-        assertThat(e.getReason(), containsString("{http://service.soap.service.mule.org/}INVALID was not recognized"));
+        assertThat(e.getReason(), containsString("{http://service.soap.service.mule.org/}FAIL was not recognized"));
       } else {
-        assertThat(e.getReason(),
-                   containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}INVALID found."));
+        assertThat(e.getReason(), containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}FAIL found"));
       }
     }
   }

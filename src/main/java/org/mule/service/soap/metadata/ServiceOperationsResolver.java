@@ -6,10 +6,12 @@
  */
 package org.mule.service.soap.metadata;
 
-import org.mule.metadata.api.model.MetadataType;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import static java.util.stream.Collectors.toSet;
 
-import java.util.HashSet;
+import org.mule.metadata.api.model.MetadataType;
+import org.mule.service.soap.introspection.OperationDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
+
 import java.util.Set;
 
 /**
@@ -19,13 +21,13 @@ import java.util.Set;
  */
 final class ServiceOperationsResolver {
 
-  private final WsdlDefinition definition;
+  private final ServiceDefinition definition;
 
-  ServiceOperationsResolver(WsdlDefinition definition) {
+  ServiceOperationsResolver(ServiceDefinition definition) {
     this.definition = definition;
   }
 
   Set<String> getAvailableOperations() {
-    return new HashSet<>(definition.getOperationNames());
+    return definition.getOperations().stream().map(OperationDefinition::getName).collect(toSet());
   }
 }

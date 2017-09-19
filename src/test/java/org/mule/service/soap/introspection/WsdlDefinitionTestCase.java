@@ -33,21 +33,21 @@ public class WsdlDefinitionTestCase {
   @Test
   public void getWsdlStyleFromOperations() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/document.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "Dilbert", "DilbertSoap");
+    ServiceDefinition definition = new ServiceDefinition(resourceLocation, "Dilbert", "DilbertSoap");
     assertThat(definition.isDocumentStyle(), is(true));
   }
 
   @Test
   public void getWsdlStyleDefault() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/no-style-defined.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "messagingService", "messagingPort");
+    ServiceDefinition definition = new ServiceDefinition(resourceLocation, "messagingService", "messagingPort");
     assertThat(definition.isDocumentStyle(), is(true));
   }
 
   @Test
   public void getWsdlStyleFromBinding() throws URISyntaxException {
     String resourceLocation = getResourceLocation("wsdl/rpc.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "SoapResponder", "SoapResponderPortType");
+    ServiceDefinition definition = new ServiceDefinition(resourceLocation, "SoapResponder", "SoapResponderPortType");
     assertThat(definition.isRpcStyle(), is(true));
   }
 
@@ -57,7 +57,7 @@ public class WsdlDefinitionTestCase {
     expectedException.expectMessage("faultCode=OTHER_ERROR: Unable to locate document at");
     BasicAuthHttpServer server = new BasicAuthHttpServer(port.getNumber(), null, null, new Soap11Service());
     String resourceLocation = server.getDefaultAddress() + "?wsdl";
-    new WsdlDefinition(resourceLocation, "TestService", "TestPort");
+    new ServiceDefinition(resourceLocation, "TestService", "TestPort");
     server.stop();
   }
 
@@ -67,7 +67,7 @@ public class WsdlDefinitionTestCase {
     HttpBasicAuthResourceLocator resourceLocator = new HttpBasicAuthResourceLocator();
     resourceLocator.start();
     String resourceLocation = server.getDefaultAddress() + "?wsdl";
-    WsdlDefinition definition = new WsdlDefinition(resourceLocation, "TestService", "TestPort", resourceLocator);
+    ServiceDefinition definition = new ServiceDefinition(resourceLocation, "TestService", "TestPort", resourceLocator);
     resourceLocator.stop();
     server.stop();
     assertThat(definition.isDocumentStyle(), is(true));

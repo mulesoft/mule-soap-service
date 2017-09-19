@@ -17,18 +17,20 @@ import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.xml.XmlTypeLoader;
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
 import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap12.SOAP12Body;
 import javax.xml.namespace.QName;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Enables the construction of request bodies for web service operations that don't require input parameters.
@@ -44,10 +46,10 @@ final class EmptyRequestGenerator {
    * SOAP request mask for operations without input parameters
    */
   private static final String NO_PARAMS_SOAP_BODY_CALL_MASK = "<ns:%s xmlns:ns=\"%s\"/>";
-  private final WsdlDefinition definition;
+  private final ServiceDefinition definition;
   private final XmlTypeLoader loader;
 
-  public EmptyRequestGenerator(WsdlDefinition definition, XmlTypeLoader loader) {
+  public EmptyRequestGenerator(ServiceDefinition definition, XmlTypeLoader loader) {
     this.definition = definition;
     this.loader = loader;
   }
@@ -58,7 +60,7 @@ final class EmptyRequestGenerator {
    */
   String generateRequest(String operation) {
 
-    BindingOperation bindingOperation = definition.getBindingOperation(operation);
+    BindingOperation bindingOperation = definition.getOperation(operation).getBindingOperation();
     Optional<List<String>> soapBodyParts = getSoapBodyParts(bindingOperation);
 
     if (!soapBodyParts.isPresent()) {

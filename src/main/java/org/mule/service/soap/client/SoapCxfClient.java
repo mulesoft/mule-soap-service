@@ -41,11 +41,22 @@ import org.mule.service.soap.generator.attachment.MtomRequestEnricher;
 import org.mule.service.soap.generator.attachment.MtomResponseEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.metadata.DefaultSoapMetadataResolver;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
+
 import com.google.common.collect.ImmutableMap;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.attachment.AttachmentImpl;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -60,13 +71,6 @@ import org.apache.cxf.service.model.BindingOperationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * a {@link SoapClient} implementation based on CXF.
@@ -77,18 +81,19 @@ public class SoapCxfClient implements SoapClient {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SoapCxfClient.class);
 
-  public static final String WSC_DISPATCHER = "mule.wsc.dispatcher";
-  public static final String MULE_ATTACHMENTS_KEY = "mule.wsc.attachments";
-  public static final String MULE_WSC_ADDRESS = "mule.wsc.address";
-  public static final String MULE_HEADERS_KEY = "mule.wsc.headers";
-  public static final String MULE_TRANSPORT_HEADERS_KEY = "mule.wsc.transport.headers";
-  public static final String MULE_SOAP_ACTION = "mule.wsc.soap.action";
+  public static final String MESSAGE_DISPATCHER = "mule.soap.dispatcher";
+  public static final String MULE_ATTACHMENTS_KEY = "mule.soap.attachments";
+  public static final String MULE_WSC_ADDRESS = "mule.soap.address";
+  public static final String MULE_HEADERS_KEY = "mule.soap.headers";
+  public static final String MULE_TRANSPORT_HEADERS_KEY = "mule.soap.transport.headers";
+  public static final String MULE_SOAP_ACTION = "mule.soap.action";
+  public static final String MULE_SOAP_OPERATION_STYLE = "mule.soap.operation.type";
 
   private final SoapRequestGenerator requestGenerator;
   private final SoapResponseGenerator responseGenerator;
 
   private final Client client;
-  private final WsdlDefinition definition;
+  private final ServiceDefinition definition;
   private final XmlTypeLoader loader;
   private final String address;
   private final MessageDispatcher dispatcher;
@@ -96,7 +101,7 @@ public class SoapCxfClient implements SoapClient {
   private final String encoding;
   private final boolean isMtom;
 
-  SoapCxfClient(Client client, WsdlDefinition definition, XmlTypeLoader typeLoader, String address,
+  SoapCxfClient(Client client, ServiceDefinition definition, XmlTypeLoader typeLoader, String address,
                 MessageDispatcher dispatcher, SoapVersion version, String encoding, boolean isMtom) {
     this.client = client;
     this.definition = definition;
@@ -190,7 +195,8 @@ public class SoapCxfClient implements SoapClient {
     props.put(ENCODING, encoding == null ? "UTF-8" : encoding);
     props.put(MULE_HEADERS_KEY, transformToCxfHeaders(request.getSoapHeaders()));
     props.put(MULE_TRANSPORT_HEADERS_KEY, request.getTransportHeaders());
-    props.put(WSC_DISPATCHER, dispatcher);
+    props.put(MESSAGE_DISPATCHER, dispatcher);
+    props.put(MULE_SOAP_OPERATION_STYLE, definition.getOperation(request.getOperation()).getType());
     if (version == SOAP12) {
       props.put(MULE_SOAP_ACTION, request.getOperation());
     }

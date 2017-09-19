@@ -31,7 +31,7 @@ public class WsdlSchemasCollectorTestCase {
   public void wsdlWithEmbeddedTypeSchema() throws Exception {
     ClassLoader cl = currentThread().getContextClassLoader();
     URL wsdl = cl.getResource("wsdl/simple-service.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(wsdl.getPath(), "TestService", "TestPort");
+    ServiceDefinition definition = new ServiceDefinition(wsdl.getPath(), "TestService", "TestPort");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.size(), is(1));
     String expected = IOUtils.toString(cl.getResource("schemas/simple-service-types.xsd").openStream());
@@ -42,7 +42,7 @@ public class WsdlSchemasCollectorTestCase {
   @Test
   public void wsdlWithLocalRecursiveSchemas() throws Exception {
     String wsdl = getResourceLocation(RECURSIVE_WSDL_FOLDER + "main.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(wsdl, "RecursiveService", "RecursivePort");
+    ServiceDefinition definition = new ServiceDefinition(wsdl, "RecursiveService", "RecursivePort");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.values(), hasSize(6));
   }
@@ -50,7 +50,7 @@ public class WsdlSchemasCollectorTestCase {
   @Test
   public void wsdlWithSchemaThatDoesNotHaveALocation() throws Exception {
     String wsdl = getResourceLocation("wsdl/no-schema-location/test.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(wsdl, "service", "BasicHttpBinding_IOrderService");
+    ServiceDefinition definition = new ServiceDefinition(wsdl, "service", "BasicHttpBinding_IOrderService");
     Map<String, InputStream> schemas = definition.getSchemas().collect();
     assertThat(schemas.entrySet(), hasSize(4));
   }
@@ -58,7 +58,7 @@ public class WsdlSchemasCollectorTestCase {
   @Test
   public void multipleSchemasInTypesTag() throws MetadataResolvingException {
     String wsdl = getResourceLocation("wsdl/types-multiple-schema.wsdl");
-    WsdlDefinition definition = new WsdlDefinition(wsdl, "TService", "TPort");
+    ServiceDefinition definition = new ServiceDefinition(wsdl, "TService", "TPort");
     Set<String> schemas = definition.getSchemas().collect().keySet();
     assertThat(schemas, hasSize(2));
     assertThat(schemas, hasItems("http://www.test.com/schemas/FirstInterface", "http://www.test.com/schemas/SecondInterface"));
