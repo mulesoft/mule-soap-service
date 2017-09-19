@@ -7,14 +7,21 @@
 package org.mule.service.soap.metadata;
 
 import static java.lang.String.format;
+import static javax.wsdl.OperationType.ONE_WAY;
 import static org.mule.metadata.api.model.MetadataFormat.XML;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_CONFIGURATION;
+import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_METADATA_KEY;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.UNKNOWN;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.BaseTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.OperationDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 import javax.wsdl.Part;
 
@@ -27,23 +34,26 @@ abstract class NodeMetadataResolver {
 
   final BaseTypeBuilder typeBuilder = BaseTypeBuilder.create(XML);
   final MetadataType nullType = typeBuilder.nullType().build();
-  final WsdlDefinition definition;
+  final ServiceDefinition definition;
   final TypeLoader loader;
+  final Function<OperationDefinition, Optional<Part>> bodyPartRetriever;
 
-  NodeMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
+  NodeMetadataResolver(ServiceDefinition definition,
+                       TypeLoader loader,
+                       Function<OperationDefinition, Optional<Part>> bodyPartRetriever) {
     this.definition = definition;
     this.loader = loader;
+    this.bodyPartRetriever = bodyPartRetriever;
   }
 
   /**
-   * Resolves the metadata for an operation, Input or Output is fetched depending on the {@link TypeIntrospecterDelegate} passed
+   * Resolves the metadata for an operation, Input or Output is fetched depending on the {@link Function} passed
    * as parameter.
    *
-   * @param operation the name of the operation that the types are going to be resolved.
-   * @param delegate  a delegate that introspects the message to get the types from (input or output).
+   * @param operation   the name of the operation that the types are going to be resolved.
    * @throws MetadataResolvingException in any error case.
    */
-  abstract MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException;
+  abstract MetadataType getMetadata(String operation) throws MetadataResolvingException;
 
   MetadataType buildPartMetadataType(Part part) throws MetadataResolvingException {
     if (part.getElementName() != null) {
@@ -53,5 +63,17 @@ abstract class NodeMetadataResolver {
     }
     throw new MetadataResolvingException("Trying to resolve metadata for a nameless part, probably the provided WSDL is invalid",
                                          INVALID_CONFIGURATION);
+  }
+
+  Part getBodyPart(OperationDefinition operation) throws MetadataResolvingException {
+    return bodyPartRetriever.apply(operation)
+        .orElseThrow(() -> {
+          String errorMsg = "No body type found for operation [" + operation.getName() + "]";
+          return new MetadataResolvingException(errorMsg, INVALID_METADATA_KEY);
+        });
+  }
+
+  boolean isOneWay(String operationName) {
+    return ONE_WAY.equals(definition.getOperation(operationName).getType());
   }
 }

@@ -8,6 +8,7 @@ package org.mule.service.soap.runtime;
 
 import static java.lang.Thread.currentThread;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
@@ -19,6 +20,7 @@ import static org.mule.service.soap.SoapTestXmlValues.HEADER_IN;
 import static org.mule.service.soap.SoapTestXmlValues.HEADER_INOUT;
 import static org.mule.service.soap.SoapTestXmlValues.HEADER_OUT;
 import static org.mule.service.soap.SoapTestXmlValues.NO_PARAMS;
+import static org.mule.service.soap.SoapTestXmlValues.ONE_WAY;
 import static org.mule.service.soap.client.TestSoapClient.getDefaultConfiguration;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
@@ -28,15 +30,19 @@ import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
 import org.mule.service.soap.client.TestSoapClient;
+
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import io.qameta.allure.Description;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
 
 @Feature(WSC_EXTENSION)
 @Story("Operation Execution")
@@ -112,17 +118,25 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
     testNoParams(SoapRequest.empty(NO_PARAMS));
   }
 
-  private void testNoParams(SoapRequest request) throws Exception {
-    SoapResponse response = client.consume(request);
-    assertThat(response.getSoapHeaders().isEmpty(), is(true));
-    assertSimilarXml(testValues.getNoParamsResponse(), response.getContent());
+  @Test
+  @Description("Consumes an operation that is one way, without response")
+  public void oneWayOperation() throws IOException {
+    SoapRequest req = builder().operation(ONE_WAY).content(testValues.getOneWayRequest()).build();
+    SoapResponse response = client.consume(req);
+    assertThat(IOUtils.toString(response.getContent()), is(""));
+    assertThat(response.getContentType(), is(nullValue()));
   }
 
   private void testSimpleOperation(SoapClient client) throws Exception {
-    //    SoapRequest request = builder().content(testValues.getEchoResquest()).contentType(APPLICATION_XML).operation(ECHO).build();
     SoapRequest request = builder().content(testValues.getEchoResquest()).operation(ECHO).build();
     SoapResponse response = client.consume(request);
     assertThat(response.getSoapHeaders().isEmpty(), is(true));
     assertSimilarXml(testValues.getEchoResponse(), response.getContent());
+  }
+
+  private void testNoParams(SoapRequest request) throws Exception {
+    SoapResponse response = client.consume(request);
+    assertThat(response.getSoapHeaders().isEmpty(), is(true));
+    assertSimilarXml(testValues.getNoParamsResponse(), response.getContent());
   }
 }

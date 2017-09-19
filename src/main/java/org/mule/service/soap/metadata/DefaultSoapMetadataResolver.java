@@ -10,7 +10,7 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.metadata.SoapMetadataResolver;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 
 import java.util.Set;
 
@@ -21,33 +21,36 @@ import java.util.Set;
  */
 public class DefaultSoapMetadataResolver implements SoapMetadataResolver {
 
-  private static final TypeIntrospecterDelegate inputDelegate = new InputTypeIntrospecterDelegate();
-  private static final TypeIntrospecterDelegate outputDelegate = new OutputTypeIntrospecterDelegate();
-
-  private final HeadersMetadataResolver headersResolver;
-  private final BodyMetadataResolver bodyResolver;
-  private final AttachmentsMetadataResolver attachmentsResolver;
+  private final HeadersMetadataResolver inputHeadersResolver;
+  private final HeadersMetadataResolver outputHeadersResolver;
+  private final BodyMetadataResolver inputBodyResolver;
+  private final BodyMetadataResolver outputBodyResolver;
+  private final AttachmentsMetadataResolver inputAttachmentsResolver;
+  private final AttachmentsMetadataResolver outputAttachmentsResolver;
   private final ServiceOperationsResolver keysResolver;
 
-  public DefaultSoapMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
-    bodyResolver = new BodyMetadataResolver(definition, loader);
-    headersResolver = new HeadersMetadataResolver(definition, loader);
-    attachmentsResolver = new AttachmentsMetadataResolver(definition, loader);
+  public DefaultSoapMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
+    inputHeadersResolver = new InputHeadersMetadataResolver(definition, loader);
+    outputHeadersResolver = new OutputHeadersMetadataResolver(definition, loader);
+    outputAttachmentsResolver = new OutputAttachmentsMetadataResolver(definition, loader);
+    inputAttachmentsResolver = new InputAttachmentsMetadataResolver(definition, loader);
+    inputBodyResolver = new InputBodyMetadataResolver(definition, loader);
+    outputBodyResolver = new OutputBodyMetadataResolver(definition, loader);
     keysResolver = new ServiceOperationsResolver(definition);
   }
 
   @Override
   public SoapOperationMetadata getInputMetadata(String operation) throws MetadataResolvingException {
-    return new ImmutableSoapOperationMetadata(bodyResolver.getMetadata(operation, inputDelegate),
-                                              headersResolver.getMetadata(operation, inputDelegate),
-                                              attachmentsResolver.getMetadata(operation, inputDelegate));
+    return new ImmutableSoapOperationMetadata(inputBodyResolver.getMetadata(operation),
+                                              inputHeadersResolver.getMetadata(operation),
+                                              inputAttachmentsResolver.getMetadata(operation));
   }
 
   @Override
   public SoapOperationMetadata getOutputMetadata(String operation) throws MetadataResolvingException {
-    return new ImmutableSoapOperationMetadata(bodyResolver.getMetadata(operation, outputDelegate),
-                                              headersResolver.getMetadata(operation, outputDelegate),
-                                              attachmentsResolver.getMetadata(operation, outputDelegate));
+    return new ImmutableSoapOperationMetadata(outputBodyResolver.getMetadata(operation),
+                                              outputHeadersResolver.getMetadata(operation),
+                                              outputAttachmentsResolver.getMetadata(operation));
   }
 
   @Override

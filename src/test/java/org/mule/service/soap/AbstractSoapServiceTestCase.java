@@ -20,6 +20,10 @@ import org.mule.service.soap.server.HttpServer;
 import org.mule.service.soap.service.Soap11Service;
 import org.mule.service.soap.service.Soap12Service;
 import org.mule.tck.junit4.rule.DynamicPort;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.cxf.interceptor.Interceptor;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.After;
@@ -27,8 +31,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import java.util.Collection;
-import java.util.List;
 
 @RunWith(Parameterized.class)
 public abstract class AbstractSoapServiceTestCase {

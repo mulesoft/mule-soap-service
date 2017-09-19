@@ -37,7 +37,16 @@ import org.mule.service.soap.security.WssTimestampSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.WssUsernameTokenSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.WssVerifySignatureSecurityStrategyCxfAdapter;
 import org.mule.service.soap.security.callback.CompositeCallbackHandler;
+
 import com.google.common.collect.ImmutableList;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import javax.security.auth.callback.CallbackHandler;
+
 import org.apache.cxf.binding.Binding;
 import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
 import org.apache.cxf.binding.soap.interceptor.Soap11FaultInInterceptor;
@@ -49,11 +58,6 @@ import org.apache.cxf.phase.PhaseInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.cxf.wsdl.interceptors.WrappedOutInterceptor;
-import javax.security.auth.callback.CallbackHandler;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * Object that creates CXF specific clients based on a {@link SoapClientConfiguration} setting all the required CXF properties.

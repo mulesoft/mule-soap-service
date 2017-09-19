@@ -7,14 +7,14 @@
 package org.mule.service.soap.generator.attachment;
 
 import static java.lang.String.format;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.metadata.OutputTypeIntrospecterDelegate;
-import org.mule.service.soap.xml.util.XMLUtils;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
+import org.mule.service.soap.xml.util.XMLUtils;
 
 import java.util.List;
 
@@ -29,10 +29,10 @@ import org.w3c.dom.Document;
  */
 public abstract class AttachmentResponseEnricher {
 
-  private final WsdlDefinition definition;
+  private final ServiceDefinition definition;
   private final TypeLoader loader;
 
-  protected AttachmentResponseEnricher(WsdlDefinition definition, TypeLoader loader) {
+  protected AttachmentResponseEnricher(ServiceDefinition definition, TypeLoader loader) {
     this.definition = definition;
     this.loader = loader;
   }
@@ -44,7 +44,7 @@ public abstract class AttachmentResponseEnricher {
    * the user can have a better experience.
    */
   public String enrich(Document response, String operation, Exchange exchange) {
-    Part outputPart = definition.getBodyPart(operation, new OutputTypeIntrospecterDelegate())
+    Part outputPart = definition.getOperation(operation).getOutputBodyPart()
         .orElseThrow(() -> new InvalidWsdlException(
                                                     format("Cannot find output body part for operation [%s] in the configured WSDL",
                                                            operation)));

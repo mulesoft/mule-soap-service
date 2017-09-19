@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
+
 import org.mule.metadata.api.model.BinaryType;
 import org.mule.metadata.api.model.NullType;
 import org.mule.metadata.api.model.ObjectFieldType;
@@ -18,12 +19,13 @@ import org.mule.metadata.api.model.ObjectType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
 
-import org.junit.Test;
+import java.util.Collection;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-
-import java.util.Collection;
+import org.junit.Assert;
+import org.junit.Test;
 
 @Feature(WSC_EXTENSION)
 @Story("Metadata")
@@ -56,5 +58,14 @@ public class AttachmentMetadataTestCase extends AbstractMetadataTestCase {
     assertThat(attachment.getKey().getName().getLocalPart(), is("attachment"));
     assertThat(attachment.getValue(), is(instanceOf(BinaryType.class)));
     assertThat(result.getBodyType(), is(instanceOf(NullType.class)));
+  }
+
+  @Test
+  @Description("Checks the metadata for an operation that is ONE WAY")
+  public void oneWayOperationMetadata() throws MetadataResolvingException {
+    SoapOperationMetadata input = resolver.getInputMetadata("oneWay");
+    SoapOperationMetadata output = resolver.getOutputMetadata("oneWay");
+    Assert.assertThat(input.getAttachmentsType(), is(instanceOf(NullType.class)));
+    Assert.assertThat(output.getAttachmentsType(), is(instanceOf(NullType.class)));
   }
 }

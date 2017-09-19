@@ -17,6 +17,8 @@ public class SoapTestXmlValues {
   public static final String FAIL = "fail";
   public static final String UPLOAD_ATTACHMENT = "uploadAttachment";
   public static final String DOWNLOAD_ATTACHMENT = "downloadAttachment";
+  public static final String LARGE = "large";
+  public static final String ONE_WAY = "oneWay";
 
   public static final String HEADER_IN = "headerIn";
   public static final String HEADER_INOUT = "headerInOut";
@@ -60,6 +62,10 @@ public class SoapTestXmlValues {
 
   public String getEchoWithHeadersRequest() {
     return buildXml(ECHO_HEADERS, "<text>test</text>");
+  }
+
+  public String getOneWayRequest() {
+    return buildXml("oneWay", "<text>text</text>");
   }
 
   public String getEchoWithHeadersResponse() {

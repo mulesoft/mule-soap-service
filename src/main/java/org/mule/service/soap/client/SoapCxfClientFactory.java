@@ -16,7 +16,7 @@ import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.soap.api.client.SoapClient;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
 import org.mule.runtime.soap.api.client.SoapClientFactory;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 import org.apache.cxf.endpoint.Client;
 
 /**
@@ -35,14 +35,14 @@ public class SoapCxfClientFactory implements SoapClientFactory {
    */
   @Override
   public SoapClient create(SoapClientConfiguration config) throws ConnectionException {
-    WsdlDefinition definition = getWsdlDefinition(config);
+    ServiceDefinition definition = getWsdlDefinition(config);
     XmlTypeLoader xmlTypeLoader = new XmlTypeLoader(definition.getSchemas());
     Client client = cxfClientProvider.getClient(config);
     return new SoapCxfClient(client, definition, xmlTypeLoader, getAddress(config, definition),
                              config.getDispatcher(), config.getVersion(), config.getEncoding(), config.isMtomEnabled());
   }
 
-  private String getAddress(SoapClientConfiguration config, WsdlDefinition definition) throws ConnectionException {
+  private String getAddress(SoapClientConfiguration config, ServiceDefinition definition) throws ConnectionException {
     String address = config.getAddress() != null ? config.getAddress() : findAddress(definition);
     String protocolSeparator = "://";
     if (address.contains(protocolSeparator)) {
@@ -55,9 +55,10 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     return address;
   }
 
-  private WsdlDefinition getWsdlDefinition(SoapClientConfiguration config) throws ConnectionException {
+  private ServiceDefinition getWsdlDefinition(SoapClientConfiguration config) throws ConnectionException {
     String wsdlLocation = config.getWsdlLocation();
-    WsdlDefinition definition = new WsdlDefinition(wsdlLocation, config.getService(), config.getPort(), config.getLocator());
+    ServiceDefinition definition =
+        new ServiceDefinition(wsdlLocation, config.getService(), config.getPort(), config.getLocator());
     if (definition.isRpcStyle()) {
       // TODO: MULE-11082  Support RPC Style - CXF DOES NOT SUPPORT RPC, if supported a new RPC Client should be created.
       throw new ConnectionException(format("The provided WSDL [%s] is RPC style, RPC WSDLs are not supported", wsdlLocation));
@@ -65,7 +66,7 @@ public class SoapCxfClientFactory implements SoapClientFactory {
     return definition;
   }
 
-  private String findAddress(WsdlDefinition wsdldefinition) throws ConnectionException {
+  private String findAddress(ServiceDefinition wsdldefinition) throws ConnectionException {
     return wsdldefinition.getSoapAddress()
         .orElseThrow(() -> new ConnectionException("No address was specified and no one was found for the given configuration"));
   }

@@ -8,11 +8,11 @@ package org.mule.service.soap.interceptor;
 
 import static java.lang.String.format;
 import static org.apache.cxf.phase.Phase.PRE_PROTOCOL;
+import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
 import static org.mule.service.soap.util.XmlTransformationUtils.nodeToString;
 
 import org.mule.runtime.soap.api.exception.BadResponseException;
 import org.mule.runtime.soap.api.message.SoapResponse;
-import org.mule.service.soap.client.SoapCxfClient;
 import org.mule.service.soap.util.XmlTransformationException;
 
 import com.google.common.collect.ImmutableMap;
@@ -46,7 +46,7 @@ public class OutputSoapHeadersInterceptor extends AbstractSoapInterceptor {
         .filter(header -> header instanceof SoapHeader)
         .map(h -> (SoapHeader) h)
         .forEach(header -> headers.put(header.getName().getLocalPart(), getHeaderInputStream(header)));
-    message.getExchange().put(SoapCxfClient.MULE_HEADERS_KEY, headers.build());
+    message.getExchange().put(MULE_HEADERS_KEY, headers.build());
   }
 
   private String getHeaderInputStream(SoapHeader h) {
