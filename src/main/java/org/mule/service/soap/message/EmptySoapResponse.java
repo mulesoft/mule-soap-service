@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * Immutable {@link SoapResponse} implementation.
+ * Empty {@link SoapResponse} implementation.
  *
  * @since 1.0
  */
