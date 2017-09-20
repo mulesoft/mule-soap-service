@@ -19,6 +19,7 @@ import org.mule.runtime.soap.api.exception.BadResponseException;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
+import org.mule.service.soap.message.EmptySoapResponse;
 import org.mule.service.soap.message.ImmutableSoapResponse;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
@@ -59,7 +60,7 @@ public final class SoapResponseGenerator {
    */
   public SoapResponse generate(String operation, Object[] response, Exchange exchange) {
     if (response == null) {
-      return new ImmutableSoapResponse(new ByteArrayInputStream("".getBytes()), emptyMap(), emptyMap(), emptyMap(), null);
+      return new EmptySoapResponse(emptyMap());
     }
 
     Document document = unwrapResponse(response);
