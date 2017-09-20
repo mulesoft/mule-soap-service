@@ -8,15 +8,18 @@ package org.mule.service.soap.generator;
 
 import static java.util.Collections.emptyMap;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
+import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
+import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
+
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
+import org.mule.runtime.extension.api.soap.SoapAttributes;
 import org.mule.runtime.soap.api.client.SoapClient;
 import org.mule.runtime.soap.api.exception.BadResponseException;
-import org.mule.runtime.extension.api.soap.SoapAttributes;
 import org.mule.runtime.soap.api.message.SoapRequest;
 import org.mule.runtime.soap.api.message.SoapResponse;
-import org.mule.service.soap.client.SoapCxfClient;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
+import org.mule.service.soap.message.EmptySoapResponse;
 import org.mule.service.soap.message.ImmutableSoapResponse;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
@@ -56,10 +59,14 @@ public final class SoapResponseGenerator {
    * @param exchange  the exchange used for CXF to store the headers and attachments.
    */
   public SoapResponse generate(String operation, Object[] response, Exchange exchange) {
+    if (response == null) {
+      return new EmptySoapResponse(emptyMap());
+    }
+
     Document document = unwrapResponse(response);
     String result = responseEnricher.enrich(document, operation, exchange);
-    Map<String, SoapAttachment> attachments = (Map<String, SoapAttachment>) exchange.get(SoapCxfClient.MULE_ATTACHMENTS_KEY);
-    Map<String, String> headers = (Map<String, String>) exchange.get(SoapCxfClient.MULE_HEADERS_KEY);
+    Map<String, SoapAttachment> attachments = (Map<String, SoapAttachment>) exchange.get(MULE_ATTACHMENTS_KEY);
+    Map<String, String> headers = (Map<String, String>) exchange.get(MULE_HEADERS_KEY);
     ByteArrayInputStream resultStream = new ByteArrayInputStream(result.getBytes());
     return new ImmutableSoapResponse(resultStream, headers, emptyMap(), attachments, APPLICATION_XML);
   }

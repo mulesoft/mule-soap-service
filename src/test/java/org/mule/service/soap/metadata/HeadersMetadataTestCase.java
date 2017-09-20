@@ -24,12 +24,15 @@ import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
 import org.mule.service.soap.client.TestSoapClient;
-import org.junit.Test;
+
+import java.net.URL;
+import java.util.Collection;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import java.net.URL;
-import java.util.Collection;
+import org.hamcrest.core.Is;
+import org.junit.Test;
 
 @Feature(WSC_EXTENSION)
 @Story("Metadata")
@@ -97,5 +100,14 @@ public class HeadersMetadataTestCase extends AbstractMetadataTestCase {
     SoapOperationMetadata result = resolver.getOutputMetadata("echo");
     MetadataType outputHeaders = result.getHeadersType();
     assertThat(outputHeaders, is(instanceOf(NullType.class)));
+  }
+
+  @Test
+  @Description("Checks the metadata for an operation that is ONE WAY")
+  public void oneWayOperationMetadata() throws MetadataResolvingException {
+    SoapOperationMetadata input = resolver.getInputMetadata("oneWay");
+    SoapOperationMetadata output = resolver.getOutputMetadata("oneWay");
+    assertThat(input.getHeadersType(), Is.is(instanceOf(NullType.class)));
+    assertThat(output.getHeadersType(), Is.is(instanceOf(NullType.class)));
   }
 }

@@ -6,43 +6,47 @@
  */
 package org.mule.service.soap.metadata;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.ObjectFieldTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.OperationDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.service.soap.introspection.SoapHeaderAdapter;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
-import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
-import javax.wsdl.extensions.ElementExtensible;
-import javax.wsdl.extensions.soap.SOAPHeader;
-import javax.wsdl.extensions.soap12.SOAP12Header;
 
 /**
  * Handles the dynamic {@link MetadataType} resolution for the SOAP Headers of a web service operation.
  *
  * @since 1.0
  */
-final class HeadersMetadataResolver extends NodeMetadataResolver {
+abstract class HeadersMetadataResolver extends NodeMetadataResolver {
 
-  HeadersMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
-    super(definition, loader);
+  private final Function<OperationDefinition, Message> messageRetriever;
+  private final Function<OperationDefinition, List<SoapHeaderAdapter>> headersRetriever;
+
+  HeadersMetadataResolver(ServiceDefinition definition,
+                          TypeLoader loader,
+                          Function<OperationDefinition, Message> messageRetriever,
+                          Function<OperationDefinition, List<SoapHeaderAdapter>> headersRetriever) {
+    super(definition, loader, o -> Optional.empty());
+    this.messageRetriever = messageRetriever;
+    this.headersRetriever = headersRetriever;
   }
 
   @Override
-  public MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException {
-    BindingOperation bindingOperation = definition.getBindingOperation(operation);
-    ElementExtensible bindingType = delegate.getBindingType(bindingOperation);
-    List<SoapHeaderAdapter> headers = getHeaderParts(bindingType);
+  public MetadataType getMetadata(String operationName) throws MetadataResolvingException {
+    OperationDefinition operation = definition.getOperation(operationName);
+    List<SoapHeaderAdapter> headers = headersRetriever.apply(operation);
     if (!headers.isEmpty()) {
-      Message message = delegate.getMessage(definition.getOperation(operation));
-      return buildHeaderType(headers, message);
+      return buildHeaderType(headers, messageRetriever.apply(operation));
     }
     return nullType;
   }
@@ -64,14 +68,4 @@ final class HeadersMetadataResolver extends NodeMetadataResolver {
     return objectType.build();
   }
 
-  private List<SoapHeaderAdapter> getHeaderParts(ElementExtensible bindingType) {
-    List extensible = bindingType.getExtensibilityElements();
-    if (extensible != null) {
-      return (List<SoapHeaderAdapter>) extensible.stream()
-          .filter(e -> e instanceof SOAPHeader || e instanceof SOAP12Header)
-          .map(e -> e instanceof SOAPHeader ? new SoapHeaderAdapter((SOAPHeader) e) : new SoapHeaderAdapter((SOAP12Header) e))
-          .collect(toList());
-    }
-    return emptyList();
-  }
 }

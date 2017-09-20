@@ -18,6 +18,7 @@ import java.net.URL;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -82,7 +83,7 @@ public class Soap11Service {
 
   @WebResult(name = "result")
   @WebMethod(action = "uploadAttachment")
-  public String uploadAttachment(@WebParam(mode = WebParam.Mode.IN, name = "attachment") DataHandler attachment) {
+  public String uploadAttachment(@WebParam(name = "attachment") DataHandler attachment) {
     try {
       String received = IOUtils.toString(attachment.getInputStream());
       if (received.contains("Some Content")) {
@@ -97,7 +98,7 @@ public class Soap11Service {
 
   @WebResult(name = "attachment")
   @WebMethod(action = "downloadAttachment")
-  public DataHandler downloadAttachment(@WebParam(mode = WebParam.Mode.IN, name = "fileName") String fileName) {
+  public DataHandler downloadAttachment(@WebParam(name = "fileName") String fileName) {
     File file = new File(getResourceAsUrl(fileName).getPath());
     return new DataHandler(new FileDataSource(file));
   }
@@ -106,6 +107,12 @@ public class Soap11Service {
   @WebMethod(action = "large")
   public String large() throws IOException {
     return IOUtils.toString(getResourceAsUrl("large.json").openStream());
+  }
+
+  @Oneway
+  @WebMethod(action = "oneWay")
+  public void oneWay(@WebParam(name = "text") String text) {
+    // Do something without a response /shrug
   }
 
   private URL getResourceAsUrl(String fileName) {

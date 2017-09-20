@@ -13,6 +13,7 @@ import static org.junit.Assert.assertThat;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
 import org.mule.metadata.api.model.MetadataType;
+import org.mule.metadata.api.model.NullType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.metadata.api.model.ObjectType;
 import org.mule.metadata.api.model.StringType;
@@ -112,5 +113,14 @@ public class BodyMetadataTestCase extends AbstractMetadataTestCase {
     assertThat(accountField.getKey().getName().getLocalPart(), is("account"));
     ObjectType objectType = toObjectType(accountField.getValue());
     assertThat(objectType.getFields(), hasSize(4));
+  }
+
+  @Test
+  @Description("Checks the metadata for an operation that is ONE WAY")
+  public void oneWayOperationMetadata() throws MetadataResolvingException {
+    SoapOperationMetadata input = resolver.getInputMetadata("oneWay");
+    SoapOperationMetadata output = resolver.getOutputMetadata("oneWay");
+    assertThat(output.getBodyType(), is(instanceOf(NullType.class)));
+    assertThat(toObjectType(input.getBodyType()).getFields(), hasSize(1));
   }
 }

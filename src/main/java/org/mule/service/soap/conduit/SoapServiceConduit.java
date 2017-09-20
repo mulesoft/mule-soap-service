@@ -10,18 +10,20 @@ import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
 
 import org.mule.service.soap.interceptor.MessageDispatcherInterceptor;
-import org.apache.cxf.binding.soap.SoapHeader;
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.message.Attachment;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.transport.AbstractConduit;
-import org.apache.cxf.ws.addressing.EndpointReferenceType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.apache.cxf.binding.soap.SoapHeader;
+import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.message.Attachment;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.transport.AbstractConduit;
+import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
 /**
  *
@@ -61,7 +63,9 @@ final class SoapServiceConduit extends AbstractConduit {
 
   private void addHeaders(Message message) {
     List<SoapHeader> soapHeaders = (List<SoapHeader>) message.getExchange().get(MULE_HEADERS_KEY);
-    soapHeaders.forEach(header -> ((SoapMessage) message).getHeaders().add(header));
+    soapHeaders.forEach(header -> {
+      ((SoapMessage) message).getHeaders().add(header);
+    });
   }
 
   @Override

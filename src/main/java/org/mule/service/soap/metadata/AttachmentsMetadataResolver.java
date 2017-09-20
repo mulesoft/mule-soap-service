@@ -6,18 +6,20 @@
  */
 package org.mule.service.soap.metadata;
 
-import static java.lang.String.format;
 import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
-import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_CONFIGURATION;
 import static org.mule.service.soap.util.SoapServiceMetadataTypeUtils.getAttachmentFields;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.WsdlDefinition;
+import org.mule.service.soap.introspection.OperationDefinition;
+import org.mule.service.soap.introspection.ServiceDefinition;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import javax.wsdl.Part;
 
@@ -26,18 +28,17 @@ import javax.wsdl.Part;
  *
  * @since 1.0
  */
-final class AttachmentsMetadataResolver extends NodeMetadataResolver {
+abstract class AttachmentsMetadataResolver extends NodeMetadataResolver {
 
-  AttachmentsMetadataResolver(WsdlDefinition definition, TypeLoader loader) {
-    super(definition, loader);
+  AttachmentsMetadataResolver(ServiceDefinition definition,
+                              TypeLoader loader,
+                              Function<OperationDefinition, Optional<Part>> partRetriever) {
+    super(definition, loader, partRetriever);
   }
 
   @Override
-  public MetadataType getMetadata(String operation, TypeIntrospecterDelegate delegate) throws MetadataResolvingException {
-    Part bodyPart = definition.getBodyPart(operation, delegate)
-        .orElseThrow(() -> new MetadataResolvingException(format("operation [%s] does not have a body part", operation),
-                                                          INVALID_CONFIGURATION));
-
+  public MetadataType getMetadata(String operation) throws MetadataResolvingException {
+    Part bodyPart = getBodyPart(definition.getOperation(operation));
     MetadataType bodyType = buildPartMetadataType(bodyPart);
     List<ObjectFieldType> attachments = getAttachmentFields(bodyType);
     if (attachments.isEmpty()) {

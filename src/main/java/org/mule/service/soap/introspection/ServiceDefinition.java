@@ -7,25 +7,29 @@
 package org.mule.service.soap.introspection;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import org.mule.metadata.xml.api.SchemaCollector;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
 import org.mule.runtime.soap.api.transport.NullTransportResourceLocator;
 import org.mule.runtime.soap.api.transport.TransportResourceLocator;
-import org.mule.service.soap.metadata.TypeIntrospecterDelegate;
+
 import com.ibm.wsdl.extensions.schema.SchemaSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
 import javax.wsdl.BindingInput;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
 import javax.wsdl.Message;
 import javax.wsdl.Operation;
-import javax.wsdl.Part;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
 import javax.wsdl.Types;
@@ -36,20 +40,14 @@ import javax.wsdl.extensions.http.HTTPAddress;
 import javax.wsdl.extensions.mime.MIMEPart;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
-import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
-import javax.wsdl.extensions.soap12.SOAP12Body;
 import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Parses a WSDL file and for a given service name and port name introspecting all the operations and components for the given
@@ -58,7 +56,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @SuppressWarnings("unchecked")
-public class WsdlDefinition {
+public class ServiceDefinition {
 
   private static final String DOCUMENT_STYLE = "document";
   private static final String RPC_STYLE = "rpc";
@@ -67,18 +65,20 @@ public class WsdlDefinition {
   private final Definition definition;
   private final Service service;
   private final Port port;
+  private final Map<String, OperationDefinition> operations;
 
-  public WsdlDefinition(String wsdlLocation, String serviceName, String portName) {
+  public ServiceDefinition(String wsdlLocation, String serviceName, String portName) {
     this(wsdlLocation, serviceName, portName, new NullTransportResourceLocator());
   }
 
-  public WsdlDefinition(String wsdlLocation, String serviceName, String portName, TransportResourceLocator locator) {
+  public ServiceDefinition(String wsdlLocation, String serviceName, String portName, TransportResourceLocator locator) {
     validateBlankString(wsdlLocation, "WSDL Location");
     validateNotNull(locator, "ResourceLocator cannot be null");
     this.definition = parseWsdl(new WsdlLocator(wsdlLocation, locator));
     this.service = findService(serviceName);
     this.port = findPort(portName);
     this.schemaCollector = new WsdlSchemasCollector(definition);
+    this.operations = findOperations();
   }
 
   private Service findService(String serviceName) {
@@ -95,53 +95,20 @@ public class WsdlDefinition {
     return port;
   }
 
-  public List<String> getOperationNames() {
-    List<BindingOperation> bindingOperations = (List<BindingOperation>) port.getBinding().getBindingOperations();
-    return bindingOperations.stream().map(BindingOperation::getName).collect(toList());
+  private Map<String, OperationDefinition> findOperations() {
+    List<BindingOperation> ops = port.getBinding().getBindingOperations();
+    return ops.stream().map(bop -> new OperationDefinition(bop)).collect(toMap(o -> o.getName(), o -> o));
   }
 
-  public Operation getOperation(String operationName) {
+  public List<OperationDefinition> getOperations() {
+    return new ArrayList<>(operations.values());
+  }
+
+  public OperationDefinition getOperation(String operationName) {
     validateBlankString(operationName, "operation name");
-    Operation operation = port.getBinding().getPortType().getOperation(operationName, null, null);
+    OperationDefinition operation = operations.get(operationName);
     validateNotNull(operation, "The operation name [" + operationName + "] was not found in the current wsdl file.");
     return operation;
-  }
-
-  public BindingOperation getBindingOperation(String operationName) {
-    validateBlankString(operationName, "operation name");
-    BindingOperation operation = port.getBinding().getBindingOperation(operationName, null, null);
-    validateNotNull(operation, "The binding operation name [" + operationName + "] was not found in the current wsdl file.");
-    return operation;
-  }
-
-  public Optional<Part> getBodyPart(String operation, TypeIntrospecterDelegate delegate) {
-    BindingOperation bindingOperation = getBindingOperation(operation);
-    Message message = delegate.getMessage(bindingOperation.getOperation());
-    Map parts = message.getParts();
-    if (parts == null || parts.isEmpty()) {
-      return empty();
-    }
-    if (parts.size() == 1) {
-      return ofNullable((Part) parts.get(parts.keySet().toArray()[0]));
-    }
-    return getBodyPartName(bindingOperation, delegate).flatMap(partName -> ofNullable((Part) parts.get(partName)));
-  }
-
-  @SuppressWarnings("unchecked")
-  private Optional<String> getBodyPartName(BindingOperation bindingOperation, TypeIntrospecterDelegate delegate) {
-    List elements = delegate.getBindingType(bindingOperation).getExtensibilityElements();
-    if (elements != null) {
-      Optional<List> bodyParts = elements.stream()
-          .filter(e -> e instanceof SOAPBody || e instanceof SOAP12Body)
-          .map(e -> e instanceof SOAPBody ? ((SOAPBody) e).getParts() : ((SOAP12Body) e).getParts())
-          .map(parts -> parts == null ? emptyList() : parts)
-          .findFirst();
-
-      if (bodyParts.isPresent() && !bodyParts.get().isEmpty()) {
-        return ofNullable((String) bodyParts.get().get(0));
-      }
-    }
-    return empty();
   }
 
   public Fault getFault(Operation operation, String faultName) {
