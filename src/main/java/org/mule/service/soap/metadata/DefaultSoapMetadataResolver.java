@@ -10,8 +10,10 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.metadata.SoapMetadataResolver;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.WsdlModel;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,14 +31,14 @@ public class DefaultSoapMetadataResolver implements SoapMetadataResolver {
   private final AttachmentsMetadataResolver outputAttachmentsResolver;
   private final ServiceOperationsResolver keysResolver;
 
-  public DefaultSoapMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
-    inputHeadersResolver = new InputHeadersMetadataResolver(definition, loader);
-    outputHeadersResolver = new OutputHeadersMetadataResolver(definition, loader);
-    outputAttachmentsResolver = new OutputAttachmentsMetadataResolver(definition, loader);
-    inputAttachmentsResolver = new InputAttachmentsMetadataResolver(definition, loader);
-    inputBodyResolver = new InputBodyMetadataResolver(definition, loader);
-    outputBodyResolver = new OutputBodyMetadataResolver(definition, loader);
-    keysResolver = new ServiceOperationsResolver(definition);
+  public DefaultSoapMetadataResolver(WsdlModel wsdl, Map<String, OperationModel> operations, TypeLoader loader) {
+    inputHeadersResolver = new InputHeadersMetadataResolver(wsdl, operations, loader);
+    outputHeadersResolver = new OutputHeadersMetadataResolver(wsdl, operations, loader);
+    outputAttachmentsResolver = new OutputAttachmentsMetadataResolver(operations, loader);
+    inputAttachmentsResolver = new InputAttachmentsMetadataResolver(operations, loader);
+    inputBodyResolver = new InputBodyMetadataResolver(operations, loader);
+    outputBodyResolver = new OutputBodyMetadataResolver(operations, loader);
+    keysResolver = new ServiceOperationsResolver(operations);
   }
 
   @Override

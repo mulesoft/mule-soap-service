@@ -10,8 +10,9 @@ package org.mule.service.soap.metadata;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.OperationDefinition;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
 
 /**
  * {@link AttachmentsMetadataResolver} implementation for the output attachments.
@@ -20,8 +21,8 @@ import org.mule.service.soap.introspection.ServiceDefinition;
  */
 final class OutputAttachmentsMetadataResolver extends AttachmentsMetadataResolver {
 
-  OutputAttachmentsMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader, OperationDefinition::getOutputBodyPart);
+  OutputAttachmentsMetadataResolver(Map<String, OperationModel> definition, TypeLoader loader) {
+    super(definition, loader, OperationModel::getOutputBodyPart);
   }
 
   @Override

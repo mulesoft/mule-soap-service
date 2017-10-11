@@ -11,7 +11,6 @@ import static org.mule.service.soap.xml.util.XMLUtils.toXml;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.SoapServiceException;
-import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
 
@@ -28,11 +27,9 @@ import org.w3c.dom.Element;
  */
 public abstract class AttachmentRequestEnricher {
 
-  protected ServiceDefinition definition;
   protected TypeLoader loader;
 
-  AttachmentRequestEnricher(ServiceDefinition definition, TypeLoader loader) {
-    this.definition = definition;
+  AttachmentRequestEnricher(TypeLoader loader) {
     this.loader = loader;
   }
 

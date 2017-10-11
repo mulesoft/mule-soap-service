@@ -24,6 +24,7 @@
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
+        <wsdlParserVersion>0.0.1-SNAPSHOT</wsdlParserVersion>
 
         <muleHttpServiceVersion>1.0.0-SNAPSHOT</muleHttpServiceVersion>
     </properties>
@@ -117,6 +118,19 @@
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
                     <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- WSDL PARSER -->
+        <dependency>
+            <groupId>org.mule.wsdl</groupId>
+            <artifactId>mule-wsdl-parser</artifactId>
+            <version>${wsdlParserVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mule.runtime</groupId>
+                    <artifactId>mule-metadata-model-xml</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

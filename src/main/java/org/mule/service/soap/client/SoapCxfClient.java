@@ -17,10 +17,9 @@ import static org.apache.cxf.message.Message.ENCODING;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.disposeIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
-import static org.mule.runtime.soap.api.SoapVersion.SOAP12;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
 
-import org.mule.metadata.xml.api.XmlTypeLoader;
+import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
@@ -41,10 +40,11 @@ import org.mule.service.soap.generator.attachment.MtomRequestEnricher;
 import org.mule.service.soap.generator.attachment.MtomResponseEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher;
-import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.metadata.DefaultSoapMetadataResolver;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
+import org.mule.wsdl.parser.model.PortModel;
+import org.mule.wsdl.parser.model.WsdlModel;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -93,26 +93,34 @@ public class SoapCxfClient implements SoapClient {
   private final SoapResponseGenerator responseGenerator;
 
   private final Client client;
-  private final ServiceDefinition definition;
-  private final XmlTypeLoader loader;
+  private final WsdlModel wsdlModel;
+  private final PortModel port;
+  private final TypeLoader loader;
   private final String address;
   private final MessageDispatcher dispatcher;
   private final SoapVersion version;
   private final String encoding;
   private final boolean isMtom;
 
-  SoapCxfClient(Client client, ServiceDefinition definition, XmlTypeLoader typeLoader, String address,
-                MessageDispatcher dispatcher, SoapVersion version, String encoding, boolean isMtom) {
+  SoapCxfClient(Client client,
+                WsdlModel wsdlModel,
+                PortModel portModel,
+                String address,
+                MessageDispatcher dispatcher,
+                SoapVersion version,
+                String encoding,
+                boolean isMtom) {
     this.client = client;
-    this.definition = definition;
-    this.loader = typeLoader;
+    this.wsdlModel = wsdlModel;
+    this.port = portModel;
+    this.loader = wsdlModel.getLoader();
     this.address = address;
     this.dispatcher = dispatcher;
     this.version = version;
     this.isMtom = isMtom;
     this.encoding = encoding;
     // TODO: MULE-10889 -> instead of creating this enrichers, interceptors that works with the live stream would be ideal
-    this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), definition, loader);
+    this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), portModel, loader);
     this.responseGenerator = new SoapResponseGenerator(getResponseEnricher(isMtom));
   }
 
@@ -140,7 +148,7 @@ public class SoapCxfClient implements SoapClient {
 
   @Override
   public SoapMetadataResolver getMetadataResolver() {
-    return new DefaultSoapMetadataResolver(definition, loader);
+    return new DefaultSoapMetadataResolver(wsdlModel, port.getOperationsMap(), loader);
   }
 
   private Object[] invoke(SoapRequest request, Exchange exchange) {
@@ -196,10 +204,8 @@ public class SoapCxfClient implements SoapClient {
     props.put(MULE_HEADERS_KEY, transformToCxfHeaders(request.getSoapHeaders()));
     props.put(MULE_TRANSPORT_HEADERS_KEY, request.getTransportHeaders());
     props.put(MESSAGE_DISPATCHER, dispatcher);
-    props.put(MULE_SOAP_OPERATION_STYLE, definition.getOperation(request.getOperation()).getType());
-    if (version == SOAP12) {
-      props.put(MULE_SOAP_ACTION, request.getOperation());
-    }
+    props.put(MULE_SOAP_OPERATION_STYLE, port.getOperation(request.getOperation()).getType());
+    props.put(MULE_SOAP_ACTION, request.getOperation());
     Map<String, Object> ctx = new HashMap<>();
     ctx.put(Client.REQUEST_CONTEXT, props);
     return ctx;
@@ -233,11 +239,12 @@ public class SoapCxfClient implements SoapClient {
   }
 
   private AttachmentRequestEnricher getRequestEnricher(boolean isMtom) {
-    return isMtom ? new MtomRequestEnricher(definition, loader) : new SoapAttachmentRequestEnricher(definition, loader);
+    return isMtom ? new MtomRequestEnricher(loader) : new SoapAttachmentRequestEnricher(loader);
   }
 
   private AttachmentResponseEnricher getResponseEnricher(boolean isMtom) {
-    return isMtom ? new MtomResponseEnricher(definition, loader) : new SoapAttachmentResponseEnricher(definition, loader);
+    return isMtom ? new MtomResponseEnricher(loader, port.getOperationsMap())
+        : new SoapAttachmentResponseEnricher(loader, port.getOperationsMap());
   }
 
   private Optional<String> parseExceptionDetail(Element detail) {

@@ -8,9 +8,9 @@ package org.mule.service.soap.generator.attachment;
 
 
 import static java.lang.String.format;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
-import org.mule.service.soap.introspection.ServiceDefinition;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,8 +27,8 @@ public final class MtomRequestEnricher extends AttachmentRequestEnricher {
   private static final String HREF = "href";
   private static final String CONTENT_ID_MASK = "cid:%s";
 
-  public MtomRequestEnricher(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader);
+  public MtomRequestEnricher(TypeLoader loader) {
+    super(loader);
   }
 
 
