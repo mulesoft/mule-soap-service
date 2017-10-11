@@ -91,6 +91,7 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     inMessage.put(ENCODING, encoding);
     inMessage.put(CONTENT_TYPE, response.getContentType());
     inMessage.setContent(InputStream.class, response.getContent());
+    exchange.put(MULE_TRANSPORT_HEADERS_KEY, response.getHeaders());
     inMessage.setExchange(exchange);
     messageObserver.onMessage(inMessage);
   }

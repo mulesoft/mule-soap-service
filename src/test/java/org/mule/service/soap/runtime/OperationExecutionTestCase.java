@@ -8,6 +8,9 @@ package org.mule.service.soap.runtime;
 
 import static java.lang.Thread.currentThread;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
@@ -116,6 +119,15 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Description("Consumes an operation that expects no parameters auto-generating the request and returns a simple type")
   public void noParamsOperationWithoutXmlPayload() throws Exception {
     testNoParams(SoapRequest.empty(NO_PARAMS));
+  }
+
+  @Test
+  @Description("Consumes an operation and checks the output transport headers")
+  public void transportHeaders() throws Exception {
+    SoapRequest request = builder().content(testValues.getEchoResquest()).operation(ECHO).build();
+    SoapResponse response = client.consume(request);
+    Map<String, String> transportHeaders = response.getTransportHeaders();
+    assertThat(transportHeaders.entrySet(), hasSize(3));
   }
 
   @Test
