@@ -10,6 +10,7 @@ import static java.util.Collections.emptyMap;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
+import static org.mule.service.soap.client.SoapCxfClient.MULE_TRANSPORT_HEADERS_KEY;
 
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
@@ -59,8 +60,9 @@ public final class SoapResponseGenerator {
    * @param exchange  the exchange used for CXF to store the headers and attachments.
    */
   public SoapResponse generate(String operation, Object[] response, Exchange exchange) {
+    Map<String, String> transportHeaders = getTransportHeaders(exchange);
     if (response == null) {
-      return new EmptySoapResponse(emptyMap());
+      return new EmptySoapResponse(transportHeaders);
     }
 
     Document document = unwrapResponse(response);
@@ -68,7 +70,12 @@ public final class SoapResponseGenerator {
     Map<String, SoapAttachment> attachments = (Map<String, SoapAttachment>) exchange.get(MULE_ATTACHMENTS_KEY);
     Map<String, String> headers = (Map<String, String>) exchange.get(MULE_HEADERS_KEY);
     ByteArrayInputStream resultStream = new ByteArrayInputStream(result.getBytes());
-    return new ImmutableSoapResponse(resultStream, headers, emptyMap(), attachments, APPLICATION_XML);
+    return new ImmutableSoapResponse(resultStream, headers, transportHeaders, attachments, APPLICATION_XML);
+  }
+
+  private Map<String, String> getTransportHeaders(Exchange exchange) {
+    Map<String, String> transportHeaders = (Map<String, String>) exchange.get(MULE_TRANSPORT_HEADERS_KEY);
+    return transportHeaders == null ? emptyMap() : transportHeaders;
   }
 
   /**
