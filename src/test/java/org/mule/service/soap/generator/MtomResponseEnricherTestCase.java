@@ -6,8 +6,12 @@
  */
 package org.mule.service.soap.generator;
 
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
 import org.mule.service.soap.generator.attachment.MtomResponseEnricher;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
 
 import org.apache.cxf.message.Exchange;
 
@@ -21,8 +25,8 @@ public class MtomResponseEnricherTestCase extends ResponseEnricherTestCase {
           + "</con:downloadAttachmentResponse>";
 
   @Override
-  protected AttachmentResponseEnricher getEnricher() {
-    return new MtomResponseEnricher(definition, loader);
+  protected AttachmentResponseEnricher getEnricher(XmlTypeLoader loader, Map<String, OperationModel> ops) {
+    return new MtomResponseEnricher(loader, ops);
   }
 
   @Override

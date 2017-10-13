@@ -8,12 +8,12 @@ package org.mule.service.soap.generator;
 
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
-import io.qameta.allure.Stories;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.MtomRequestEnricher;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Stories;
 import io.qameta.allure.Story;
 
 @Feature(WSC_EXTENSION)
@@ -23,7 +23,7 @@ public class MtomRequestEnricherTestCase extends AbstractRequestEnricherTestCase
   @Override
   @Step("Returns an MTOM enricher that adds an XOP element to the XML referencing the attachment in the multipart message")
   protected AttachmentRequestEnricher getEnricher() {
-    return new MtomRequestEnricher(definition, loader);
+    return new MtomRequestEnricher(model.getLoader());
   }
 
   @Override

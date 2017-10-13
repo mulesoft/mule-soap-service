@@ -8,7 +8,6 @@ package org.mule.service.soap.interceptor;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
-import static javax.wsdl.OperationType.ONE_WAY;
 import static org.apache.cxf.interceptor.StaxInEndingInterceptor.STAX_IN_NOCLOSE;
 import static org.apache.cxf.message.Message.CONTENT_TYPE;
 import static org.apache.cxf.message.Message.ENCODING;
@@ -24,6 +23,7 @@ import org.mule.runtime.extension.api.soap.message.DispatchingRequest;
 import org.mule.runtime.extension.api.soap.message.DispatchingResponse;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.client.SoapClientConfiguration;
+import org.mule.wsdl.parser.model.operation.OperationType;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -79,7 +79,7 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     // otherwise cxf will close it too early when handling message in the StaxInEndingInterceptor.
     exchange.put(STAX_IN_NOCLOSE, TRUE);
 
-    if (ONE_WAY.equals(exchange.get(MULE_SOAP_OPERATION_STYLE))) {
+    if (OperationType.ONE_WAY.equals(exchange.get(MULE_SOAP_OPERATION_STYLE))) {
       exchange.put(ClientImpl.FINISHED, true);
     } else {
       handleRequestResponse(exchange, encoding, response);
