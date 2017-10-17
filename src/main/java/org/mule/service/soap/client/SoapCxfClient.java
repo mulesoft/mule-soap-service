@@ -113,7 +113,7 @@ public class SoapCxfClient implements SoapClient {
     this.client = client;
     this.wsdlModel = wsdlModel;
     this.port = portModel;
-    this.loader = wsdlModel.getLoader();
+    this.loader = wsdlModel.getLoader().getValue();
     this.address = address;
     this.dispatcher = dispatcher;
     this.version = version;

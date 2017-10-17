@@ -30,7 +30,7 @@ abstract class ResponseEnricherTestCase extends AbstractEnricherTestCase {
     ExchangeImpl exchange = new ExchangeImpl();
     Document doc = stringToDocument(getResponse());
     Map<String, OperationModel> ops = model.getService("TestService").getPort("TestPort").getOperationsMap();
-    AttachmentResponseEnricher enricher = getEnricher(model.getLoader(), ops);
+    AttachmentResponseEnricher enricher = getEnricher(model.getLoader().getValue(), ops);
     String result = enricher.enrich(doc, DOWNLOAD_ATTACHMENT, exchange);
     assertSimilarXml(testValues.getDownloadAttachmentResponse(), result);
     assertAttachment(exchange);

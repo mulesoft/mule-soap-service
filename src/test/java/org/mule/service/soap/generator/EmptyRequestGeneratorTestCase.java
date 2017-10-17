@@ -33,7 +33,7 @@ public class EmptyRequestGeneratorTestCase extends AbstractEnricherTestCase {
   @Before
   public void setup() {
     super.setup();
-    generator = new EmptyRequestGenerator(model.getService("TestService").getPort("TestPort"), model.getLoader());
+    generator = new EmptyRequestGenerator(model.getService("TestService").getPort("TestPort"), model.getLoader().getValue());
   }
 
   @Test
