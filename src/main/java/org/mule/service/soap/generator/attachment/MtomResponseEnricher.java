@@ -7,11 +7,14 @@
 package org.mule.service.soap.generator.attachment;
 
 import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.ObjectFieldType;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.service.soap.interceptor.OutputMtomSoapAttachmentsInterceptor;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cxf.message.Exchange;
 import org.w3c.dom.Document;
@@ -24,8 +27,8 @@ import org.w3c.dom.Node;
  */
 public final class MtomResponseEnricher extends AttachmentResponseEnricher {
 
-  public MtomResponseEnricher(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader);
+  public MtomResponseEnricher(TypeLoader loader, Map<String, OperationModel> operations) {
+    super(loader, operations);
   }
 
   /**

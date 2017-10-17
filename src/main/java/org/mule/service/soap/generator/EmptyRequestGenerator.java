@@ -7,29 +7,24 @@
 package org.mule.service.soap.generator;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
-import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.runtime.soap.api.exception.BadRequestException;
-import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
+import org.mule.wsdl.parser.model.PortModel;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.wsdl.BindingOperation;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
-import javax.wsdl.extensions.soap.SOAPBody;
-import javax.wsdl.extensions.soap12.SOAP12Body;
 import javax.xml.namespace.QName;
 
 /**
@@ -46,11 +41,11 @@ final class EmptyRequestGenerator {
    * SOAP request mask for operations without input parameters
    */
   private static final String NO_PARAMS_SOAP_BODY_CALL_MASK = "<ns:%s xmlns:ns=\"%s\"/>";
-  private final ServiceDefinition definition;
-  private final XmlTypeLoader loader;
+  private final PortModel port;
+  private final TypeLoader loader;
 
-  public EmptyRequestGenerator(ServiceDefinition definition, XmlTypeLoader loader) {
-    this.definition = definition;
+  public EmptyRequestGenerator(PortModel port, TypeLoader loader) {
+    this.port = port;
     this.loader = loader;
   }
 
@@ -58,36 +53,26 @@ final class EmptyRequestGenerator {
    * Generates a request body for an operation that don't require input parameters, if the required XML in the body is
    * just one constant element.
    */
-  String generateRequest(String operation) {
+  String generateRequest(String operationName) {
 
-    BindingOperation bindingOperation = definition.getOperation(operation).getBindingOperation();
-    Optional<List<String>> soapBodyParts = getSoapBodyParts(bindingOperation);
-
-    if (!soapBodyParts.isPresent()) {
-      throw new InvalidWsdlException(format("No SOAP body defined in the WSDL for the specified operation, cannot check if the operation"
-          + " requires input parameters. Cannot build a default body request for the specified operation [%s]",
-                                            operation));
-    }
-
-    Message message = bindingOperation.getOperation().getInput().getMessage();
-    Optional<Part> part = getSinglePart(soapBodyParts.get(), message);
+    OperationModel operation = port.getOperation(operationName);
+    Optional<Part> part = getSinglePart(operation.getInputParts(), operation.getInputMessage());
 
     if (!part.isPresent()) {
-      throw new BadRequestException(
-                                    format(REQUIRED_PARAMS_ERROR_MASK, operation,
+      throw new BadRequestException(format(REQUIRED_PARAMS_ERROR_MASK, operationName,
                                            " there is no single part in the input message"));
     }
 
     if (part.get().getElementName() == null) {
-      throw new BadRequestException(
-                                    format(REQUIRED_PARAMS_ERROR_MASK, operation,
+      throw new BadRequestException(format(REQUIRED_PARAMS_ERROR_MASK, operationName,
                                            " there is one message body part but no does not have an element defined"));
     }
 
     Part bodyPart = part.get();
+
     if (isOperationWithRequiredParameters(loader, bodyPart)) {
       // operation has required parameters
-      throw new BadRequestException(format(REQUIRED_PARAMS_ERROR_MASK, operation, ""));
+      throw new BadRequestException(format(REQUIRED_PARAMS_ERROR_MASK, operationName, ""));
     }
 
     // There is a single part with an element defined and it does not require parameters
@@ -124,20 +109,5 @@ final class EmptyRequestGenerator {
       }
     }
     return empty();
-  }
-
-  /**
-   * Retrieves the list of SOAP body parts of a binding operation if defined.
-   *
-   * @param operation the binding operation that we want to get the SOAP body parts from.
-   */
-  @SuppressWarnings("unchecked")
-  private Optional<List<String>> getSoapBodyParts(BindingOperation operation) {
-    List elements = operation.getBindingInput().getExtensibilityElements();
-    return elements.stream()
-        .filter(e -> e instanceof SOAPBody || e instanceof SOAP12Body)
-        .map(e -> e instanceof SOAPBody ? ((SOAPBody) e).getParts() : ((SOAP12Body) e).getParts())
-        .map(parts -> parts == null ? emptyList() : parts)
-        .findFirst();
   }
 }

@@ -9,18 +9,20 @@ package org.mule.service.soap.generator.attachment;
 import static java.lang.String.format;
 import static org.mule.metadata.api.utils.MetadataTypeUtils.getLocalPart;
 import static org.mule.runtime.api.metadata.MediaType.ANY;
+
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.EncodingException;
 import org.mule.service.soap.client.SoapCxfClient;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import com.google.common.collect.ImmutableMap;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cxf.message.Exchange;
 import org.w3c.dom.Document;
@@ -35,8 +37,8 @@ public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnri
 
   private static final Base64Decoder decoder = new Base64Decoder();
 
-  public SoapAttachmentResponseEnricher(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader);
+  public SoapAttachmentResponseEnricher(TypeLoader loader, Map<String, OperationModel> operations) {
+    super(loader, operations);
   }
 
   /**

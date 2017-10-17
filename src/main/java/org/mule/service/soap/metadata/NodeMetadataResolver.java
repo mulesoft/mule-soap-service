@@ -7,19 +7,19 @@
 package org.mule.service.soap.metadata;
 
 import static java.lang.String.format;
-import static javax.wsdl.OperationType.ONE_WAY;
 import static org.mule.metadata.api.model.MetadataFormat.XML;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_CONFIGURATION;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.INVALID_METADATA_KEY;
 import static org.mule.runtime.api.metadata.resolving.FailureCode.UNKNOWN;
+import static org.mule.wsdl.parser.model.operation.OperationType.ONE_WAY;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.BaseTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.OperationDefinition;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -32,16 +32,16 @@ import javax.wsdl.Part;
  */
 abstract class NodeMetadataResolver {
 
+  final Map<String, OperationModel> operations;
   final BaseTypeBuilder typeBuilder = BaseTypeBuilder.create(XML);
   final MetadataType nullType = typeBuilder.nullType().build();
-  final ServiceDefinition definition;
   final TypeLoader loader;
-  final Function<OperationDefinition, Optional<Part>> bodyPartRetriever;
+  final Function<OperationModel, Optional<Part>> bodyPartRetriever;
 
-  NodeMetadataResolver(ServiceDefinition definition,
+  NodeMetadataResolver(Map<String, OperationModel> operations,
                        TypeLoader loader,
-                       Function<OperationDefinition, Optional<Part>> bodyPartRetriever) {
-    this.definition = definition;
+                       Function<OperationModel, Optional<Part>> bodyPartRetriever) {
+    this.operations = operations;
     this.loader = loader;
     this.bodyPartRetriever = bodyPartRetriever;
   }
@@ -65,7 +65,7 @@ abstract class NodeMetadataResolver {
                                          INVALID_CONFIGURATION);
   }
 
-  Part getBodyPart(OperationDefinition operation) throws MetadataResolvingException {
+  Part getBodyPart(OperationModel operation) throws MetadataResolvingException {
     return bodyPartRetriever.apply(operation)
         .orElseThrow(() -> {
           String errorMsg = "No body type found for operation [" + operation.getName() + "]";
@@ -74,6 +74,6 @@ abstract class NodeMetadataResolver {
   }
 
   boolean isOneWay(String operationName) {
-    return ONE_WAY.equals(definition.getOperation(operationName).getType());
+    return ONE_WAY.equals(operations.get(operationName).getType());
   }
 }

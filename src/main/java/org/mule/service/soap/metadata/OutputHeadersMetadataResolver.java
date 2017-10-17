@@ -10,8 +10,10 @@ package org.mule.service.soap.metadata;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
-import org.mule.service.soap.introspection.OperationDefinition;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.WsdlModel;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
 
 /**
  * {@link HeadersMetadataResolver} implementation for output headers metadata.
@@ -20,8 +22,8 @@ import org.mule.service.soap.introspection.ServiceDefinition;
  */
 public class OutputHeadersMetadataResolver extends HeadersMetadataResolver {
 
-  OutputHeadersMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader, OperationDefinition::getOutputMessage, OperationDefinition::getOutputHeaders);
+  OutputHeadersMetadataResolver(WsdlModel wsdl, Map<String, OperationModel> operations, TypeLoader loader) {
+    super(wsdl, operations, loader, OperationModel::getOutputMessage, OperationModel::getOutputHeaders);
   }
 
   @Override

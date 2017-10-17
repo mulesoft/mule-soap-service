@@ -7,13 +7,14 @@
 package org.mule.service.soap.generator;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import org.mule.metadata.xml.api.XmlTypeLoader;
+
+import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.soap.api.exception.SoapServiceException;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
-import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
+import org.mule.wsdl.parser.model.PortModel;
 
 import java.util.Map;
 
@@ -33,9 +34,9 @@ public final class SoapRequestGenerator {
   private final EmptyRequestGenerator emptyRequestGenerator;
   private final AttachmentRequestEnricher requestEnricher;
 
-  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, ServiceDefinition definition, XmlTypeLoader loader) {
+  public SoapRequestGenerator(AttachmentRequestEnricher requestEnricher, PortModel port, TypeLoader loader) {
     this.requestEnricher = requestEnricher;
-    this.emptyRequestGenerator = new EmptyRequestGenerator(definition, loader);
+    this.emptyRequestGenerator = new EmptyRequestGenerator(port, loader);
   }
 
   /**

@@ -10,7 +10,12 @@ import static org.mule.service.soap.SoapTestUtils.assertSimilarXml;
 import static org.mule.service.soap.SoapTestXmlValues.DOWNLOAD_ATTACHMENT;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDocument;
 
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
+
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.junit.Test;
@@ -24,13 +29,14 @@ abstract class ResponseEnricherTestCase extends AbstractEnricherTestCase {
   public void enrich() throws Exception {
     ExchangeImpl exchange = new ExchangeImpl();
     Document doc = stringToDocument(getResponse());
-    AttachmentResponseEnricher enricher = getEnricher();
+    Map<String, OperationModel> ops = model.getService("TestService").getPort("TestPort").getOperationsMap();
+    AttachmentResponseEnricher enricher = getEnricher(model.getLoader().getValue(), ops);
     String result = enricher.enrich(doc, DOWNLOAD_ATTACHMENT, exchange);
     assertSimilarXml(testValues.getDownloadAttachmentResponse(), result);
     assertAttachment(exchange);
   }
 
-  protected abstract AttachmentResponseEnricher getEnricher();
+  protected abstract AttachmentResponseEnricher getEnricher(XmlTypeLoader loader, Map<String, OperationModel> ops);
 
   protected abstract String getResponse();
 

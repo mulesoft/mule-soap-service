@@ -8,8 +8,9 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.TypeLoader;
-import org.mule.service.soap.introspection.OperationDefinition;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
 
 /**
  * {@link AttachmentsMetadataResolver} implementation for the input attachments.
@@ -18,7 +19,7 @@ import org.mule.service.soap.introspection.ServiceDefinition;
  */
 public final class InputAttachmentsMetadataResolver extends AttachmentsMetadataResolver {
 
-  InputAttachmentsMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader, OperationDefinition::getInputBodyPart);
+  InputAttachmentsMetadataResolver(Map<String, OperationModel> definition, TypeLoader loader) {
+    super(definition, loader, OperationModel::getInputBodyPart);
   }
 }

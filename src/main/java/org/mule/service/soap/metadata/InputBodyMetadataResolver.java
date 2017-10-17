@@ -8,8 +8,9 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.TypeLoader;
-import org.mule.service.soap.introspection.OperationDefinition;
-import org.mule.service.soap.introspection.ServiceDefinition;
+import org.mule.wsdl.parser.model.operation.OperationModel;
+
+import java.util.Map;
 
 /**
  * {@link BodyMetadataResolver} implementation for the output soap body.
@@ -18,7 +19,7 @@ import org.mule.service.soap.introspection.ServiceDefinition;
  */
 public final class InputBodyMetadataResolver extends BodyMetadataResolver {
 
-  InputBodyMetadataResolver(ServiceDefinition definition, TypeLoader loader) {
-    super(definition, loader, OperationDefinition::getInputBodyPart);
+  InputBodyMetadataResolver(Map<String, OperationModel> operations, TypeLoader loader) {
+    super(operations, loader, OperationModel::getInputBodyPart);
   }
 }

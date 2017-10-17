@@ -9,12 +9,12 @@ package org.mule.service.soap.generator;
 
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
 
-import io.qameta.allure.Stories;
 import org.mule.service.soap.generator.attachment.AttachmentRequestEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentRequestEnricher;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Stories;
 import io.qameta.allure.Story;
 
 @Feature(WSC_EXTENSION)
@@ -24,7 +24,7 @@ public class SoapAttachmentsRequestEnricherTestCase extends AbstractRequestEnric
   @Override
   @Step("Returns an attachment enricher that adds the content of the attachment encoded to base64")
   protected AttachmentRequestEnricher getEnricher() {
-    return new SoapAttachmentRequestEnricher(definition, loader);
+    return new SoapAttachmentRequestEnricher(model.getLoader().getValue());
   }
 
   @Override

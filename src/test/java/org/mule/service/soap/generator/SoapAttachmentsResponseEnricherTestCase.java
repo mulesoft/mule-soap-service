@@ -11,10 +11,12 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 
+import org.mule.metadata.xml.api.XmlTypeLoader;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
 import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.Map;
 
@@ -33,8 +35,8 @@ public class SoapAttachmentsResponseEnricherTestCase extends ResponseEnricherTes
   }
 
   @Override
-  protected AttachmentResponseEnricher getEnricher() {
-    return new SoapAttachmentResponseEnricher(definition, loader);
+  protected AttachmentResponseEnricher getEnricher(XmlTypeLoader loader, Map<String, OperationModel> ops) {
+    return new SoapAttachmentResponseEnricher(loader, ops);
   }
 
   @Override

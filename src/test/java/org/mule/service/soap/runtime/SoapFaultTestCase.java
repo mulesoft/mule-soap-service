@@ -10,7 +10,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mule.runtime.soap.api.SoapVersion.SOAP11;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
 import static org.mule.service.soap.SoapTestXmlValues.FAIL;
 import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
@@ -56,11 +55,7 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
     } catch (SoapFaultException e) {
       // Client is for 1.1, Sender for 1.2
       assertThat(e.getFaultCode().getLocalPart(), isOneOf("Client", "Sender"));
-      if (soapVersion.equals(SOAP11)) {
-        assertThat(e.getReason(), containsString("{http://service.soap.service.mule.org/}FAIL was not recognized"));
-      } else {
-        assertThat(e.getReason(), containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}FAIL found"));
-      }
+      assertThat(e.getReason(), containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}FAIL found"));
     }
   }
 

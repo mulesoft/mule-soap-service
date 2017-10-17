@@ -12,11 +12,12 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.soap.api.exception.InvalidWsdlException;
-import org.mule.service.soap.introspection.ServiceDefinition;
 import org.mule.service.soap.util.SoapServiceMetadataTypeUtils;
 import org.mule.service.soap.xml.util.XMLUtils;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.wsdl.Part;
 
@@ -29,12 +30,12 @@ import org.w3c.dom.Document;
  */
 public abstract class AttachmentResponseEnricher {
 
-  private final ServiceDefinition definition;
   private final TypeLoader loader;
+  private final Map<String, OperationModel> operations;
 
-  protected AttachmentResponseEnricher(ServiceDefinition definition, TypeLoader loader) {
-    this.definition = definition;
+  protected AttachmentResponseEnricher(TypeLoader loader, Map<String, OperationModel> operations) {
     this.loader = loader;
+    this.operations = operations;
   }
 
   /**
@@ -44,7 +45,7 @@ public abstract class AttachmentResponseEnricher {
    * the user can have a better experience.
    */
   public String enrich(Document response, String operation, Exchange exchange) {
-    Part outputPart = definition.getOperation(operation).getOutputBodyPart()
+    Part outputPart = operations.get(operation).getOutputBodyPart()
         .orElseThrow(() -> new InvalidWsdlException(
                                                     format("Cannot find output body part for operation [%s] in the configured WSDL",
                                                            operation)));
