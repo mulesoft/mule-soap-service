@@ -75,6 +75,6 @@ abstract class NodeMetadataResolver {
   }
 
   boolean isOneWay(String operationName) {
-    return ONE_WAY.equals(port.getOperation(operationName));
+    return ONE_WAY.equals(port.getOperation(operationName).getType());
   }
 }
