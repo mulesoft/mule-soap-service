@@ -65,7 +65,7 @@ public class Soap11Service {
   }
 
   @WebResult(name = "text")
-  @WebMethod(action = "noParams")
+  @WebMethod(action = "noParamsWithHeader")
   public String noParamsWithHeader(@WebParam(name = "headerIn", header = true, mode = WebParam.Mode.IN) String header) {
     return header;
   }

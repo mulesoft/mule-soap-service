@@ -10,6 +10,7 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.soap.api.client.metadata.SoapMetadataResolver;
 import org.mule.runtime.soap.api.client.metadata.SoapOperationMetadata;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
@@ -31,14 +32,14 @@ public class DefaultSoapMetadataResolver implements SoapMetadataResolver {
   private final AttachmentsMetadataResolver outputAttachmentsResolver;
   private final ServiceOperationsResolver keysResolver;
 
-  public DefaultSoapMetadataResolver(WsdlModel wsdl, Map<String, OperationModel> operations, TypeLoader loader) {
-    inputHeadersResolver = new InputHeadersMetadataResolver(wsdl, operations, loader);
-    outputHeadersResolver = new OutputHeadersMetadataResolver(wsdl, operations, loader);
-    outputAttachmentsResolver = new OutputAttachmentsMetadataResolver(operations, loader);
-    inputAttachmentsResolver = new InputAttachmentsMetadataResolver(operations, loader);
-    inputBodyResolver = new InputBodyMetadataResolver(operations, loader);
-    outputBodyResolver = new OutputBodyMetadataResolver(operations, loader);
-    keysResolver = new ServiceOperationsResolver(operations);
+  public DefaultSoapMetadataResolver(WsdlModel wsdl, PortModel port, TypeLoader loader) {
+    inputHeadersResolver = new InputHeadersMetadataResolver(wsdl, port, loader);
+    outputHeadersResolver = new OutputHeadersMetadataResolver(wsdl, port, loader);
+    outputAttachmentsResolver = new OutputAttachmentsMetadataResolver(port, loader);
+    inputAttachmentsResolver = new InputAttachmentsMetadataResolver(port, loader);
+    inputBodyResolver = new InputBodyMetadataResolver(port, loader);
+    outputBodyResolver = new OutputBodyMetadataResolver(port, loader);
+    keysResolver = new ServiceOperationsResolver(port);
   }
 
   @Override

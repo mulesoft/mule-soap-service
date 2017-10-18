@@ -148,7 +148,7 @@ public class SoapCxfClient implements SoapClient {
 
   @Override
   public SoapMetadataResolver getMetadataResolver() {
-    return new DefaultSoapMetadataResolver(wsdlModel, port.getOperationsMap(), loader);
+    return new DefaultSoapMetadataResolver(wsdlModel, port, loader);
   }
 
   private Object[] invoke(SoapRequest request, Exchange exchange) {

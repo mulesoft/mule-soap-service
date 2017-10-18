@@ -7,9 +7,8 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.model.MetadataType;
-import org.mule.wsdl.parser.model.operation.OperationModel;
+import org.mule.wsdl.parser.model.PortModel;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,13 +18,13 @@ import java.util.Set;
  */
 final class ServiceOperationsResolver {
 
-  private final Map<String, OperationModel> operations;
+  private final PortModel port;
 
-  public ServiceOperationsResolver(Map<String, OperationModel> operations) {
-    this.operations = operations;
+  public ServiceOperationsResolver(PortModel port) {
+    this.port = port;
   }
 
   Set<String> getAvailableOperations() {
-    return operations.keySet();
+    return port.getOperationsMap().keySet();
   }
 }
