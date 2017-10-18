@@ -14,6 +14,7 @@ import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.metadata.api.model.ObjectFieldType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.List;
@@ -30,15 +31,15 @@ import javax.wsdl.Part;
  */
 abstract class AttachmentsMetadataResolver extends NodeMetadataResolver {
 
-  AttachmentsMetadataResolver(Map<String, OperationModel> operations,
+  AttachmentsMetadataResolver(PortModel port,
                               TypeLoader loader,
                               Function<OperationModel, Optional<Part>> partRetriever) {
-    super(operations, loader, partRetriever);
+    super(port, loader, partRetriever);
   }
 
   @Override
   public MetadataType getMetadata(String operation) throws MetadataResolvingException {
-    Part bodyPart = getBodyPart(operations.get(operation));
+    Part bodyPart = getBodyPart(operation);
     MetadataType bodyType = buildPartMetadataType(bodyPart);
     List<ObjectFieldType> attachments = getAttachmentFields(bodyType);
     if (attachments.isEmpty()) {

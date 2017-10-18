@@ -8,6 +8,7 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.TypeLoader;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public final class InputBodyMetadataResolver extends BodyMetadataResolver {
 
-  InputBodyMetadataResolver(Map<String, OperationModel> operations, TypeLoader loader) {
+  InputBodyMetadataResolver(PortModel operations, TypeLoader loader) {
     super(operations, loader, OperationModel::getInputBodyPart);
   }
 }

@@ -10,6 +10,7 @@ package org.mule.service.soap.metadata;
 import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
@@ -22,8 +23,8 @@ import java.util.Map;
  */
 public class OutputHeadersMetadataResolver extends HeadersMetadataResolver {
 
-  OutputHeadersMetadataResolver(WsdlModel wsdl, Map<String, OperationModel> operations, TypeLoader loader) {
-    super(wsdl, operations, loader, OperationModel::getOutputMessage, OperationModel::getOutputHeaders);
+  OutputHeadersMetadataResolver(WsdlModel wsdl, PortModel port, TypeLoader loader) {
+    super(wsdl, port, loader, OperationModel::getOutputMessage, OperationModel::getOutputHeaders);
   }
 
   @Override

@@ -17,6 +17,7 @@ import org.mule.metadata.api.TypeLoader;
 import org.mule.metadata.api.builder.BaseTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import java.util.Map;
@@ -32,16 +33,16 @@ import javax.wsdl.Part;
  */
 abstract class NodeMetadataResolver {
 
-  final Map<String, OperationModel> operations;
+  final PortModel port;
   final BaseTypeBuilder typeBuilder = BaseTypeBuilder.create(XML);
   final MetadataType nullType = typeBuilder.nullType().build();
   final TypeLoader loader;
   final Function<OperationModel, Optional<Part>> bodyPartRetriever;
 
-  NodeMetadataResolver(Map<String, OperationModel> operations,
+  NodeMetadataResolver(PortModel port,
                        TypeLoader loader,
                        Function<OperationModel, Optional<Part>> bodyPartRetriever) {
-    this.operations = operations;
+    this.port = port;
     this.loader = loader;
     this.bodyPartRetriever = bodyPartRetriever;
   }
@@ -65,15 +66,15 @@ abstract class NodeMetadataResolver {
                                          INVALID_CONFIGURATION);
   }
 
-  Part getBodyPart(OperationModel operation) throws MetadataResolvingException {
-    return bodyPartRetriever.apply(operation)
+  Part getBodyPart(String operation) throws MetadataResolvingException {
+    return bodyPartRetriever.apply(port.getOperation(operation))
         .orElseThrow(() -> {
-          String errorMsg = "No body type found for operation [" + operation.getName() + "]";
+          String errorMsg = "No body type found for operation [" + operation + "]";
           return new MetadataResolvingException(errorMsg, INVALID_METADATA_KEY);
         });
   }
 
   boolean isOneWay(String operationName) {
-    return ONE_WAY.equals(operations.get(operationName).getType());
+    return ONE_WAY.equals(port.getOperation(operationName).getType());
   }
 }

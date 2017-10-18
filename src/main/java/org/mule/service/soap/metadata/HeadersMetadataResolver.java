@@ -11,12 +11,12 @@ import org.mule.metadata.api.builder.ObjectFieldTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 import org.mule.wsdl.parser.model.operation.SoapHeader;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -35,11 +35,11 @@ abstract class HeadersMetadataResolver extends NodeMetadataResolver {
   private final Function<OperationModel, List<SoapHeader>> headersRetriever;
 
   HeadersMetadataResolver(WsdlModel wsdl,
-                          Map<String, OperationModel> operations,
+                          PortModel port,
                           TypeLoader loader,
                           Function<OperationModel, Message> messageRetriever,
                           Function<OperationModel, List<SoapHeader>> headersRetriever) {
-    super(operations, loader, o -> Optional.empty());
+    super(port, loader, o -> Optional.empty());
     this.wsdl = wsdl;
     this.messageRetriever = messageRetriever;
     this.headersRetriever = headersRetriever;
@@ -47,7 +47,7 @@ abstract class HeadersMetadataResolver extends NodeMetadataResolver {
 
   @Override
   public MetadataType getMetadata(String operationName) throws MetadataResolvingException {
-    OperationModel operation = operations.get(operationName);
+    OperationModel operation = port.getOperation(operationName);
     List<SoapHeader> headers = headersRetriever.apply(operation);
     if (!headers.isEmpty()) {
       return buildHeaderType(headers, messageRetriever.apply(operation));

@@ -8,6 +8,7 @@
 package org.mule.service.soap.metadata;
 
 import org.mule.metadata.api.TypeLoader;
+import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class InputHeadersMetadataResolver extends HeadersMetadataResolver {
 
-  public InputHeadersMetadataResolver(WsdlModel wsdl, Map<String, OperationModel> operations, TypeLoader loader) {
-    super(wsdl, operations, loader, OperationModel::getInputMessage, OperationModel::getInputHeaders);
+  public InputHeadersMetadataResolver(WsdlModel wsdl, PortModel port, TypeLoader loader) {
+    super(wsdl, port, loader, OperationModel::getInputMessage, OperationModel::getInputHeaders);
   }
 }
