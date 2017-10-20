@@ -125,10 +125,4 @@ public class Soap11Service {
       throw new RuntimeException(e);
     }
   }
-
-  public static void main(String[] args) {
-    HttpServer server = new HttpServer(1231, null, null, new Soap11Service());
-    while (true) {
-    }
-  }
 }
