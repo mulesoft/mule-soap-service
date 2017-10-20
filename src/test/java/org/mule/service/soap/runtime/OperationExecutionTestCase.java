@@ -71,7 +71,6 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that expects an input and a set of headers and returns a simple type and a set of headers")
   public void simpleOperationWithHeaders() throws Exception {
-
     Map<String, String> headers = ImmutableMap.<String, String>builder()
         .put(HEADER_IN, testValues.getHeaderIn())
         .put(HEADER_INOUT, testValues.getHeaderInOutRequest())

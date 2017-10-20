@@ -50,13 +50,8 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that does not exist and throws a SOAP Fault because of it and asserts the thrown exception")
   public void noExistentOperation() throws Exception {
-    try {
-      client.consume(builder().content(testValues.buildXml("FAIL", "")).operation("fail").build());
-    } catch (SoapFaultException e) {
-      // Client is for 1.1, Sender for 1.2
-      assertThat(e.getFaultCode().getLocalPart(), isOneOf("Client", "Sender"));
-      assertThat(e.getReason(), containsString("Unexpected wrapper element {http://service.soap.service.mule.org/}FAIL found"));
-    }
+    expectedException.expectMessage("operation [FAIL] was not found in the current wsdl file.");
+    client.consume(builder().content(testValues.buildXml("FAIL", "")).operation("FAIL").build());
   }
 
   @Test

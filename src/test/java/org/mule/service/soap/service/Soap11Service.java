@@ -7,8 +7,11 @@
 package org.mule.service.soap.service;
 
 import static java.lang.String.format;
+import static org.mule.service.soap.client.TestSoapClient.getDefaultConfiguration;
 
 import org.mule.runtime.core.api.util.IOUtils;
+import org.mule.service.soap.client.TestSoapClient;
+import org.mule.service.soap.server.HttpServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +26,14 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.xml.ws.Endpoint;
 import javax.xml.ws.Holder;
 
 @WebService(portName = "TestPort", serviceName = "TestService")
 public class Soap11Service {
 
   @WebResult(name = "text")
-  @WebMethod(action = "echo")
+  @WebMethod(action = "echoOperationCustomAction")
   public String echo(@WebParam(name = "text") String s) {
     return s + " response";
   }
@@ -59,7 +63,6 @@ public class Soap11Service {
   }
 
   @WebResult(name = "text")
-  @WebMethod(action = "noParams")
   public String noParams() {
     return "response";
   }
@@ -120,6 +123,12 @@ public class Soap11Service {
       return Thread.currentThread().getContextClassLoader().getResource(fileName).toURI().toURL();
     } catch (MalformedURLException | URISyntaxException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  public static void main(String[] args) {
+    HttpServer server = new HttpServer(1231, null, null, new Soap11Service());
+    while (true) {
     }
   }
 }

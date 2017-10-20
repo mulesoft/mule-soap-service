@@ -43,8 +43,10 @@ import org.mule.service.soap.generator.attachment.SoapAttachmentResponseEnricher
 import org.mule.service.soap.metadata.DefaultSoapMetadataResolver;
 import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
+import org.mule.wsdl.parser.exception.OperationNotFoundException;
 import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
+import org.mule.wsdl.parser.model.operation.OperationModel;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -165,7 +167,7 @@ public class SoapCxfClient implements SoapClient {
         throw new BadRequestException("Error consuming the operation [" + operation + "], the request body is not a valid XML");
       }
       throw new SoapFaultException(f.getFaultCode(), parseExceptionDetail(f.getDetail()).orElse(null), f);
-    } catch (DispatchingException e) {
+    } catch (DispatchingException | OperationNotFoundException e) {
       throw e;
     } catch (Exception e) {
       throw new SoapServiceException("Unexpected error while consuming the web service operation [" + operation + "]", e);
@@ -197,6 +199,8 @@ public class SoapCxfClient implements SoapClient {
 
   private Map<String, Object> getInvocationContext(SoapRequest request) {
     Map<String, Object> props = new HashMap<>();
+    OperationModel operation = port.getOperation(request.getOperation());
+
     // is NOT mtom the attachments must not be touched by cxf, we create a custom request embedding the attachment in the xml
     props.put(MULE_ATTACHMENTS_KEY, isMtom ? transformToCxfAttachments(request.getAttachments()) : emptyMap());
     props.put(MULE_WSC_ADDRESS, address);
@@ -205,7 +209,7 @@ public class SoapCxfClient implements SoapClient {
     props.put(MULE_TRANSPORT_HEADERS_KEY, request.getTransportHeaders());
     props.put(MESSAGE_DISPATCHER, dispatcher);
     props.put(MULE_SOAP_OPERATION_STYLE, port.getOperation(request.getOperation()).getType());
-    props.put(MULE_SOAP_ACTION, request.getOperation());
+    operation.getSoapAction().ifPresent(action -> props.put(MULE_SOAP_ACTION, action));
     Map<String, Object> ctx = new HashMap<>();
     ctx.put(Client.REQUEST_CONTEXT, props);
     return ctx;
