@@ -25,6 +25,7 @@ import io.qameta.allure.Story;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import shapeless.the;
 
 @Feature(WSC_EXTENSION)
 @Stories({@Story("Operation Execution"), @Story("Soap Fault")})
@@ -50,7 +51,8 @@ public class SoapFaultTestCase extends AbstractSoapServiceTestCase {
   @Test
   @Description("Consumes an operation that does not exist and throws a SOAP Fault because of it and asserts the thrown exception")
   public void noExistentOperation() throws Exception {
-    expectedException.expectMessage("operation [FAIL] was not found in the current wsdl file.");
+    expectedException.expect(BadRequestException.class);
+    expectedException.expectMessage("The provided [FAIL] does not exist in the WSDL file");
     client.consume(builder().content(testValues.buildXml("FAIL", "")).operation("FAIL").build());
   }
 
