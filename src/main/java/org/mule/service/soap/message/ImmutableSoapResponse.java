@@ -7,6 +7,10 @@
 package org.mule.service.soap.message;
 
 import static java.util.Collections.unmodifiableMap;
+import static org.mule.runtime.api.metadata.DataType.XML_STRING;
+import static org.mule.runtime.api.metadata.DataType.builder;
+import static org.mule.runtime.api.metadata.MediaType.APPLICATION_JAVA;
+import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
 import static org.mule.runtime.api.metadata.MediaType.XML;
 
 import org.mule.runtime.api.metadata.DataType;
@@ -18,7 +22,9 @@ import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.SoapAttributes;
 import org.mule.runtime.extension.api.soap.SoapOutputPayload;
 import org.mule.runtime.soap.api.message.SoapResponse;
+
 import com.google.common.collect.ImmutableMap;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -75,20 +81,29 @@ public final class ImmutableSoapResponse implements SoapResponse {
   @Override
   public Result<SoapOutputPayload, SoapAttributes> getAsResult(StreamingHelper helper) {
     return Result.<SoapOutputPayload, SoapAttributes>builder()
-        .output(new SoapOutputPayload(wrapBody(content, helper), wrapAttachments(attachments, helper), soapHeaders))
+        .output(new SoapOutputPayload(wrapBody(content, helper), wrapAttachments(attachments, helper), wrapHeaders(soapHeaders)))
+        .mediaType(APPLICATION_JAVA)
         .attributes(new SoapAttributes(transportHeaders))
         .build();
   }
 
+  private Map<String, TypedValue<String>> wrapHeaders(Map<String, String> headers) {
+    ImmutableMap.Builder<String, TypedValue<String>> wrapped = ImmutableMap.builder();
+    headers.forEach((k, v) -> wrapped.put(k, new TypedValue(v, builder().mediaType(APPLICATION_XML).build())));
+    return wrapped.build();
+  }
+
   private TypedValue<InputStream> wrapBody(InputStream body, StreamingHelper helper) {
-    return new TypedValue(helper.resolveCursorProvider(body), DataType.builder().type(InputStream.class).mediaType(XML).build());
+    DataType dataType = builder().type(InputStream.class).mediaType(contentType).build();
+    return new TypedValue(helper.resolveCursorProvider(body), dataType);
   }
 
   private Map<String, TypedValue<InputStream>> wrapAttachments(Map<String, SoapAttachment> attachments, StreamingHelper helper) {
     ImmutableMap.Builder<String, TypedValue<InputStream>> wrapped = ImmutableMap.builder();
-    attachments.forEach((k, v) -> wrapped.put(k, new TypedValue(helper.resolveCursorProvider(v.getContent()),
-                                                                DataType.builder().type(InputStream.class)
-                                                                    .mediaType(v.getContentType()).build())));
+    attachments.forEach((k, v) -> {
+      DataType dataType = builder().type(InputStream.class).mediaType(v.getContentType()).build();
+      wrapped.put(k, new TypedValue(helper.resolveCursorProvider(v.getContent()), dataType));
+    });
     return wrapped.build();
   }
 
