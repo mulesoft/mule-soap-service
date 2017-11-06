@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.services</groupId>
         <artifactId>mule-core-services-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,8 +24,8 @@
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
-        <wsdlParserVersion>1.0.0-SNAPSHOT</wsdlParserVersion>
-        <muleHttpServiceVersion>1.0.0-SNAPSHOT</muleHttpServiceVersion>
+        <wsdlParserVersion>1.1.0-SNAPSHOT</wsdlParserVersion>
+        <muleHttpServiceVersion>1.1.0-SNAPSHOT</muleHttpServiceVersion>
     </properties>
 
     <scm>
