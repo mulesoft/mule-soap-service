@@ -20,6 +20,7 @@ import org.mule.runtime.soap.api.transport.TransportResourceLocator;
 import org.mule.wsdl.parser.WsdlParser;
 import org.mule.wsdl.parser.locator.ResourceLocator;
 import org.mule.wsdl.parser.model.PortModel;
+import org.mule.wsdl.parser.model.ServiceModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 
 import java.io.InputStream;
@@ -46,7 +47,14 @@ public class SoapCxfClientFactory implements SoapClientFactory {
   public SoapClient create(SoapClientConfiguration config) throws ConnectionException {
     WsdlModel wsdlDefinition = getWsdlDefinition(config);
     Client client = cxfClientProvider.getClient(config);
-    PortModel port = wsdlDefinition.getService(config.getService()).getPort(config.getPort());
+    ServiceModel service = wsdlDefinition.getService(config.getService());
+    if (service == null) {
+      throw new ConnectionException("Service [" + config.getService() + "] is not defined in the wsdl");
+    }
+    PortModel port = service.getPort(config.getPort());
+    if (port == null) {
+      throw new ConnectionException("Port [" + config.getPort() + "] not found in service [" + service.getName() + "]");
+    }
     return new SoapCxfClient(client,
                              wsdlDefinition,
                              port,
