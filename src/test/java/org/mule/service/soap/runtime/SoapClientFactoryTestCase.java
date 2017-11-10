@@ -56,11 +56,11 @@ public class SoapClientFactoryTestCase extends AbstractSoapServiceTestCase {
     expectedException.expectMessage("Service [INVALID_SERVICE] is not defined in the wsdl");
     URL resource = currentThread().getContextClassLoader().getResource("wsdl/simple-service.wsdl");
     factory.create(builder()
-                     .withPort("INVALID PORT")
-                     .withService("INVALID_SERVICE")
-                     .withDispatcher(mock(MessageDispatcher.class))
-                     .withWsdlLocation(resource.getPath())
-                     .build());
+        .withPort("INVALID PORT")
+        .withService("INVALID_SERVICE")
+        .withDispatcher(mock(MessageDispatcher.class))
+        .withWsdlLocation(resource.getPath())
+        .build());
   }
 
   @Test
@@ -70,10 +70,10 @@ public class SoapClientFactoryTestCase extends AbstractSoapServiceTestCase {
     expectedException.expectMessage("Port [INVALID PORT] not found in service [TestService]");
     URL resource = currentThread().getContextClassLoader().getResource("wsdl/simple-service.wsdl");
     factory.create(builder()
-                     .withPort("INVALID PORT")
-                     .withService("TestService")
-                     .withDispatcher(mock(MessageDispatcher.class))
-                     .withWsdlLocation(resource.getPath())
-                     .build());
+        .withPort("INVALID PORT")
+        .withService("TestService")
+        .withDispatcher(mock(MessageDispatcher.class))
+        .withWsdlLocation(resource.getPath())
+        .build());
   }
 }
