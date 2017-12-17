@@ -126,7 +126,7 @@ public class OperationExecutionTestCase extends AbstractSoapServiceTestCase {
     SoapRequest request = builder().content(testValues.getEchoResquest()).operation(ECHO).build();
     SoapResponse response = client.consume(request);
     Map<String, String> transportHeaders = response.getTransportHeaders();
-    assertThat(transportHeaders.entrySet(), hasSize(3));
+    assertThat(transportHeaders.entrySet(), hasSize(4));
   }
 
   @Test

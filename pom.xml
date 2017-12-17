@@ -18,10 +18,11 @@
 
     <properties>
         <dom4jVersion>1.6.1</dom4jVersion>
-        <cxfVersion>3.0.13</cxfVersion>
+        <cxfVersion>3.2.1</cxfVersion>
         <openSamlVersion>2.6.4</openSamlVersion>
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
+        <jettyVersion>9.4.6.v20170531</jettyVersion>
         <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.0-SNAPSHOT</wsdlParserVersion>
@@ -275,14 +276,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
-            <version>6.1.26</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jettyVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
+            <version>${jettyVersion}</version>
             <scope>test</scope>
         </dependency>
 
