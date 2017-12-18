@@ -16,6 +16,7 @@ import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -50,8 +51,11 @@ public class BasicAuthHttpServer extends HttpServer {
   }
 
   private SecurityHandler getBasicAuth() {
+    UserStore userStore = new UserStore();
+    userStore.addUser(USERNAME, getCredential(PASSWORD), new String[] {"user"});
+
     HashLoginService l = new HashLoginService();
-    l.putUser(USERNAME, getCredential(PASSWORD), new String[] {"user"});
+    l.setUserStore(userStore);
     l.setName("private");
 
     Constraint constraint = new Constraint();
