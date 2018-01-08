@@ -18,7 +18,7 @@
 
     <properties>
         <dom4jVersion>1.6.1</dom4jVersion>
-        <bouncyCastleVersion>1.58</bouncyCastleVersion>
+        <bouncyCastleVersion>1.59</bouncyCastleVersion>
         <cxfVersion>3.2.1</cxfVersion>
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
