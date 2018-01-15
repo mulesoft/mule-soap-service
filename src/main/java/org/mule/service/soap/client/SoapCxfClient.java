@@ -9,6 +9,7 @@ package org.mule.service.soap.client;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -21,6 +22,7 @@ import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomEleme
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.util.Preconditions;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.SoapVersion;
@@ -54,6 +56,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.xml.namespace.QName;
@@ -99,7 +102,7 @@ public class SoapCxfClient implements SoapClient {
   private final PortModel port;
   private final TypeLoader loader;
   private final String address;
-  private final MessageDispatcher dispatcher;
+  private final MessageDispatcher defaultDispatcher;
   private final SoapVersion version;
   private final String encoding;
   private final boolean isMtom;
@@ -117,7 +120,7 @@ public class SoapCxfClient implements SoapClient {
     this.port = portModel;
     this.loader = wsdlModel.getLoader().getValue();
     this.address = address;
-    this.dispatcher = dispatcher;
+    this.defaultDispatcher = dispatcher;
     this.version = version;
     this.isMtom = isMtom;
     this.encoding = encoding;
@@ -127,25 +130,28 @@ public class SoapCxfClient implements SoapClient {
   }
 
   @Override
+  public SoapResponse consume(SoapRequest request) {
+    return consume(request, defaultDispatcher);
+  }
+
+  @Override
+  public SoapResponse consume(SoapRequest request, MessageDispatcher dispatcher) {
+    requireNonNull(dispatcher, "Message Dispatcher cannot be null");
+    String operation = request.getOperation();
+    Exchange exchange = new ExchangeImpl();
+    Object[] response = invoke(request, exchange, dispatcher);
+    return responseGenerator.generate(operation, response, exchange);
+  }
+
+  @Override
   public void stop() throws MuleException {
-    disposeIfNeeded(dispatcher, LOGGER);
+    disposeIfNeeded(defaultDispatcher, LOGGER);
     client.destroy();
   }
 
   @Override
   public void start() throws MuleException {
-    initialiseIfNeeded(dispatcher);
-  }
-
-  /**
-   * Consumes an operation from a SOAP Web Service.
-   */
-  @Override
-  public SoapResponse consume(SoapRequest request) throws SoapFaultException {
-    String operation = request.getOperation();
-    Exchange exchange = new ExchangeImpl();
-    Object[] response = invoke(request, exchange);
-    return responseGenerator.generate(operation, response, exchange);
+    initialiseIfNeeded(defaultDispatcher);
   }
 
   @Override
@@ -153,11 +159,11 @@ public class SoapCxfClient implements SoapClient {
     return new DefaultSoapMetadataResolver(wsdlModel, port, loader);
   }
 
-  private Object[] invoke(SoapRequest request, Exchange exchange) {
+  private Object[] invoke(SoapRequest request, Exchange exchange, MessageDispatcher dispatcher) {
     String operation = request.getOperation();
     XMLStreamReader xmlBody = getXmlBody(request);
     try {
-      Map<String, Object> ctx = getInvocationContext(request);
+      Map<String, Object> ctx = getInvocationContext(request, dispatcher);
       return client.invoke(getInvocationOperation(), new Object[] {xmlBody}, ctx, exchange);
     } catch (SoapFault sf) {
       throw new SoapFaultException(sf.getFaultCode(), sf.getSubCode(), parseExceptionDetail(sf.getDetail()).orElse(null),
@@ -200,7 +206,8 @@ public class SoapCxfClient implements SoapClient {
     return bop;
   }
 
-  private Map<String, Object> getInvocationContext(SoapRequest request) {
+  private Map<String, Object> getInvocationContext(SoapRequest request,
+                                                   MessageDispatcher dispatcher) {
     Map<String, Object> props = new HashMap<>();
     OperationModel operation = port.getOperation(request.getOperation());
 
