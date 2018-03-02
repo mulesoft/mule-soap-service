@@ -7,11 +7,8 @@
 package org.mule.service.soap.client;
 
 import static org.mule.runtime.core.api.util.ClassUtils.withContextClassLoader;
+
 import org.mule.service.soap.conduit.SoapServiceConduitInitiator;
-
-import java.util.Iterator;
-
-import javax.xml.transform.Source;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.SoapVersion;
@@ -23,6 +20,10 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientFactoryBean;
 import org.apache.cxf.transport.Conduit;
 import org.apache.cxf.transport.ConduitInitiatorManager;
+
+import java.util.Iterator;
+
+import javax.xml.transform.Source;
 
 /**
  * A factory for CXF {@link Client}s.
@@ -57,14 +58,17 @@ class CxfClientFactory {
   }
 
   public Client createClient(String address, String soapVersion) {
-    ClientFactoryBean factory = new ClientFactoryBean();
-    factory.setServiceClass(ProxyService.class);
-    factory.setDataBinding(new StaxDataBinding());
-    factory.getFeatures().add(new StaxDataBindingFeature());
-    factory.setAddress(address);
-    factory.setBus(bus);
-    factory.setBindingId(getBindingIdForSoapVersion(soapVersion));
-    return factory.create();
+    return withContextClassLoader(CxfClientFactory.class.getClassLoader(), () -> {
+      ClientFactoryBean factory = new ClientFactoryBean();
+      factory.setServiceClass(ProxyService.class);
+      factory.setDataBinding(new StaxDataBinding());
+      factory.getFeatures().add(new StaxDataBindingFeature());
+      factory.setAddress(address);
+      factory.setBus(bus);
+      factory.setBindingId(getBindingIdForSoapVersion(soapVersion));
+      return factory.create();
+    });
+
   }
 
   private String getBindingIdForSoapVersion(String version) {
