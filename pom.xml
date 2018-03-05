@@ -26,7 +26,7 @@
         <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.1-DRY-RUN</wsdlParserVersion>
-        <muleHttpServiceVersion>1.1.1-SNAPSHOT</muleHttpServiceVersion>
+        <muleHttpServiceVersion>1.1.1-DRY-RUN</muleHttpServiceVersion>
     </properties>
 
     <scm>
