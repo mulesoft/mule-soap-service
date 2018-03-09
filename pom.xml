@@ -107,6 +107,11 @@
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
+                <!--  Contains shaded jetty classes with security problems -->
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
