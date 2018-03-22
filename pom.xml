@@ -25,7 +25,7 @@
         <jettyVersion>9.4.6.v20170531</jettyVersion>
         <springVersion>4.1.9.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
-        <wsdlParserVersion>1.1.1-SNAPSHOT</wsdlParserVersion>
+        <wsdlParserVersion>1.1.2-SNAPSHOT</wsdlParserVersion>
         <muleHttpServiceVersion>1.1.1-SNAPSHOT</muleHttpServiceVersion>
     </properties>
 
