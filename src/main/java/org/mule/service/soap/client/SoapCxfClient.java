@@ -181,7 +181,8 @@ public class SoapCxfClient implements SoapClient {
       throw e;
     } catch (OperationNotFoundException e) {
       String location = wsdlModel.getLocation();
-      throw new BadRequestException("The provided [" + operation + "] does not exist in the WSDL file [" + location + "]", e);
+      throw new BadRequestException("The provided operation [" + operation + "] does not exist in the WSDL file [" + location
+          + "]", e);
     } catch (Exception e) {
       throw new SoapServiceException("Unexpected error while consuming the web service operation [" + operation + "]", e);
     }

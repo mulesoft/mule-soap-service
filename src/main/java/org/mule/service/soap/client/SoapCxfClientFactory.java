@@ -85,10 +85,11 @@ public class SoapCxfClientFactory implements SoapClientFactory {
 
   private WsdlModel getWsdlDefinition(SoapClientConfiguration config) throws ConnectionException {
     String location = config.getWsdlLocation();
-    WsdlModel wsdlModel = WsdlParser.Companion.parse(location, new ResourceLocatorAdapter(config.getLocator()));
+    WsdlModel wsdlModel = WsdlParser.Companion.parse(location,
+                                                     new ResourceLocatorAdapter(config.getLocator()),
+                                                     config.getEncoding());
     if (RPC.equals(wsdlModel.getStyle())) {
-      throw new ConnectionException(format("The provided WSDL [%s] is RPC style, RPC WSDLs are not supported",
-                                           location));
+      throw new ConnectionException(format("The provided WSDL [%s] is RPC style, RPC WSDLs are not supported", location));
     }
     return wsdlModel;
   }
