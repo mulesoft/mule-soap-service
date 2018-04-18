@@ -6,12 +6,14 @@
  */
 package org.mule.service.soap.generator;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Collections.emptyMap;
 import static org.mule.runtime.api.metadata.MediaType.APPLICATION_XML;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_TRANSPORT_HEADERS_KEY;
 
+import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.SoapAttributes;
@@ -26,7 +28,10 @@ import org.mule.service.soap.util.XmlTransformationException;
 import org.mule.service.soap.util.XmlTransformationUtils;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamReader;
 
@@ -70,12 +75,30 @@ public final class SoapResponseGenerator {
     Map<String, SoapAttachment> attachments = (Map<String, SoapAttachment>) exchange.get(MULE_ATTACHMENTS_KEY);
     Map<String, String> headers = (Map<String, String>) exchange.get(MULE_HEADERS_KEY);
     ByteArrayInputStream resultStream = new ByteArrayInputStream(result.getBytes());
-    return new ImmutableSoapResponse(resultStream, headers, transportHeaders, attachments, APPLICATION_XML);
+    MediaType mediaType = getContentType(transportHeaders);
+    return new ImmutableSoapResponse(resultStream, headers, transportHeaders, attachments, mediaType);
+  }
+
+  private MediaType getContentType(Map<String, String> transportHeaders) {
+    String ct = transportHeaders.get("content-type");
+    if (ct != null) {
+      Optional<Charset> charset = MediaType.parse(ct).getCharset();
+      if (charset.isPresent()) {
+        return MediaType.create("application", "xml", charset.get());
+      }
+    }
+    return APPLICATION_XML;
   }
 
   private Map<String, String> getTransportHeaders(Exchange exchange) {
     Map<String, String> transportHeaders = (Map<String, String>) exchange.get(MULE_TRANSPORT_HEADERS_KEY);
-    return transportHeaders == null ? emptyMap() : transportHeaders;
+    if (transportHeaders == null) {
+      return emptyMap();
+    } else {
+      Map<String, String> result = new TreeMap<>(CASE_INSENSITIVE_ORDER);
+      result.putAll(transportHeaders);
+      return result;
+    }
   }
 
   /**
