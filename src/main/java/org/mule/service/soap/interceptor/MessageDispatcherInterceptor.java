@@ -7,6 +7,7 @@
 package org.mule.service.soap.interceptor;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Collections.emptyList;
 import static org.apache.cxf.interceptor.StaxInEndingInterceptor.STAX_IN_NOCLOSE;
 import static org.apache.cxf.message.Message.CONTENT_TYPE;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.cxf.endpoint.ClientImpl;
 import org.apache.cxf.interceptor.Fault;
@@ -73,7 +75,7 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     message.setAttachments(emptyList());
 
     MessageDispatcher dispatcher = (MessageDispatcher) exchange.get(MESSAGE_DISPATCHER);
-    DispatchingResponse response = dispatcher.dispatch(getDispatchingRequest(message));
+    DispatchingResponse response = dispatcher.dispatch(DispatchingRequestFactory.createDispatchingRequest(message));
 
     // This needs to be set because we want the wsc closes the final stream,
     // otherwise cxf will close it too early when handling message in the StaxInEndingInterceptor.
@@ -94,17 +96,5 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
     exchange.put(MULE_TRANSPORT_HEADERS_KEY, response.getHeaders());
     inMessage.setExchange(exchange);
     messageObserver.onMessage(inMessage);
-  }
-
-  private DispatchingRequest getDispatchingRequest(Message message) {
-    Exchange exchange = message.getExchange();
-    String action = (String) exchange.get(MULE_SOAP_ACTION);
-    Map<String, String> headers = new HashMap<>();
-    headers.put(SOAP_ACTION, action);
-    // It's important that content type is bundled with the headers
-    headers.put(CONTENT_TYPE, (String) message.get(CONTENT_TYPE));
-    headers.putAll((Map) exchange.get(MULE_TRANSPORT_HEADERS_KEY));
-    InputStream content = new ByteArrayInputStream(message.getContent(OutputStream.class).toString().getBytes());
-    return new DispatchingRequest(content, (String) exchange.get(MULE_WSC_ADDRESS), headers);
   }
 }
