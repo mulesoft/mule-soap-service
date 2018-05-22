@@ -29,27 +29,27 @@ import java.util.Map;
  */
 class CxfAttachmentsFactory {
 
-    private boolean isMtom;
+  private boolean isMtom;
 
-    CxfAttachmentsFactory(boolean isMtom) {
-        this.isMtom = isMtom;
-    }
+  CxfAttachmentsFactory(boolean isMtom) {
+    this.isMtom = isMtom;
+  }
 
-    public Map<String, Attachment> transformToCxfAttachments(Map<String, SoapAttachment> attachments) {
-        if (!isMtom) {
-            return emptyMap();
-        }
-        ImmutableMap.Builder<String, Attachment> builder = ImmutableMap.builder();
-        attachments.forEach((name, value) -> {
-            try {
-                AttachmentImpl attachment = new AttachmentImpl(name, toDataHandler(name, value.getContent(), value.getContentType()));
-                attachment.setHeader(CONTENT_DISPOSITION, "attachment; name=\"" + name + "\"");
-                builder.put(name, attachment);
-            } catch (IOException e) {
-                throw new BadRequestException(format("Error while preparing attachment [%s] for upload", name), e);
-            }
-        });
-        return builder.build();
+  public Map<String, Attachment> transformToCxfAttachments(Map<String, SoapAttachment> attachments) {
+    if (!isMtom) {
+      return emptyMap();
     }
+    ImmutableMap.Builder<String, Attachment> builder = ImmutableMap.builder();
+    attachments.forEach((name, value) -> {
+      try {
+        AttachmentImpl attachment = new AttachmentImpl(name, toDataHandler(name, value.getContent(), value.getContentType()));
+        attachment.setHeader(CONTENT_DISPOSITION, "attachment; name=\"" + name + "\"");
+        builder.put(name, attachment);
+      } catch (IOException e) {
+        throw new BadRequestException(format("Error while preparing attachment [%s] for upload", name), e);
+      }
+    });
+    return builder.build();
+  }
 
 }
