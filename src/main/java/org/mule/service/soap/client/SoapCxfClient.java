@@ -20,11 +20,11 @@ import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNee
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.startIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.stopIfNeeded;
 import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
+import static org.mule.runtime.http.api.HttpHeaders.Names.CONTENT_DISPOSITION;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.api.util.Preconditions;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.SoapVersion;
@@ -58,7 +58,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.xml.namespace.QName;
@@ -249,7 +248,11 @@ public class SoapCxfClient implements SoapClient {
     ImmutableMap.Builder<String, Attachment> builder = ImmutableMap.builder();
     attachments.forEach((name, value) -> {
       try {
-        builder.put(name, new AttachmentImpl(name, toDataHandler(name, value.getContent(), value.getContentType())));
+        AttachmentImpl attachment = new AttachmentImpl(name, toDataHandler(name, value.getContent(), value.getContentType()));
+        if (isMtom) {
+          attachment.setHeader(CONTENT_DISPOSITION, "attachment; name=\"" + name + "\"");
+        }
+        builder.put(name, attachment);
       } catch (IOException e) {
         throw new BadRequestException(format("Error while preparing attachment [%s] for upload", name), e);
       }
