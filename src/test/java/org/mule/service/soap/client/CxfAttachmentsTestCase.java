@@ -80,7 +80,6 @@ public class CxfAttachmentsTestCase {
     }
 
     @Override
-    public void describeTo(Description description) {
-    }
+    public void describeTo(Description description) {}
   }
 }
