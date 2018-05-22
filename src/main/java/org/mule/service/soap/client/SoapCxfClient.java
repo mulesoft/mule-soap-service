@@ -19,13 +19,10 @@ import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.disposeIfNeeded
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.startIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.stopIfNeeded;
-import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
-import static org.mule.runtime.http.api.HttpHeaders.Names.CONTENT_DISPOSITION;
 import static org.mule.service.soap.util.XmlTransformationUtils.stringToDomElement;
 
 import org.mule.metadata.api.TypeLoader;
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.extension.api.soap.SoapAttachment;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
 import org.mule.runtime.soap.api.SoapVersion;
 import org.mule.runtime.soap.api.client.SoapClient;
@@ -52,8 +49,6 @@ import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.WsdlModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
 
-import com.google.common.collect.ImmutableMap;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -64,13 +59,11 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.cxf.attachment.AttachmentImpl;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.message.Attachment;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.service.model.BindingOperationInfo;
@@ -107,6 +100,7 @@ public class SoapCxfClient implements SoapClient {
   private final SoapVersion version;
   private final String encoding;
   private final boolean isMtom;
+  private final CxfAttachmentsFactory attachmentsFactory;
 
   SoapCxfClient(Client client,
                 WsdlModel wsdlModel,
@@ -128,6 +122,7 @@ public class SoapCxfClient implements SoapClient {
     // TODO: MULE-10889 -> instead of creating this enrichers, interceptors that works with the live stream would be ideal
     this.requestGenerator = new SoapRequestGenerator(getRequestEnricher(isMtom), portModel, loader);
     this.responseGenerator = new SoapResponseGenerator(getResponseEnricher(isMtom));
+    this.attachmentsFactory = new CxfAttachmentsFactory(this.isMtom);
   }
 
   @Override
@@ -216,7 +211,7 @@ public class SoapCxfClient implements SoapClient {
     OperationModel operation = port.getOperation(request.getOperation());
 
     // is NOT mtom the attachments must not be touched by cxf, we create a custom request embedding the attachment in the xml
-    props.put(MULE_ATTACHMENTS_KEY, isMtom ? transformToCxfAttachments(request.getAttachments()) : emptyMap());
+    props.put(MULE_ATTACHMENTS_KEY, this.attachmentsFactory.transformToCxfAttachments(request.getAttachments()));
     props.put(MULE_WSC_ADDRESS, address);
     props.put(ENCODING, encoding == null ? "UTF-8" : encoding);
     props.put(MULE_HEADERS_KEY, transformToCxfHeaders(request.getSoapHeaders()));
@@ -242,22 +237,6 @@ public class SoapCxfClient implements SoapClient {
           }
         })
         .collect(toList());
-  }
-
-  private Map<String, Attachment> transformToCxfAttachments(Map<String, SoapAttachment> attachments) {
-    ImmutableMap.Builder<String, Attachment> builder = ImmutableMap.builder();
-    attachments.forEach((name, value) -> {
-      try {
-        AttachmentImpl attachment = new AttachmentImpl(name, toDataHandler(name, value.getContent(), value.getContentType()));
-        if (isMtom) {
-          attachment.setHeader(CONTENT_DISPOSITION, "attachment; name=\"" + name + "\"");
-        }
-        builder.put(name, attachment);
-      } catch (IOException e) {
-        throw new BadRequestException(format("Error while preparing attachment [%s] for upload", name), e);
-      }
-    });
-    return builder.build();
   }
 
   private AttachmentRequestEnricher getRequestEnricher(boolean isMtom) {
