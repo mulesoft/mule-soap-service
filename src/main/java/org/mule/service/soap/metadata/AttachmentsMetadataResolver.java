@@ -53,7 +53,7 @@ abstract class AttachmentsMetadataResolver extends NodeMetadataResolver {
     if (attachments.isEmpty()) {
       return getMultipartAttachments(operation, bodyPart).orElse(nullType);
     }
-    // TODO: This piece of code should be removed when soap with attachments are no longer parsed.
+    // TODO(MULE-15275): This piece of code should be removed when soap with attachments are no longer parsed.
     ObjectTypeBuilder type = typeBuilder.objectType();
     attachments.forEach(attachment -> type.addField()
         .key(getLocalPart(attachment))
@@ -61,7 +61,7 @@ abstract class AttachmentsMetadataResolver extends NodeMetadataResolver {
     return type.build();
   }
 
-  // TODO: Move this to the parser.
+  // TODO(MULE-15275): Move this to the parser.
   private Optional<MetadataType> getMultipartAttachments(String operation, Part bodyPart) {
     Message message = this.messageRetriever.apply(this.port.getOperation(operation)).orElse(null);
     if (message != null) {
