@@ -12,8 +12,14 @@ import org.mule.metadata.api.model.MetadataType;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.wsdl.parser.model.PortModel;
 import org.mule.wsdl.parser.model.operation.OperationModel;
+import org.mule.wsdl.parser.model.operation.OperationType;
 
 import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.mule.wsdl.parser.model.operation.OperationType.ONE_WAY;
 
 /**
  * {@link AttachmentsMetadataResolver} implementation for the output attachments.
@@ -23,7 +29,7 @@ import java.util.Map;
 final class OutputAttachmentsMetadataResolver extends AttachmentsMetadataResolver {
 
   OutputAttachmentsMetadataResolver(PortModel port, TypeLoader loader) {
-    super(port, loader, OperationModel::getOutputBodyPart);
+    super(port, loader, OperationModel::getOutputBodyPart, o -> o.getType().equals(ONE_WAY) ? empty() : of(o.getOutputMessage()));
   }
 
   @Override
