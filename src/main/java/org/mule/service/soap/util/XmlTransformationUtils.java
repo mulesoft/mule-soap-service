@@ -6,6 +6,7 @@
  */
 package org.mule.service.soap.util;
 
+import com.ctc.wstx.stax.WstxInputFactory;
 import org.mule.runtime.core.api.util.xmlsecurity.XMLSecureFactories;
 import org.mule.runtime.soap.api.SoapService;
 import org.mule.service.soap.xml.stax.StaxSource;
@@ -13,9 +14,11 @@ import org.mule.service.soap.xml.stax.StaxSource;
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -30,12 +33,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
+
 /**
  * {@link SoapService} Transformation utility class
  *
  * @since 1.0
  */
 public class XmlTransformationUtils {
+
+  private static final XMLInputFactory XML_INPUT_FACTORY = getXmlInputFactory();
+
+  private static XMLInputFactory getXmlInputFactory() {
+    XMLInputFactory xmlInputFactory = WstxInputFactory.newInstance();
+    // Preserve the CDATA tags
+    xmlInputFactory.setProperty(IS_COALESCING, false);
+    return xmlInputFactory;
+  }
 
   public static Document xmlStreamReaderToDocument(XMLStreamReader xmlStreamReader) throws XmlTransformationException {
     StaxSource staxSource = new StaxSource(xmlStreamReader);
@@ -87,9 +101,12 @@ public class XmlTransformationUtils {
   }
 
   public static XMLStreamReader stringToXmlStreamReader(String xml) throws XmlTransformationException {
+    return stringToXmlStreamReader(xml, "UTF-8");
+  }
+
+  public static XMLStreamReader stringToXmlStreamReader(String xml, String encoding) throws XmlTransformationException {
     try {
-      return XMLSecureFactories.createDefault().getXMLInputFactory()
-          .createXMLStreamReader(new ByteArrayInputStream(xml.getBytes()));
+      return XML_INPUT_FACTORY.createXMLStreamReader(new ByteArrayInputStream(xml.getBytes(Charset.forName(encoding))));
     } catch (Exception e) {
       throw new XmlTransformationException("Could not transform xml to XmlStreamReader", e);
     }
