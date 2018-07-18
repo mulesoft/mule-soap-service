@@ -43,6 +43,7 @@ import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
 public class XmlTransformationUtils {
 
   private static final XMLInputFactory XML_INPUT_FACTORY = getXmlInputFactory();
+  private static final TransformerFactory SAXON_TRANSFORMER_FACTORY = SaxonTransformerFactory.newInstance();
 
   private static XMLInputFactory getXmlInputFactory() {
     XMLInputFactory xmlInputFactory = WstxInputFactory.newInstance();
@@ -54,12 +55,11 @@ public class XmlTransformationUtils {
   public static Document xmlStreamReaderToDocument(XMLStreamReader xmlStreamReader) throws XmlTransformationException {
     StaxSource staxSource = new StaxSource(xmlStreamReader);
     DOMResult writer = new DOMResult();
-    TransformerFactory idTransformer = SaxonTransformerFactory.newInstance();
     try {
-      Transformer transformer = idTransformer.newTransformer();
+      Transformer transformer = SAXON_TRANSFORMER_FACTORY.newTransformer();
       transformer.transform(staxSource, writer);
     } catch (TransformerException e) {
-      throw new XmlTransformationException("Error transforming XML Stream Reader to String", e);
+      throw new XmlTransformationException("Error transforming reader to DOM document", e);
     }
     return (Document) writer.getNode();
   }
