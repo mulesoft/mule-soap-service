@@ -6,13 +6,10 @@
  */
 package org.mule.service.soap.provider;
 
-import static java.util.Collections.singletonList;
 import org.mule.runtime.api.service.ServiceDefinition;
 import org.mule.runtime.api.service.ServiceProvider;
 import org.mule.runtime.soap.api.SoapService;
 import org.mule.service.soap.SoapServiceImplementation;
-
-import java.util.List;
 
 /**
  * {@link ServiceProvider} implementation for providing a mule {@link SoapService}.
@@ -22,8 +19,7 @@ import java.util.List;
 public class SoapServiceProvider implements ServiceProvider {
 
   @Override
-  public List<ServiceDefinition> providedServices() {
-    ServiceDefinition serviceDefinition = new ServiceDefinition(SoapService.class, new SoapServiceImplementation());
-    return singletonList(serviceDefinition);
+  public ServiceDefinition getServiceDefinition() {
+    return new ServiceDefinition(SoapService.class, new SoapServiceImplementation());
   }
 }
