@@ -10,24 +10,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.Mockito.mock;
 import static org.mule.runtime.soap.api.message.SoapRequest.builder;
 import static org.mule.service.soap.SoapTestXmlValues.FAIL;
-import static org.mule.test.allure.AllureConstants.WscFeature.WSC_EXTENSION;
-
-import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
-import org.mule.runtime.http.api.client.HttpClient;
-import org.mule.runtime.soap.api.client.SoapClient;
-import org.mule.runtime.soap.api.client.SoapClientConfiguration;
-import org.mule.runtime.soap.api.client.SoapClientConfigurationBuilder;
 import org.mule.runtime.soap.api.exception.BadRequestException;
 import org.mule.runtime.soap.api.exception.SoapFaultException;
-import org.mule.runtime.soap.api.message.dispatcher.DefaultHttpMessageDispatcher;
 import org.mule.service.soap.AbstractSoapServiceTestCase;
-import org.mule.service.soap.client.SoapCxfClient;
-import org.mule.service.soap.client.SoapCxfClientFactory;
-
-import javax.inject.Inject;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -36,7 +23,6 @@ import io.qameta.allure.Story;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import shapeless.the;
 
 @Feature("SOAP SERVICE")
 @Stories({@Story("Operation Execution"), @Story("Soap Fault")})
