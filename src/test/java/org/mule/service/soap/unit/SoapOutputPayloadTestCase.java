@@ -35,11 +35,11 @@ public class SoapOutputPayloadTestCase {
 
   @Test
   public void toStringFullPayload() throws Exception {
-    TypedValue<InputStream> body = new TypedValue<>(new ByteArrayInputStream("<xml>ABC</xml>".getBytes(UTF_8)), null);
-    Map<String, TypedValue<String>> hs = ImmutableMap.of("header1", new TypedValue<>("<header1>content</header1>", null),
-                                                         "header2", new TypedValue<>("<header2>content</header2>", null));
-    Map<String, TypedValue<InputStream>> as = ImmutableMap.of("attachment1", new TypedValue<>(null, null),
-                                                              "attachment2", new TypedValue<>(null, null));
+    TypedValue<InputStream> body = TypedValue.of(new ByteArrayInputStream("<xml>ABC</xml>".getBytes(UTF_8)));
+    Map<String, TypedValue<String>> hs = ImmutableMap.of("header1", TypedValue.of("<header1>content</header1>"),
+                                                         "header2", TypedValue.of("<header2>content</header2>"));
+    Map<String, TypedValue<InputStream>> as = ImmutableMap.of("attachment1", TypedValue.of(null),
+                                                              "attachment2", TypedValue.of(null));
     String result = new SoapOutputPayload(body, as, hs).toString();
     assertThat(result, is("{\n"
         + "body:<xml>ABC</xml>,\n"
