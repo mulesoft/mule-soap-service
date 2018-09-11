@@ -22,7 +22,7 @@
         <cxfVersion>3.2.1</cxfVersion>
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <jettyVersion>9.4.6.v20170531</jettyVersion>
-        <springVersion>4.3.18.RELEASE</springVersion>
+        <springVersion>4.3.19.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.2.0-SNAPSHOT</wsdlParserVersion>
         <muleHttpServiceVersion>1.2.0-SNAPSHOT</muleHttpServiceVersion>
