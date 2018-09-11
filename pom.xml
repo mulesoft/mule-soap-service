@@ -23,7 +23,7 @@
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <xmlUnitVersion>1.6</xmlUnitVersion>
         <jettyVersion>9.4.6.v20170531</jettyVersion>
-        <springVersion>4.3.18.RELEASE</springVersion>
+        <springVersion>4.3.19.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.7-SNAPSHOT</wsdlParserVersion>
         <muleHttpServiceVersion>1.1.4-SNAPSHOT</muleHttpServiceVersion>
