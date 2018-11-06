@@ -23,6 +23,8 @@
         <xmlSecVersion>2.0.6</xmlSecVersion>
         <jettyVersion>9.4.6.v20170531</jettyVersion>
         <springVersion>5.1.0.RELEASE</springVersion>
+        <javax.jaxws-api.version>2.3.0</javax.jaxws-api.version>
+        <javax.jws-api.version>1.1</javax.jws-api.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.7-SNAPSHOT</wsdlParserVersion>
         <muleHttpServiceVersion>1.2.0-SNAPSHOT</muleHttpServiceVersion>
@@ -124,6 +126,12 @@
                     <artifactId>jaxb-impl</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <version>${javax.jaxws-api.version}</version>
         </dependency>
 
         <!-- WSDL PARSER -->
@@ -234,6 +242,12 @@
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.jws</groupId>
+            <artifactId>javax.jws-api</artifactId>
+            <version>${javax.jws-api.version}</version>
             <scope>test</scope>
         </dependency>
 
