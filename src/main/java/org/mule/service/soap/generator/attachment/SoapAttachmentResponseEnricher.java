@@ -63,17 +63,17 @@ public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnri
    */
   private SoapAttachment getAttachment(Document response, String name) {
     Node attachmentNode = response.getDocumentElement().getElementsByTagName(name).item(0);
-    String decodedAttachment = decodeAttachment(name, attachmentNode.getTextContent());
+    byte[] decodedAttachment = decodeAttachment(name, attachmentNode.getTextContent());
     response.getDocumentElement().removeChild(attachmentNode);
-    return new SoapAttachment(new ByteArrayInputStream(decodedAttachment.getBytes()), ANY);
+    return new SoapAttachment(new ByteArrayInputStream(decodedAttachment), ANY);
   }
 
   /**
    * Decodes the attachment content from base64.
    */
-  private String decodeAttachment(String name, String attachmentContent) {
+  private byte[] decodeAttachment(String name, String attachmentContent) {
     try {
-      return new String((byte[]) decoder.transform(attachmentContent));
+      return (byte[]) decoder.transform(attachmentContent);
     } catch (TransformerException e) {
       throw new EncodingException(format("Cannot decode base64 attachment [%s]", name));
     }
