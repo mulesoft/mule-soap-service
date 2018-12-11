@@ -7,31 +7,25 @@
 
 package org.mule.service.soap.unit;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_ATTACHMENTS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_HEADERS_KEY;
 import static org.mule.service.soap.client.SoapCxfClient.MULE_TRANSPORT_HEADERS_KEY;
-
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.soap.api.message.SoapResponse;
 import org.mule.service.soap.generator.SoapResponseGenerator;
 import org.mule.service.soap.generator.attachment.AttachmentResponseEnricher;
 import org.mule.service.soap.xml.util.XMLUtils;
 
-import com.google.common.collect.ImmutableMap;
-
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Map;
 
-import javax.swing.text.Document;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -46,7 +40,7 @@ public class SoapResponseGeneratorTestCase {
   @Test
   public void responseWithCharset() throws XMLStreamException {
     AttachmentResponseEnricher enricher = mock(AttachmentResponseEnricher.class);
-    when(enricher.enrich(any(), any(), any())).thenAnswer(a -> XMLUtils.toXml(a.getArgumentAt(0, org.w3c.dom.Document.class)));
+    when(enricher.enrich(any(), any(), any())).thenAnswer(a -> XMLUtils.toXml(a.getArgument(0)));
     Exchange exchange = mock(Exchange.class);
     when(exchange.get(MULE_ATTACHMENTS_KEY)).thenReturn(emptyMap());
     when(exchange.get(MULE_HEADERS_KEY)).thenReturn(emptyMap());
