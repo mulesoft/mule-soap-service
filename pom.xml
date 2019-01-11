@@ -26,7 +26,7 @@
         <springVersion>4.3.19.RELEASE</springVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.7-SNAPSHOT</wsdlParserVersion>
-        <muleHttpServiceVersion>1.2.1-SNAPSHOT</muleHttpServiceVersion>
+        <muleHttpServiceVersion>1.2.1</muleHttpServiceVersion>
     </properties>
 
     <scm>
