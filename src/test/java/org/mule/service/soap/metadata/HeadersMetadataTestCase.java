@@ -78,7 +78,7 @@ public class HeadersMetadataTestCase extends AbstractMetadataTestCase {
     ObjectFieldType header = headers.getFields().iterator().next();
     assertThat(header.getKey().getName().getLocalPart(), is("header"));
     String headerTypeId = header.getValue().getAnnotation(TypeIdAnnotation.class).get().getValue();
-    assertThat(headerTypeId, is("{urn:com.workday/bsvc}Workday_Common_Header"));
+    assertThat(headerTypeId, is("#root:{urn:com.workday/bsvc}Workday_Common_Header"));
   }
 
   @Test
