@@ -28,7 +28,7 @@
         <xml.messaging.saaj.version>1.3.28</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.4.0-SNAPSHOT</wsdlParserVersion>
-        <muleHttpServiceVersion>1.3.0-SNAPSHOT</muleHttpServiceVersion>
+        <muleHttpServiceVersion>1.4.0-SNAPSHOT</muleHttpServiceVersion>
     </properties>
 
     <scm>
