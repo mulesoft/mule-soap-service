@@ -11,13 +11,10 @@ import org.apache.cxf.message.Message;
 import org.junit.Test;
 import org.mule.runtime.extension.api.soap.message.DispatchingRequest;
 import org.mule.service.soap.interceptor.DispatchingRequestFactory;
-import org.mule.service.soap.interceptor.MessageDispatcherInterceptor;
-import sun.nio.ch.IOUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 
 import static java.util.Collections.singletonMap;
 import static org.hamcrest.core.Is.is;

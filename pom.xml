@@ -19,9 +19,9 @@
     <properties>
         <dom4jVersion>1.6.1</dom4jVersion>
         <bouncyCastleVersion>1.60</bouncyCastleVersion>
-        <cxfVersion>3.2.1</cxfVersion>
-        <xmlSecVersion>2.0.6</xmlSecVersion>
-        <jettyVersion>9.4.6.v20170531</jettyVersion>
+        <cxfVersion>3.3.1</cxfVersion>
+        <xmlSecVersion>2.1.2</xmlSecVersion>
+        <jettyVersion>9.4.14.v20181114</jettyVersion>
         <springVersion>5.1.0.RELEASE</springVersion>
         <javax.jaxws-api.version>2.3.0</javax.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
