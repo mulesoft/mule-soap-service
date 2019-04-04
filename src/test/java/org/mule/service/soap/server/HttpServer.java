@@ -78,6 +78,15 @@ public class HttpServer {
     return defaultAddress;
   }
 
+  /**
+   * Starts this server, which is stopped when the JVM is shutdown.
+   * <p>
+   * The expected arguments are:
+   * <ul>
+   * <li><b>portNumber</b>: The port where the HTTP server will listen for SOAP requests.</li>
+   * <li><b>serviceClass</b>: Refer to @link {@link Endpoint#publish(String, Object)}</li>
+   * </ul>
+   */
   public static void main(String[] args) {
     final int port;
     final Object service;
