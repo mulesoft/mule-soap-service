@@ -8,6 +8,7 @@ package org.mule.service.soap.client;
 
 import static org.mule.runtime.core.api.util.ClassUtils.withContextClassLoader;
 
+import org.apache.cxf.wsdl.service.factory.ReflectionServiceFactoryBean;
 import org.mule.service.soap.conduit.SoapServiceConduitInitiator;
 
 import org.apache.cxf.Bus;
@@ -21,6 +22,7 @@ import org.apache.cxf.frontend.ClientFactoryBean;
 import org.apache.cxf.transport.Conduit;
 import org.apache.cxf.transport.ConduitInitiatorManager;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import javax.xml.transform.Source;
@@ -59,7 +61,9 @@ class CxfClientFactory {
 
   public Client createClient(String address, String soapVersion) {
     return withContextClassLoader(CxfClientFactory.class.getClassLoader(), () -> {
-      ClientFactoryBean factory = new ClientFactoryBean();
+      ReflectionServiceFactoryBean serviceFactoryBean = new ReflectionServiceFactoryBean();
+      serviceFactoryBean.getServiceConfigurations().add(0, new DefaultServiceConfiguration());
+      ClientFactoryBean factory = new ClientFactoryBean(serviceFactoryBean);
       factory.setServiceClass(ProxyService.class);
       factory.setDataBinding(new StaxDataBinding());
       factory.getFeatures().add(new StaxDataBindingFeature());
@@ -88,5 +92,16 @@ class CxfClientFactory {
   private interface ProxyService {
 
     Source invoke(Source source);
+
+    void invokeOneWay(Source source);
+
+  }
+
+  public class DefaultServiceConfiguration extends org.apache.cxf.wsdl.service.factory.DefaultServiceConfiguration {
+
+    public Boolean hasOutMessage(Method m) {
+      return !m.getName().equals("invokeOneWay");
+    }
+
   }
 }
