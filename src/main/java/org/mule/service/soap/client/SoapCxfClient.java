@@ -67,6 +67,7 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.service.model.BindingOperationInfo;
+import org.mule.wsdl.parser.model.operation.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -162,7 +163,7 @@ public class SoapCxfClient implements SoapClient {
     XMLStreamReader xmlBody = getXmlBody(request);
     try {
       Map<String, Object> ctx = getInvocationContext(request, dispatcher);
-      return client.invoke(getInvocationOperation(), new Object[] {xmlBody}, ctx, exchange);
+      return client.invoke(getInvocationOperation(operation), new Object[] {xmlBody}, ctx, exchange);
     } catch (SoapFault sf) {
       throw new SoapFaultException(sf.getFaultCode(), sf.getSubCode(), parseExceptionDetail(sf.getDetail()).orElse(null),
                                    sf.getReason(), sf.getNode(), sf.getRole(), sf);
@@ -191,13 +192,14 @@ public class SoapCxfClient implements SoapClient {
     }
   }
 
-  private BindingOperationInfo getInvocationOperation() throws Exception {
+  private BindingOperationInfo getInvocationOperation(String operationName) throws Exception {
     // Normally its not this hard to invoke the CXF Client, but we're
     // sending along some exchange properties, so we need to use a more advanced
     // method
     Endpoint ep = client.getEndpoint();
     // The operation is always named invoke because hits our ProxyService implementation.
-    QName q = new QName(ep.getService().getName().getNamespaceURI(), "invoke");
+    String method = port.getOperation(operationName).getType().equals(OperationType.ONE_WAY) ? "invokeOneWay" : "invoke";
+    QName q = new QName(ep.getService().getName().getNamespaceURI(), method);
     BindingOperationInfo bop = ep.getBinding().getBindingInfo().getOperation(q);
     if (bop.isUnwrappedCapable()) {
       bop = bop.getUnwrappedOperation();
