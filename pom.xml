@@ -17,7 +17,7 @@
     <description>A SOAP service based on CXF</description>
 
     <properties>
-        <dom4jVersion>1.6.1</dom4jVersion>
+        <dom4jVersion>2.1.1</dom4jVersion>
         <bouncyCastleVersion>1.60</bouncyCastleVersion>
         <cxfVersion>3.3.1</cxfVersion>
         <xmlSecVersion>2.1.2</xmlSecVersion>
@@ -240,8 +240,9 @@
             <artifactId>stax-utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>dom4j</groupId>
+            <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
+            <version>${dom4jVersion}</version>
         </dependency>
 
         <!-- Test Dependencies -->
