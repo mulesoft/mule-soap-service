@@ -13,6 +13,7 @@ import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
 import javax.xml.ws.Endpoint;
 
 public class HttpServer {
@@ -22,6 +23,10 @@ public class HttpServer {
   private final Interceptor in;
   private final Interceptor out;
   private final Object serviceInstance;
+
+  public HttpServer(int port, Object serviceInstance) {
+    this(port, null, null, serviceInstance);
+  }
 
   public HttpServer(int port, Interceptor in, Interceptor out, Object serviceInstance) {
     this.httpServer = new Server(port);
@@ -71,5 +76,49 @@ public class HttpServer {
 
   public String getDefaultAddress() {
     return defaultAddress;
+  }
+
+  /**
+   * Starts this server, which is stopped when the JVM is shutdown.
+   * <p>
+   * The expected arguments are:
+   * <ul>
+   * <li><b>portNumber</b>: The port where the HTTP server will listen for SOAP requests.</li>
+   * <li><b>serviceClass</b>: Refer to @link {@link Endpoint#publish(String, Object)}</li>
+   * </ul>
+   */
+  public static void main(String[] args) {
+    final int port;
+    final Object service;
+    try {
+      port = Integer.parseInt(args[0]);
+      service = Class.forName(args[1]).newInstance();
+    } catch (NumberFormatException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+      e.printStackTrace();
+      System.exit(-1);
+      return;
+    }
+
+    final HttpServer server = new HttpServer(port, service);
+
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+
+      @Override
+      public void run() {
+        try {
+          server.stop();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+    while (true) {
+      try {
+        Thread.sleep(10000);
+      } catch (InterruptedException e) {
+        System.exit(0);
+      }
+    }
   }
 }
