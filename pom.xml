@@ -19,7 +19,7 @@
     <properties>
         <dom4jVersion>2.1.1</dom4jVersion>
         <bouncyCastleVersion>1.64</bouncyCastleVersion>
-        <cxfVersion>3.3.1</cxfVersion>
+        <cxfVersion>3.3.4</cxfVersion>
         <antVersion>1.10.5</antVersion>
         <xmlSecVersion>2.1.4</xmlSecVersion>
         <jettyVersion>9.4.14.v20181114</jettyVersion>
