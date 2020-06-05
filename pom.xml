@@ -21,7 +21,7 @@
         <bouncyCastleVersion>1.65</bouncyCastleVersion>
         <cxfVersion>3.3.5</cxfVersion>
         <antVersion>1.10.5</antVersion>
-        <xmlSecVersion>2.1.4</xmlSecVersion>
+        <xmlSecVersion>2.2.0</xmlSecVersion>
         <jettyVersion>9.4.16.v20190411</jettyVersion>
         <springVersion>5.2.5.RELEASE</springVersion>
         <javax.jaxws-api.version>2.3.0</javax.jaxws-api.version>
