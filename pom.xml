@@ -24,7 +24,7 @@
         <xmlSecVersion>2.2.0</xmlSecVersion>
         <jettyVersion>9.4.31.v20200723</jettyVersion>
         <springVersion>5.2.8.RELEASE</springVersion>
-        <javax.jaxws-api.version>2.3.0</javax.jaxws-api.version>
+        <javax.jaxws-api.version>2.3.1</javax.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.3.28</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
