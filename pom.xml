@@ -22,7 +22,7 @@
         <cxfVersion>3.4.1</cxfVersion>
         <antVersion>1.10.9</antVersion>
         <xmlSecVersion>2.2.0</xmlSecVersion>
-        <jettyVersion>9.4.31.v20200723</jettyVersion>
+        <jettyVersion>9.4.35.v20201120</jettyVersion>
         <springVersion>5.3.1</springVersion>
         <javax.jaxws-api.version>2.3.1</javax.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
