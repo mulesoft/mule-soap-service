@@ -17,7 +17,8 @@ import org.apache.wss4j.common.crypto.Merlin;
 import java.util.Properties;
 
 /**
- * Default {@link WssStoreConfigurationPropertiesBuilder} implementation for Key Stores, used for encryption, decryption and signing.
+ * Default {@link WssStoreConfigurationPropertiesBuilder} implementation for Key Stores, used for encryption, decryption and
+ * signing.
  *
  * @since 1.0
  */

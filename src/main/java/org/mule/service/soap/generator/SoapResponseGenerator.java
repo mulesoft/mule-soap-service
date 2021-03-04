@@ -61,8 +61,8 @@ public final class SoapResponseGenerator {
    * returned {@link Result}.
    *
    * @param operation the name of the operation that was invoked
-   * @param response  the CXF response
-   * @param exchange  the exchange used for CXF to store the headers and attachments.
+   * @param response the CXF response
+   * @param exchange the exchange used for CXF to store the headers and attachments.
    */
   public SoapResponse generate(String operation, Object[] response, Exchange exchange) {
     Map<String, String> transportHeaders = getTransportHeaders(exchange);

@@ -35,8 +35,8 @@ public final class MtomRequestEnricher extends AttachmentRequestEnricher {
   /**
    * {@inheritDoc}
    * <p>
-   * Adds the XOP element to the attachment node this way the attachments gets tracked with its CID (content id) when it's sent
-   * in the multipart request.
+   * Adds the XOP element to the attachment node this way the attachments gets tracked with its CID (content id) when it's sent in
+   * the multipart request.
    * <p>
    * Basically adds this content to the attachment node
    * {@code <xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:attachmentContentId"/>} and uses the <strong>

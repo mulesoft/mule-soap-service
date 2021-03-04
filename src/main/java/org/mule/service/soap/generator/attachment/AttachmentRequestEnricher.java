@@ -20,8 +20,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Abstract implementation for a request enricher that adds a node for each sent attachment to the incoming SOAP
- * request with all the information required to send the attachments using the SOAP protocol.
+ * Abstract implementation for a request enricher that adds a node for each sent attachment to the incoming SOAP request with all
+ * the information required to send the attachments using the SOAP protocol.
  *
  * @since 1.0
  */
@@ -34,7 +34,7 @@ public abstract class AttachmentRequestEnricher {
   }
 
   /**
-   * @param body        the XML SOAP body provided by the user.
+   * @param body the XML SOAP body provided by the user.
    * @param attachments the attachments to upload.
    */
   public String enrichRequest(String body, Map<String, SoapAttachment> attachments) {
@@ -55,8 +55,8 @@ public abstract class AttachmentRequestEnricher {
   /**
    * Adds the content to the attachment node recently created to the XML SOAP request
    *
-   * @param bodyDocument      the document where we are adding the node element.
-   * @param attachment      the attachment to be sent.
+   * @param bodyDocument the document where we are adding the node element.
+   * @param attachment the attachment to be sent.
    * @param attachmentElement the recently created attachment node in the xml request.
    */
   abstract void addAttachmentElement(Document bodyDocument, String name, SoapAttachment attachment, Element attachmentElement);

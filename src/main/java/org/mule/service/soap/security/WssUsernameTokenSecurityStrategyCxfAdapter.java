@@ -26,8 +26,8 @@ import java.util.StringJoiner;
 
 
 /**
- * Provides the capability to authenticate using Username and Password with a SOAP service by adding the UsernameToken
- * element in the SOAP request.
+ * Provides the capability to authenticate using Username and Password with a SOAP service by adding the UsernameToken element in
+ * the SOAP request.
  *
  * @since 1.0
  */

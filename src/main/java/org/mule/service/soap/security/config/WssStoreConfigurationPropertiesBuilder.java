@@ -12,8 +12,8 @@ import org.mule.service.soap.security.SecurityStrategyCxfAdapter;
 import java.util.Properties;
 
 /**
- * Base contract for Security Stores that prepares additional properties for CXF in order to apply some
- * kind of Web Service Security.
+ * Base contract for Security Stores that prepares additional properties for CXF in order to apply some kind of Web Service
+ * Security.
  * <p>
  * See https://ws.apache.org/wss4j/config.html.
  *

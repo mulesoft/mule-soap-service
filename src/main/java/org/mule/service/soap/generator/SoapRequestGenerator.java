@@ -41,8 +41,9 @@ public final class SoapRequestGenerator {
 
   /**
    * Generates an {@link XMLStreamReader} SOAP request ready to be consumed by CXF.
-   * @param operation   the name of the operation being invoked.
-   * @param body        the body content provided by the user.
+   * 
+   * @param operation the name of the operation being invoked.
+   * @param body the body content provided by the user.
    * @param attachments the attachments provided by the user.
    */
   public XMLStreamReader generate(String operation, String body, Map<String, SoapAttachment> attachments) {

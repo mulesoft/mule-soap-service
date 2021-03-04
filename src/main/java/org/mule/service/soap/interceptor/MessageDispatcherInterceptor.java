@@ -42,8 +42,8 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.transport.MessageObserver;
 
 /**
- * CXF interceptor that uses a custom {@link MessageDispatcher}, specified in the {@link SoapClientConfiguration} to send a
- * SOAP message and inject the obtained response into the CXF <strong>in</strong> (response) interceptors lifecycle.
+ * CXF interceptor that uses a custom {@link MessageDispatcher}, specified in the {@link SoapClientConfiguration} to send a SOAP
+ * message and inject the obtained response into the CXF <strong>in</strong> (response) interceptors lifecycle.
  *
  * @since 1.0
  */
@@ -59,8 +59,8 @@ public class MessageDispatcherInterceptor extends AbstractPhaseInterceptor<Messa
   /**
    * {@inheritDoc}
    * <p>
-   * Intercepts the SOAP message and performs the dispatch of it, receiving the response and
-   * sending it to the IN intercepting processor chain.
+   * Intercepts the SOAP message and performs the dispatch of it, receiving the response and sending it to the IN intercepting
+   * processor chain.
    */
   @Override
   public void handleMessage(Message message) throws Fault {
