@@ -68,7 +68,7 @@ public class XMLStreamReaderToContentHandler implements StAXReaderToContentHandl
    * Construct a new StAX to SAX adapter that will convert a StAX event stream into a SAX event stream.
    * 
    * @param staxCore StAX event source
-   * @param filter SAX event sink
+   * @param filter   SAX event sink
    */
   public XMLStreamReaderToContentHandler(XMLStreamReader staxCore, XMLFilterImplEx filter) {
     staxStreamReader = staxCore;

@@ -34,7 +34,7 @@ public abstract class AttachmentRequestEnricher {
   }
 
   /**
-   * @param body the XML SOAP body provided by the user.
+   * @param body        the XML SOAP body provided by the user.
    * @param attachments the attachments to upload.
    */
   public String enrichRequest(String body, Map<String, SoapAttachment> attachments) {
@@ -55,8 +55,8 @@ public abstract class AttachmentRequestEnricher {
   /**
    * Adds the content to the attachment node recently created to the XML SOAP request
    *
-   * @param bodyDocument the document where we are adding the node element.
-   * @param attachment the attachment to be sent.
+   * @param bodyDocument      the document where we are adding the node element.
+   * @param attachment        the attachment to be sent.
    * @param attachmentElement the recently created attachment node in the xml request.
    */
   abstract void addAttachmentElement(Document bodyDocument, String name, SoapAttachment attachment, Element attachmentElement);

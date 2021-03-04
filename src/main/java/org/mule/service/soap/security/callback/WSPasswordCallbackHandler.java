@@ -29,9 +29,9 @@ public class WSPasswordCallbackHandler implements CallbackHandler {
   /**
    * Creates a new instance.
    *
-   * @param usage A constant from {@link WSPasswordCallback} indicating the usage of this callback.
+   * @param usage   A constant from {@link WSPasswordCallback} indicating the usage of this callback.
    * @param handler {@link Consumer} that handles a {@link WSPasswordCallback}. This function will be called with the password
-   *        callback that matches the {@code usage} also provided.
+   *                callback that matches the {@code usage} also provided.
    */
   public WSPasswordCallbackHandler(int usage, Consumer<WSPasswordCallback> handler) {
     this.usage = usage;

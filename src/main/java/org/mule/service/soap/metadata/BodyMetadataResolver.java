@@ -53,7 +53,7 @@ abstract class BodyMetadataResolver extends NodeMetadataResolver {
    * <p>
    * If after removing the attachments there are not fields remaining in the request, a {@link NullType} is returned.
    *
-   * @param bodyType the {@link MetadataType} of the xml input body, with all the required parameters including the
+   * @param bodyType    the {@link MetadataType} of the xml input body, with all the required parameters including the
    * @param attachments the attachments fields on found in the type.
    * @return the body {@link MetadataType} without the attachment fields.
    */

@@ -94,7 +94,7 @@ final class EmptyRequestGenerator {
    * Finds the part of the input message that must be used in the SOAP body, if the operation requires only one part.
    *
    * @param soapBodyParts the body parts discovered in the binding type
-   * @param inputMessage the input {@link Message} of the operation.
+   * @param inputMessage  the input {@link Message} of the operation.
    */
   private Optional<Part> getSinglePart(List<String> soapBodyParts, Message inputMessage) {
     if (soapBodyParts.isEmpty()) {
