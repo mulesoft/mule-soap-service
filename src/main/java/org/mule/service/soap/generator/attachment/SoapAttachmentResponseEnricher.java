@@ -44,8 +44,8 @@ public final class SoapAttachmentResponseEnricher extends AttachmentResponseEnri
   /**
    * {@inheritDoc}
    * <p>
-   * Extracts the base64 encoded content from the attachment nodes, decodes them and then remove all the nodes to
-   * clean the response body.
+   * Extracts the base64 encoded content from the attachment nodes, decodes them and then remove all the nodes to clean the
+   * response body.
    */
   @Override
   protected void processResponseAttachments(Document response, List<ObjectFieldType> attachments, Exchange exchange) {

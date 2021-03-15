@@ -48,8 +48,8 @@ abstract class BodyMetadataResolver extends NodeMetadataResolver {
   }
 
   /**
-   * Filter the attachments fields from the body metadata type since SOAP manages the attachments as regular parameters but
-   * we wan't to provide a body decoupled experience for the attachments.
+   * Filter the attachments fields from the body metadata type since SOAP manages the attachments as regular parameters but we
+   * wan't to provide a body decoupled experience for the attachments.
    * <p>
    * If after removing the attachments there are not fields remaining in the request, a {@link NullType} is returned.
    *

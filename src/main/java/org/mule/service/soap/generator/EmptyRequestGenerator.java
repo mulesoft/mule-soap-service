@@ -50,8 +50,8 @@ final class EmptyRequestGenerator {
   }
 
   /**
-   * Generates a request body for an operation that don't require input parameters, if the required XML in the body is
-   * just one constant element.
+   * Generates a request body for an operation that don't require input parameters, if the required XML in the body is just one
+   * constant element.
    */
   String generateRequest(String operationName) {
 

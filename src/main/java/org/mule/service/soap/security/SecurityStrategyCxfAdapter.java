@@ -15,8 +15,8 @@ import java.util.Optional;
 /**
  * Base contract for objects that adds a level of security to the SOAP Protocol by preparing a set of CXF properties.
  * <p>
- * All securities have an Action Name and a Type (Whether should be applied to the SOAP request or SOAP response), and returns
- * a set of properties that needs to be set in the client to make it work.
+ * All securities have an Action Name and a Type (Whether should be applied to the SOAP request or SOAP response), and returns a
+ * set of properties that needs to be set in the client to make it work.
  *
  * @since 1.0
  */
@@ -37,8 +37,8 @@ public interface SecurityStrategyCxfAdapter {
   SecurityStrategyType securityType();
 
   /**
-   * Returns a set of properties to be set on the SOAP request interceptors (OUT interceptors) in order to
-   * applies {@code this} security strategy.
+   * Returns a set of properties to be set on the SOAP request interceptors (OUT interceptors) in order to applies {@code this}
+   * security strategy.
    *
    * @return a {@link Map} with the properties required to apply the security strategy.
    */

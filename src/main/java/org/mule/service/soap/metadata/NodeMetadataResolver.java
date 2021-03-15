@@ -48,10 +48,9 @@ abstract class NodeMetadataResolver {
   }
 
   /**
-   * Resolves the metadata for an operation, Input or Output is fetched depending on the {@link Function} passed
-   * as parameter.
+   * Resolves the metadata for an operation, Input or Output is fetched depending on the {@link Function} passed as parameter.
    *
-   * @param operation   the name of the operation that the types are going to be resolved.
+   * @param operation the name of the operation that the types are going to be resolved.
    * @throws MetadataResolvingException in any error case.
    */
   abstract MetadataType getMetadata(String operation) throws MetadataResolvingException;

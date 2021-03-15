@@ -41,8 +41,8 @@ public abstract class AttachmentResponseEnricher {
   /**
    * {@inheritDoc}
    * <p>
-   * Modifies the SOAP response to avoid attachment content in the response body and make decouple the attachment handling so
-   * the user can have a better experience.
+   * Modifies the SOAP response to avoid attachment content in the response body and make decouple the attachment handling so the
+   * user can have a better experience.
    */
   public String enrich(Document response, String operation, Exchange exchange) {
     Part outputPart = operations.get(operation).getOutputBodyPart()

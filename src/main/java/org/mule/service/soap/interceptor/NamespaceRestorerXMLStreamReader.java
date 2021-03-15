@@ -18,8 +18,8 @@ import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.StartElement;
 
 /**
- * XMLStreamReader decorator that restores XML Namespace declarations, by default, it will restore the namespaces on the
- * first declaration, but this can be overridden
+ * XMLStreamReader decorator that restores XML Namespace declarations, by default, it will restore the namespaces on the first
+ * declaration, but this can be overridden
  *
  * @since 1.0
  */

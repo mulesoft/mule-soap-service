@@ -16,8 +16,8 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 
 /**
- * CXF interceptor that wraps the XML Stream with a decorator that is able to restore namespace declarations for fragments in
- * the response message.
+ * CXF interceptor that wraps the XML Stream with a decorator that is able to restore namespace declarations for fragments in the
+ * response message.
  *
  * @since 1.0
  */

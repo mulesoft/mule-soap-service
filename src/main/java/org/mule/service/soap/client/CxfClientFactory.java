@@ -30,8 +30,8 @@ import javax.xml.transform.Source;
 /**
  * A factory for CXF {@link Client}s.
  * <p>
- * Sets up the custom {@link SoapServiceConduitInitiator} for all the different entries used for CXF to obtain the
- * needed {@link Conduit}, this occurs because we want that CXF always use our custom conduit to operate.
+ * Sets up the custom {@link SoapServiceConduitInitiator} for all the different entries used for CXF to obtain the needed
+ * {@link Conduit}, this occurs because we want that CXF always use our custom conduit to operate.
  *
  * @since 1.0
  */

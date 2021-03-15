@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 
 
 /**
- * Abstract implementation of {@link CallbackHandler} that only handles instances
- * of {@link WSPasswordCallback} with a specific usage.
+ * Abstract implementation of {@link CallbackHandler} that only handles instances of {@link WSPasswordCallback} with a specific
+ * usage.
  *
  * @since 1.0
  */
@@ -30,8 +30,8 @@ public class WSPasswordCallbackHandler implements CallbackHandler {
    * Creates a new instance.
    *
    * @param usage   A constant from {@link WSPasswordCallback} indicating the usage of this callback.
-   * @param handler {@link Consumer} that handles a {@link WSPasswordCallback}. This function will be called with the
-   *                password callback that matches the {@code usage} also provided.
+   * @param handler {@link Consumer} that handles a {@link WSPasswordCallback}. This function will be called with the password
+   *                callback that matches the {@code usage} also provided.
    */
   public WSPasswordCallbackHandler(int usage, Consumer<WSPasswordCallback> handler) {
     this.usage = usage;
