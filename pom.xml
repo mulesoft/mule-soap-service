@@ -30,7 +30,7 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.6</wsdlParserVersion>
         <muleHttpServiceVersion>1.6.0-SNAPSHOT</muleHttpServiceVersion>
-        <woodstoxCoreVersion>6.2.4</woodstoxCoreVersion>
+        <woodstoxCoreVersion>6.2.5</woodstoxCoreVersion>
     </properties>
 
     <scm>
