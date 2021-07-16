@@ -27,6 +27,7 @@
         <springVersion>5.3.6</springVersion>
         <javax.jaxws-api.version>2.3.1</javax.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
+        <kotlin.version>1.5.21</kotlin.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.6</wsdlParserVersion>
@@ -165,6 +166,10 @@
                     <groupId>com.fasterxml.woodstox</groupId>
                     <artifactId>woodstox-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-stdlib</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -190,6 +195,12 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
             <version>${antVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
         </dependency>
 
         <!-- Mule Dependencies -->
