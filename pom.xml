@@ -21,6 +21,7 @@
         <bouncyCastleVersion>1.69</bouncyCastleVersion>
         <cxfVersion>3.4.1</cxfVersion>
         <antVersion>1.10.9</antVersion>
+        <kotlin.version>1.5.21</kotlin.version>
         <xmlSecVersion>2.2.1</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
         <springVersion>5.3.6</springVersion>
@@ -170,6 +171,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
 
         <!--  These spring dependencies are needed by cxf's SpringBusFactory -->
         <dependency>
@@ -193,11 +199,6 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
             <version>${antVersion}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
         </dependency>
 
         <!-- Mule Dependencies -->
