@@ -5,22 +5,23 @@
     <parent>
         <groupId>org.mule.services</groupId>
         <artifactId>mule-core-services-parent</artifactId>
-        <version>1.2.4-SNAPSHOT</version>
+        <version>1.2.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mule-service-soap</artifactId>
     <packaging>mule-service</packaging>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.2</version>
 
     <name>Mule SOAP Service</name>
     <description>A SOAP service based on CXF</description>
 
     <properties>
         <dom4jVersion>2.1.3</dom4jVersion>
-        <bouncyCastleVersion>1.61</bouncyCastleVersion>
+        <bouncyCastleVersion>1.69</bouncyCastleVersion>
         <cxfVersion>3.3.5</cxfVersion>
-        <antVersion>1.10.5</antVersion>
+        <antVersion>1.10.11</antVersion>
+        <cryptacularVersion>1.2.4</cryptacularVersion>
         <xmlSecVersion>2.1.4</xmlSecVersion>
         <jettyVersion>9.4.16.v20190411</jettyVersion>
         <springVersion>5.1.6.RELEASE</springVersion>
@@ -28,8 +29,8 @@
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.3.28</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
-        <wsdlParserVersion>1.1.7-SNAPSHOT</wsdlParserVersion>
-        <muleHttpServiceVersion>1.4.23-SNAPSHOT</muleHttpServiceVersion>
+        <wsdlParserVersion>1.1.6</wsdlParserVersion>
+        <muleHttpServiceVersion>1.4.22</muleHttpServiceVersion>
     </properties>
 
     <scm>
@@ -137,7 +138,7 @@
         <dependency>
             <groupId>org.cryptacular</groupId>
             <artifactId>cryptacular</artifactId>
-            <version>1.2.4</version>
+            <version>${cryptacularVersion}</version>
         </dependency>
 
         <!-- WSDL PARSER -->
