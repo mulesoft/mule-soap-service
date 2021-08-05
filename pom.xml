@@ -11,7 +11,7 @@
 
     <artifactId>mule-service-soap</artifactId>
     <packaging>mule-service</packaging>
-    <version>1.3.4-SNAPSHOT</version>
+    <version>1.3.4</version>
 
     <name>Mule SOAP Service</name>
     <description>A SOAP service based on CXF</description>
@@ -31,7 +31,7 @@
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.6</wsdlParserVersion>
-        <muleHttpServiceVersion>1.5.14-SNAPSHOT</muleHttpServiceVersion>
+        <muleHttpServiceVersion>1.5.13</muleHttpServiceVersion>
         <woodstoxCoreVersion>6.2.5</woodstoxCoreVersion>
     </properties>
 
