@@ -30,7 +30,7 @@
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <wsdlParserVersion>1.1.6</wsdlParserVersion>
-        <muleHttpServiceVersion>1.6.0-SNAPSHOT</muleHttpServiceVersion>
+        <muleHttpServiceVersion>1.6.0-20210913</muleHttpServiceVersion>
         <woodstoxCoreVersion>6.2.5</woodstoxCoreVersion>
     </properties>
 
