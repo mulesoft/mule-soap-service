@@ -34,8 +34,8 @@ public class NamespaceSaverStaxInterceptor extends AbstractPhaseInterceptor<Mess
 
     if (reader != null) {
       NamespaceRestorerXMLStreamReader replacement = new NamespaceRestorerXMLStreamReader(reader)
-          .blackList(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE)
-          .blackList(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE);
+          .blockList(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE)
+          .blockList(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE);
 
       message.setContent(XMLStreamReader.class, replacement);
       message.setContent(NamespaceRestorerXMLStreamReader.class, replacement);
