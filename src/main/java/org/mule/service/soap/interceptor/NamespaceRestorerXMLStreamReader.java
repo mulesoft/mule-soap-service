@@ -26,14 +26,14 @@ import javax.xml.stream.events.StartElement;
 public class NamespaceRestorerXMLStreamReader extends ScopeSaverXMLStreamReader {
 
   private List<Namespace> namespaces;
-  private List<String> nsBlacklist = new ArrayList<>();
+  private List<String> nsBlocklist = new ArrayList<>();
 
   NamespaceRestorerXMLStreamReader(XMLStreamReader reader) {
     super(reader);
   }
 
-  final NamespaceRestorerXMLStreamReader blackList(String namespace) {
-    nsBlacklist.add(namespace);
+  final NamespaceRestorerXMLStreamReader blockList(String namespace) {
+    nsBlocklist.add(namespace);
     return this;
   }
 
@@ -46,7 +46,7 @@ public class NamespaceRestorerXMLStreamReader extends ScopeSaverXMLStreamReader 
         Iterator<Namespace> iterator = elem.getNamespaces();
         while (iterator.hasNext()) {
           Namespace ns = iterator.next();
-          if (prefixes.add(ns.getPrefix()) && !nsBlacklist.contains(ns.getNamespaceURI())) {
+          if (prefixes.add(ns.getPrefix()) && !nsBlocklist.contains(ns.getNamespaceURI())) {
             namespaces.add(ns);
           }
         }
