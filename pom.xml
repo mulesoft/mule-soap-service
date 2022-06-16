@@ -24,7 +24,7 @@
         <antVersion>1.10.12</antVersion>
         <xmlSecVersion>2.2.3</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
-        <springVersion>5.3.18</springVersion>
+        <springVersion>5.3.21</springVersion>
         <javax.jaxws-api.version>2.3.1</javax.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <kotlin.version>1.5.21</kotlin.version>
