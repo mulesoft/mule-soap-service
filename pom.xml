@@ -19,10 +19,10 @@
     <properties>
         <dom4jVersion>2.1.3</dom4jVersion>
         <bouncyCastleVersion>1.69</bouncyCastleVersion>
-        <cxfVersion>3.3.5</cxfVersion>
+        <cxfVersion>3.5.1</cxfVersion>
         <antVersion>1.10.11</antVersion>
         <cryptacularVersion>1.2.4</cryptacularVersion>
-        <xmlSecVersion>2.1.4</xmlSecVersion>
+        <xmlSecVersion>2.3.0</xmlSecVersion>
         <jettyVersion>9.4.16.v20190411</jettyVersion>
         <springVersion>5.3.21</springVersion>
         <javax.jaxws-api.version>2.3.0</javax.jaxws-api.version>
