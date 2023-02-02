@@ -21,7 +21,7 @@
         <bouncyCastleVersion>1.70</bouncyCastleVersion>
         <cxfVersion>3.5.5</cxfVersion>
         <antVersion>1.10.12</antVersion>
-        <kotlin.version>1.7.20</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
         <xmlSecVersion>2.3.0</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
         <springVersion>5.3.21</springVersion>
