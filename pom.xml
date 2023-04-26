@@ -17,6 +17,7 @@
     <description>A SOAP service based on CXF</description>
 
     <properties>
+        <javaModuleName>org.mule.runtime.soap.service</javaModuleName>
         <dom4jVersion>2.1.3</dom4jVersion>
         <bouncyCastleVersion>1.70</bouncyCastleVersion>
         <cxfVersion>3.5.5</cxfVersion>
