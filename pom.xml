@@ -24,7 +24,7 @@
         <kotlin.version>1.7.20</kotlin.version>
         <xmlSecVersion>2.3.0</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
-        <springVersion>5.3.21</springVersion>
+        <springVersion>5.3.27</springVersion>
         <jakarta.jaxws-api.version>2.3.3</jakarta.jaxws-api.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
