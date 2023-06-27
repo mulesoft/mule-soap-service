@@ -26,6 +26,7 @@
         <jettyVersion>9.4.39.v20210325</jettyVersion>
         <springVersion>5.3.27</springVersion>
         <jakarta.jaxws-api.version>2.3.3</jakarta.jaxws-api.version>
+        <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
@@ -168,6 +169,11 @@
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
             <version>${xml.messaging.saaj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>${jakarta.activation.version}</version>
         </dependency>
 
         <dependency>
