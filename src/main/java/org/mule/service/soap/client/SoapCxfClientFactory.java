@@ -6,11 +6,12 @@
  */
 package org.mule.service.soap.client;
 
+import static org.mule.service.soap.conduit.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
+import static org.mule.wsdl.parser.model.WsdlStyle.RPC;
+
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static org.mule.service.soap.conduit.SoapServiceConduitInitiator.SOAP_SERVICE_KNOWN_PROTOCOLS;
-import static org.mule.wsdl.parser.model.WsdlStyle.RPC;
 
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.soap.api.client.SoapClient;
@@ -27,7 +28,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.cxf.endpoint.Client;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * {@link SoapClientFactory} implementation that creates {@link SoapCxfClient} instances.
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SoapCxfClientFactory implements SoapClientFactory {
 
-  private CxfClientProvider cxfClientProvider = new CxfClientProvider();
+  private final CxfClientProvider cxfClientProvider = new CxfClientProvider();
 
   /**
    * Creates a new instance of a {@link SoapCxfClient} for the given address ans soap version.
@@ -107,7 +107,6 @@ public class SoapCxfClientFactory implements SoapClientFactory {
       return locator.handles(s);
     }
 
-    @NotNull
     @Override
     public InputStream getResource(String s) {
       return locator.getResource(s);

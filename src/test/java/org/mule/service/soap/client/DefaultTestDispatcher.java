@@ -9,8 +9,6 @@
  */
 package org.mule.service.soap.client;
 
-import static org.mule.runtime.core.internal.util.FunctionalUtils.safely;
-
 import org.mule.runtime.extension.api.soap.message.DispatchingRequest;
 import org.mule.runtime.extension.api.soap.message.DispatchingResponse;
 import org.mule.runtime.extension.api.soap.message.MessageDispatcher;
@@ -43,6 +41,10 @@ public class DefaultTestDispatcher implements MessageDispatcher {
   }
 
   public void stop() {
-    safely(httpClient::stop);
+    try {
+      httpClient.stop();
+    } catch (Exception e) {
+      // ignore
+    }
   }
 }

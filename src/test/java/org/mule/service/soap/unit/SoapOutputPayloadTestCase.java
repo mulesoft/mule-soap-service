@@ -6,23 +6,29 @@
  */
 package org.mule.service.soap.unit;
 
-import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.emptyMap;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.mule.runtime.api.metadata.TypedValue;
+import org.mule.runtime.api.streaming.bytes.CursorStream;
 import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
-import org.mule.runtime.core.internal.streaming.bytes.ByteArrayCursorStream;
 import org.mule.runtime.extension.api.soap.SoapOutputPayload;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Collections.emptyMap;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.google.common.collect.ImmutableMap;
+
+import org.junit.Test;
 
 public class SoapOutputPayloadTestCase {
 
@@ -54,9 +60,18 @@ public class SoapOutputPayloadTestCase {
   }
 
   @Test
-  public void withCursorProvier() {
+  public void withCursorProvider() throws IOException {
+    final CursorStream cursorStream = mock(CursorStream.class);
+    final ByteArrayInputStream bais = new ByteArrayInputStream("<xml>ABC</xml>".getBytes(UTF_8));
+    when(cursorStream.read()).thenAnswer(inv -> {
+      return bais.read();
+    });
+    when(cursorStream.read(any(byte[].class), anyInt(), anyInt())).thenAnswer(inv -> {
+      return bais.read(inv.getArgument(0), inv.getArgument(1), inv.getArgument(2));
+    });
+
     CursorStreamProvider mock = mock(CursorStreamProvider.class);
-    when(mock.openCursor()).thenReturn(new ByteArrayCursorStream(mock, "<xml>ABC</xml>".getBytes(UTF_8)));
+    when(mock.openCursor()).thenReturn(cursorStream);
     TypedValue body = TypedValue.of(mock);
     Map<String, TypedValue<String>> hs = ImmutableMap.of("header1", TypedValue.of("<header1>content</header1>"),
                                                          "header2", TypedValue.of("<header2>content</header2>"));
