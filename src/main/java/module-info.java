@@ -36,7 +36,7 @@ module org.mule.service.soap {
   requires mule.wsdl4j;
 
   requires com.ctc.wstx;
-  requires dom4j;
+  requires org.dom4j;
   requires stax.utils;
   requires Saxon.HE;
 
