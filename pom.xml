@@ -216,6 +216,10 @@
             <version>${wsdlParserVersion}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.mule.runtime</groupId>
                     <artifactId>mule-metadata-model-xml</artifactId>
                 </exclusion>
