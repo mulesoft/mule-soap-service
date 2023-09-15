@@ -33,10 +33,12 @@ module org.mule.service.soap {
   requires org.apache.wss4j.dom;
 
   requires org.mule.wsdl.parser;
+  requires mule.wsdl4j;
 
   requires com.ctc.wstx;
   requires dom4j;
   requires stax.utils;
+  requires Saxon.HE;
 
   requires com.google.common;
   requires org.apache.commons.io;
