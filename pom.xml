@@ -11,7 +11,7 @@
 
     <artifactId>mule-service-soap</artifactId>
     <packaging>mule-service</packaging>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
 
     <name>Mule SOAP Service</name>
     <description>A SOAP service based on CXF</description>
