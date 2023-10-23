@@ -21,7 +21,7 @@
         <dom4jVersion>2.1.3</dom4jVersion>
         <cxfVersion>3.5.5</cxfVersion>
         <kotlin.version>1.7.20</kotlin.version>
-        <xmlSecVersion>2.3.0</xmlSecVersion>
+        <xmlSecVersion>2.3.4</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
         <springVersion>5.3.27</springVersion>
         <jakarta.jaxws-api.version>2.3.3</jakarta.jaxws-api.version>
