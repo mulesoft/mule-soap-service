@@ -22,7 +22,7 @@
         <commonsIoVersion>2.11.0</commonsIoVersion>
         <cxfVersion>3.5.5</cxfVersion>
         <antVersion>1.10.12</antVersion>
-        <xmlSecVersion>2.3.0</xmlSecVersion>
+        <xmlSecVersion>2.3.4</xmlSecVersion>
         <jettyVersion>9.4.39.v20210325</jettyVersion>
         <springVersion>5.3.21</springVersion>
         <javax.jaxws-api.version>2.3.1</javax.jaxws-api.version>
