@@ -330,13 +330,7 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
-        <!-- Mule uses a particular BouncyCastle version -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk18on</artifactId>
-        </dependency>
-
+        
         <!-- XML Handling -->
         <dependency>
             <groupId>net.sf.saxon</groupId>
