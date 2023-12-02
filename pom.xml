@@ -40,7 +40,7 @@
         <cxfVersion>3.5.5</cxfVersion>
         <kotlin.version>1.7.20</kotlin.version>
         <xmlSecVersion>2.3.4</xmlSecVersion>
-        <jettyVersion>9.4.39.v20210325</jettyVersion>
+        <jettyVersion>9.4.51.v20230217</jettyVersion>
         <springVersion>5.3.27</springVersion>
         <jakarta.jaxws-api.version>2.3.3</jakarta.jaxws-api.version>
         <jakarta.activation.version>1.2.2</jakarta.activation.version>
