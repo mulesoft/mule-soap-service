@@ -432,6 +432,11 @@
             <version>${jettyVersion}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Mule Test Dependencies -->
         <dependency>
