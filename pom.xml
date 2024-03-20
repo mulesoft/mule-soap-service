@@ -37,7 +37,7 @@
 
         <javaModuleName>org.mule.service.soap</javaModuleName>
         <dom4jVersion>2.1.4</dom4jVersion>
-        <cxfVersion>3.5.5</cxfVersion>
+        <cxfVersion>3.5.8</cxfVersion>
         <kotlin.version>1.7.20</kotlin.version>
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <jettyVersion>9.4.53.v20231009</jettyVersion>
