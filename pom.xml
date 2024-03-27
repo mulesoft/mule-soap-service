@@ -39,7 +39,7 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
         <cxfVersion>3.5.8</cxfVersion>
-        <xmlSecVersion>2.3.4</xmlSecVersion>
+        <xmlSecVersion>4.0.2</xmlSecVersion>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <wsdlParserVersion>1.1.7</wsdlParserVersion>
