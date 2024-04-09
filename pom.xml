@@ -38,7 +38,6 @@
         <javaModuleName>org.mule.service.soap</javaModuleName>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
-        <cxfVersion>3.5.8</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
@@ -355,7 +354,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -367,7 +365,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -379,7 +376,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
