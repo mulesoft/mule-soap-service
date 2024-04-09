@@ -38,7 +38,6 @@
         <javaModuleName>org.mule.service.soap</javaModuleName>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
-        <cxfVersion>3.5.8</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <javax.jws-api.version>1.1</javax.jws-api.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
@@ -96,7 +95,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-core</artifactId>
-            <version>${cxfVersion}</version>
             <exclusions>
                 <!-- We use the one bundled with the JDK -->
                 <exclusion>
@@ -120,7 +118,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-rm</artifactId>
-            <version>${cxfVersion}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
@@ -136,7 +133,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
-            <version>${cxfVersion}</version>
             <exclusions>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -170,7 +166,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-simple</artifactId>
-            <version>${cxfVersion}</version>
             <exclusions>
                 <!-- We use the one bundled with the JDK -->
                 <exclusion>
@@ -359,7 +354,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -371,7 +365,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -383,7 +376,6 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${cxfVersion}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
