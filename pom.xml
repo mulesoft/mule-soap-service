@@ -40,7 +40,7 @@
 
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <javax.jws-api.version>1.1</javax.jws-api.version>
-        <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
+        <xml.messaging.saaj.version>3.0.3</xml.messaging.saaj.version>
         <wsdlParserVersion>1.1.7</wsdlParserVersion>
         <woodstoxCoreVersion>6.6.2</woodstoxCoreVersion>
     </properties>
