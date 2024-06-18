@@ -32,7 +32,7 @@
             --add-exports=org.mule.service.soap/org.mule.service.soap.service=org.apache.cxf.core
             --add-exports=org.mule.service.soap/org.mule.service.soap.service=org.apache.wss4j.dom
             --add-exports=org.mule.service.soap/org.mule.service.soap.service=ALL-UNNAMED
-            ${surefire.args.base}
+            ${surefire.test.unit.open.args}
         </surefire.args>
 
         <javaModuleName>org.mule.service.soap</javaModuleName>
