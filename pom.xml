@@ -193,11 +193,6 @@
             <artifactId>jakarta.xml.ws-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>4.0.3</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
             <version>${xml.messaging.saaj.version}</version>
