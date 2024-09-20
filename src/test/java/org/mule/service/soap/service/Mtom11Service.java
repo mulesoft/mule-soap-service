@@ -6,8 +6,8 @@
  */
 package org.mule.service.soap.service;
 
-import javax.jws.WebService;
-import javax.xml.ws.soap.MTOM;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.soap.MTOM;
 
 @MTOM
 @WebService(portName = "TestPort", serviceName = "TestService")
