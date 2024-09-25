@@ -8,8 +8,8 @@ package org.mule.service.soap.client;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyMap;
-import static org.mule.runtime.core.api.util.IOUtils.toDataHandler;
 import static org.mule.runtime.http.api.HttpHeaders.Names.CONTENT_DISPOSITION;
+import static org.mule.service.soap.util.AttachmentsUtils.toDataHandler;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.cxf.attachment.AttachmentImpl;
