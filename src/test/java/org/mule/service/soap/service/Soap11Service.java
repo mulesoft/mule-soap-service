@@ -19,15 +19,14 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
+import jakarta.activation.DataHandler;
+import jakarta.activation.FileDataSource;
 import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.Holder;
+import jakarta.xml.ws.Holder;
 
 @WebService(portName = "TestPort", serviceName = "TestService")
 public class Soap11Service {

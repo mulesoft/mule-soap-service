@@ -7,8 +7,8 @@
 package org.mule.service.soap.service;
 
 import javax.jws.WebService;
-import javax.xml.ws.BindingType;
-import javax.xml.ws.soap.SOAPBinding;
+import jakarta.xml.ws.BindingType;
+import jakarta.xml.ws.soap.SOAPBinding;
 
 @WebService(portName = "TestPort", serviceName = "TestService")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
