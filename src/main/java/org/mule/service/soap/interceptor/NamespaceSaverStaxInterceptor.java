@@ -6,7 +6,7 @@
  */
 package org.mule.service.soap.interceptor;
 
-import javax.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.cxf.interceptor.Fault;

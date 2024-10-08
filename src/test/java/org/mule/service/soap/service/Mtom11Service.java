@@ -6,7 +6,7 @@
  */
 package org.mule.service.soap.service;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import jakarta.xml.ws.soap.MTOM;
 
 @MTOM
