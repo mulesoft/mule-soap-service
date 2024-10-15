@@ -26,7 +26,6 @@
             --add-exports=org.mule.runtime.core/org.mule.runtime.core.internal.registry=ALL-UNNAMED
             --add-exports=org.mule.runtime.core/org.mule.runtime.core.internal.serialization=ALL-UNNAMED
             --add-exports=org.mule.runtime.core/org.mule.runtime.core.privileged.registry=ALL-UNNAMED
-            --add-exports=org.mule.runtime.core/org.mule.runtime.core.privileged.security.tls=ALL-UNNAMED
             --add-exports=org.mule.runtime.core/org.mule.runtime.core.internal.transformer=ALL-UNNAMED
             --add-opens=org.mule.service.soap/org.mule.service.soap.service=java.xml.bind
             --add-exports=org.mule.service.soap/org.mule.service.soap.service=org.apache.cxf.core
@@ -411,11 +410,6 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-io</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-core</artifactId>
             <scope>test</scope>
         </dependency>
 
