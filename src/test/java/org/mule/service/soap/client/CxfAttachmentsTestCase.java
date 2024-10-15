@@ -6,24 +6,29 @@
  */
 package org.mule.service.soap.client;
 
+import static org.mule.runtime.http.api.HttpHeaders.Names.CONTENT_DISPOSITION;
+
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.indexOfSubList;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mule.runtime.http.api.HttpHeaders.Names.CONTENT_DISPOSITION;
 
-import java.io.ByteArrayInputStream;
-import java.util.Map;
-import com.google.common.collect.ImmutableMap;
-import org.apache.cxf.message.Attachment;
-import org.apache.tika.io.NullInputStream;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.junit.Test;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.extension.api.soap.SoapAttachment;
+
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
+
+import org.apache.commons.io.input.NullInputStream;
+import org.apache.cxf.message.Attachment;
+
+import org.junit.Test;
+
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 public class CxfAttachmentsTestCase {
 
@@ -45,7 +50,7 @@ public class CxfAttachmentsTestCase {
   }
 
   private Map<String, SoapAttachment> buildAttachments() {
-    ImmutableMap.Builder builder = new ImmutableMap.Builder();
+    ImmutableMap.Builder<String, SoapAttachment> builder = new ImmutableMap.Builder<>();
     builder.put("name1", new SoapAttachment(new NullInputStream(10), MediaType.APPLICATION_JAVA));
     builder.put("name2", new SoapAttachment(new NullInputStream(10), MediaType.APPLICATION_XML));
     builder.put("name3", new SoapAttachment(new NullInputStream(10), MediaType.APPLICATION_JSON));
