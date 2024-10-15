@@ -33,6 +33,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_STYLESHEET;
 import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
 
 /**
@@ -43,7 +45,14 @@ import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
 public class XmlTransformationUtils {
 
   private static final XMLInputFactory XML_INPUT_FACTORY = getXmlInputFactory();
-  private static final TransformerFactory SAXON_TRANSFORMER_FACTORY = SaxonTransformerFactory.newInstance();
+  private static final TransformerFactory SAXON_TRANSFORMER_FACTORY;
+
+  static {
+    final TransformerFactory factory = SaxonTransformerFactory.newInstance();
+    factory.setAttribute(ACCESS_EXTERNAL_STYLESHEET, "");
+    factory.setAttribute(ACCESS_EXTERNAL_DTD, "");
+    SAXON_TRANSFORMER_FACTORY = factory;
+  }
 
   private static XMLInputFactory getXmlInputFactory() {
     XMLInputFactory xmlInputFactory = WstxInputFactory.newInstance();
