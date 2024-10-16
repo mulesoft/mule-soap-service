@@ -39,6 +39,7 @@
 
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <javax.jws-api.version>1.1</javax.jws-api.version>
+        <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <wsdlParserVersion>1.1.7</wsdlParserVersion>
         <woodstoxCoreVersion>6.7.0</woodstoxCoreVersion>
@@ -199,6 +200,7 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>jakarta.activation</artifactId>
+            <version>${jakarta.activation.version}</version>
         </dependency>
 
         <dependency>
