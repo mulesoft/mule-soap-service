@@ -46,7 +46,9 @@ module org.mule.service.soap {
 
   requires jakarta.activation;
   requires java.logging;
-  requires java.xml.soap;
+  requires jakarta.xml.soap;
+  requires jakarta.xml.ws;
+  requires jakarta.jws;
 
   // Allow invocation and injection into providers by the Mule Runtime
   exports org.mule.service.soap.provider to

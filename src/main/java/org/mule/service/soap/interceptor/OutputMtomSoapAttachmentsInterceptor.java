@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Collection;
 
-import javax.activation.DataHandler;
+import jakarta.activation.DataHandler;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.interceptor.Fault;
