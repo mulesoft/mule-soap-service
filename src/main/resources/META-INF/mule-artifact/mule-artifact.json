@@ -3,10 +3,6 @@
   "minMuleVersion": "4.2.0",
   "requiredProduct": "MULE",
   "contracts": [
-    {
-      "serviceProviderClassName": "org.mule.service.soap.provider.SoapServiceProvider",
-      "contractClassName": "org.mule.runtime.soap.api.SoapService"
-    }
   ],
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
