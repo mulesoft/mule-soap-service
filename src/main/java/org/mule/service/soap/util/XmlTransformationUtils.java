@@ -6,7 +6,10 @@
  */
 package org.mule.service.soap.util;
 
-import com.ctc.wstx.stax.WstxInputFactory;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_STYLESHEET;
+import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
+
 import org.mule.runtime.core.api.util.xmlsecurity.XMLSecureFactories;
 import org.mule.runtime.soap.api.SoapService;
 import org.mule.service.soap.xml.stax.StaxSource;
@@ -27,15 +30,14 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.sf.saxon.jaxp.SaxonTransformerFactory;
+import com.ctc.wstx.stax.WstxInputFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
-import static javax.xml.XMLConstants.ACCESS_EXTERNAL_STYLESHEET;
-import static javax.xml.stream.XMLInputFactory.IS_COALESCING;
+import net.sf.saxon.jaxp.SaxonTransformerFactory;
 
 /**
  * {@link SoapService} Transformation utility class
@@ -48,14 +50,14 @@ public class XmlTransformationUtils {
   private static final TransformerFactory SAXON_TRANSFORMER_FACTORY;
 
   static {
-    final TransformerFactory factory = SaxonTransformerFactory.newInstance();
+    final TransformerFactory factory = new SaxonTransformerFactory();
     factory.setAttribute(ACCESS_EXTERNAL_STYLESHEET, "");
     factory.setAttribute(ACCESS_EXTERNAL_DTD, "");
     SAXON_TRANSFORMER_FACTORY = factory;
   }
 
   private static XMLInputFactory getXmlInputFactory() {
-    XMLInputFactory xmlInputFactory = WstxInputFactory.newInstance();
+    XMLInputFactory xmlInputFactory = new WstxInputFactory();
     // Preserve the CDATA tags
     xmlInputFactory.setProperty(IS_COALESCING, false);
     return xmlInputFactory;

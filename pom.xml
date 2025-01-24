@@ -17,6 +17,7 @@
     <description>A SOAP service based on CXF</description>
 
     <properties>
+        <surefire.test.unit.open.args.target>ALL-UNNAMED</surefire.test.unit.open.args.target>
         <!-- Add visibility required by the tests exclusively -->
         <surefire.args>
             -XX:+IgnoreUnrecognizedVMOptions
@@ -37,8 +38,15 @@
         <javaModuleName>org.mule.service.soap</javaModuleName>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
+        <mule.version>4.8.3</mule.version>
+        <muleExtensionsApiVersion>1.8.3</muleExtensionsApiVersion>
+        
+        <cxfVersion>3.5.9</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
+        <jakarta.jaxws.version>2.3.3</jakarta.jaxws.version>
+        <jakarta.transaction.version>1.3.3</jakarta.transaction.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
+        <staxUtilsVersion>20080702</staxUtilsVersion>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <wsdlParserVersion>1.1.7</wsdlParserVersion>
         <woodstoxCoreVersion>6.7.0</woodstoxCoreVersion>
@@ -82,6 +90,72 @@
                     <exclusion>
                         <groupId>org.bouncycastle</groupId>
                         <artifactId>bcprov-jdk18on</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mule.runtime</groupId>
+                <artifactId>mule-extensions-soap-api</artifactId>
+                <version>${muleExtensionsApiVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
+                <version>${jakarta.jaxws.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
+                <version>${jakarta.transaction.version}</version>
+            </dependency>
+
+            <!-- CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http-jetty</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-simple</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-rm</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${cxfVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.stax-utils</groupId>
+                <artifactId>stax-utils</artifactId>
+                <version>${staxUtilsVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.bea.xml</groupId>
+                        <artifactId>jsr173-ri</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -185,6 +259,10 @@
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
