@@ -39,7 +39,7 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
         <mule.version>4.8.3</mule.version>
-        <muleExtensionsApiVersion>1.8.3</muleExtensionsApiVersion>
+        <muleExtensionsApiVersion>1.9.0-20241025</muleExtensionsApiVersion>
         
         <cxfVersion>3.5.10</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
