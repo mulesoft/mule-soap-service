@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.mule.services</groupId>
         <artifactId>mule-core-services-parent</artifactId>
-        <version>1.9.0-rc3</version>
+        <version>1.9.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mule-service-soap</artifactId>
     <packaging>mule-service</packaging>
-    <version>1.9.0-SNAPSHOT</version>
+    <version>1.9.0</version>
 
     <name>Mule SOAP Service</name>
     <description>A SOAP service based on CXF</description>
@@ -38,8 +38,8 @@
         <javaModuleName>org.mule.service.soap</javaModuleName>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
-        <mule.version>4.8.3</mule.version>
-        <muleExtensionsApiVersion>1.8.3</muleExtensionsApiVersion>
+        <mule.version>4.9.2</mule.version>
+        <muleExtensionsApiVersion>1.9.2</muleExtensionsApiVersion>
         
         <cxfVersion>3.5.10</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
