@@ -100,7 +100,7 @@
             <dependency>
                 <groupId>org.mule.runtime</groupId>
                 <artifactId>mule-extensions-soap-api</artifactId>
-                <version>${muleExtensionsApiVersion}</version>
+                <version>${muleExtensionsSoapApiVersion}</version>
             </dependency>
 
             <dependency>
