@@ -39,7 +39,10 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
         <mule.version>4.9.2</mule.version>
-        <muleExtensionsApiVersion>1.9.2</muleExtensionsApiVersion>
+
+        <!-- These were the latest released, there will probably not be any newer ones -->
+        <muleSoapApiVersion>4.8.5</muleSoapApiVersion>
+        <muleExtensionsSoapApiVersion>1.8.5</muleExtensionsSoapApiVersion>
         
         <cxfVersion>3.5.10</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
@@ -353,7 +356,7 @@
         <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-service-soap-api</artifactId>
-            <version>${mule.version}</version>
+            <version>${muleSoapApiVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
