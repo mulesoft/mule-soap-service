@@ -46,7 +46,7 @@
         <jakarta.jaxws.version>2.3.3</jakarta.jaxws.version>
         <jakarta.transaction.version>1.3.3</jakarta.transaction.version>
         <javax.jws-api.version>1.1</javax.jws-api.version>
-        <staxUtilsVersion>20080702</staxUtilsVersion>
+        <staxUtilsVersion>20080702-osgi</staxUtilsVersion>
         <xml.messaging.saaj.version>1.5.3</xml.messaging.saaj.version>
         <wsdlParserVersion>1.1.7</wsdlParserVersion>
         <woodstoxCoreVersion>6.7.0</woodstoxCoreVersion>
