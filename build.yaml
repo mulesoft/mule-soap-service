@@ -1,4 +1,3 @@
 upstreamProjects:
   Mule-runtime/mule/support/4.4.x
-mavenSettingsXmlId: mule-runtime-maven-settings-MuleSettings
 projectType: runtime
