@@ -40,7 +40,7 @@
         <mule.version>4.10.0-SNAPSHOT</mule.version>
         <muleExtensionsApiVersion>1.10.0-SNAPSHOT</muleExtensionsApiVersion>
         
-        <cxfVersion>3.5.10</cxfVersion>
+        <cxfVersion>3.5.11</cxfVersion>
         <xmlSecVersion>2.3.4</xmlSecVersion>
         <jakarta.jaxws.version>2.3.3</jakarta.jaxws.version>
         <jakarta.transaction.version>1.3.3</jakarta.transaction.version>
